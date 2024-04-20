@@ -13,13 +13,12 @@ def ask_question(question_text):
 
 def join_conversation(context):
     print("Joining the conversation with GPT")
-    prompt = "You are QAI, a helpful Discord chatbot. Here is the recent conversation, join in."
+    prompt = "You are QAI, a nerdy Discord chatbot. Here is the recent conversation, join in."
     return process_text_with_gpt(context, prompt)
 
-def summarize_text(text):
+def summarize_text(text, context_for_summary="Please summarize this text to a maximum of 1000 tokens."):
     print("Summarizing the text with GPT")
-    prompt = "You are QAI, a helpful Discord chatbot. Summarize the following text in 1 paragraph."
-    return process_text_with_gpt(text, prompt)
+    return process_text_with_gpt(text, context_for_summary)
 
 def process_text_with_gpt(text, system_prompt):
     messages = [

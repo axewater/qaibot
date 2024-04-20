@@ -7,7 +7,10 @@ from ..utilities import send_large_message
 from .summarize_url import summarize_text, fetch_website_content, process_text_with_gpt
 from .google_search import perform_web_search
 
+
+
 async def setup(bot):
+    # /QAI command
     @bot.slash_command(name="qai", description="Ask QAI any question... it knows all!")
     async def qai(interaction: discord.Interaction, question: str):
         """Handles the slash command /qai."""
@@ -22,7 +25,8 @@ async def setup(bot):
             await interaction.followup.send(processed_text)
         else:
             await interaction.followup.send("Error: No response received from processing.")
-            
+    
+    # /joinconvo command        
     @bot.slash_command(name="joinconvo", description="Let QAI join the conversation (reads last 15 messages).")
     async def joinconvo(interaction: discord.Interaction):
         """Handles the slash command /joinconvo."""
@@ -35,11 +39,12 @@ async def setup(bot):
 
         processed_text = join_conversation(context)
         if processed_text:
-            await interaction.followup.send(processed_text)
+            await send_large_message(interaction, processed_text)
         else:
             await interaction.followup.send("Error: No response generated.")
             
-    @bot.slash_command(name="summarize", description="QAI will summarize the content of a given URL.")
+    # /summarize command            
+    @bot.slash_command(name="summarize", description="QAI will summarize the content of a given URL.")         
     async def summarize(interaction: discord.Interaction, url: str):
         """Handles the slash command /summarize for a URL."""
         
@@ -57,10 +62,11 @@ async def setup(bot):
             summary = summarize_text(content, context_for_summary=f"Summarize the content at this URL: {url}")
             
             response_message = f"**SUMMARY OF:** {url}\n{summary if summary else 'Failed to generate a summary.'}"
-            await interaction.followup.send(response_message)
+            await send_large_message(interaction, response_message)
         else:
             await interaction.followup.send(f"Could not fetch or process content from the URL: {url}")        
-            
+
+    # /imback command            
     @bot.slash_command(name="imback", description="I was away for a while, what happened while I was gone? Summarize the last 200 messages")
     async def imback(interaction: discord.Interaction):
         """Handles the slash command /imback to summarize the last 200 messages."""
@@ -78,7 +84,6 @@ async def setup(bot):
         summary = summarize_text(context, context_for_summary="Summarize the last 200 messages for context.")
 
         if summary:
-            # If the summary exceeds Discord's 2000-character limit, split into parts
             if len(summary) > 2000:
                 parts = [summary[i:i+2000] for i in range(0, len(summary), 2000)]
                 for part in parts:

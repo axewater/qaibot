@@ -32,7 +32,7 @@ def process_text_with_gpt(text, system_prompt):
         response = client.chat.completions.create(
             messages=messages,
             model="gpt-4-turbo",  # Adjust model as needed
-            max_tokens=2500,
+            max_tokens=4000,
             temperature=0.9
         )
         # print("Received the following response: ", response)

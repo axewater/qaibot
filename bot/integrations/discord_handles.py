@@ -5,6 +5,7 @@ from .openai_chat import ask_question, join_conversation, summarize_text, proces
 from ..utilities import send_large_message
 from .summarize_url import fetch_website_content
 from .google_search import perform_web_search
+from .tweakers_pricewatch import search_tweakers_pricewatch
 
 # Function for processing and responding to the QAI command
 async def handle_qai(interaction: discord.Interaction, question: str):
@@ -51,26 +52,70 @@ async def handle_summarize(interaction: discord.Interaction, url: str):
         await interaction.followup.send(f"Could not fetch or process content from the URL: {url}")
 
 
+# Function for processing and responding to the pricewatch command
+async def handle_pricewatch(interaction: discord.Interaction, component_name: str):
+    await interaction.response.defer()
+    
+    results = search_tweakers_pricewatch(component_name)
+
+    if results:
+        # Create a tabular output
+        headers = ["Component", "Price", "Link"]
+        table_data = [(r["name"], r["price"], r["link"]) for r in results]
+        table = tabulate(table_data, headers=headers, tablefmt="grid")
+
+        await send_large_message(interaction, f"**Search Results for '{component_name}':**\n```\n{table}\n```")
+    else:
+        await interaction.followup.send(f"No results found for '{component_name}'.")
+        
+        
 # Function for processing and responding to the imback command
 async def handle_imback(interaction: discord.Interaction):
     await interaction.response.defer()
 
     channel = interaction.channel
     messages = await channel.history(limit=200).flatten()
-    context = " ".join([msg.content for msg in messages[::-1]])  # Reverse for chronological order
+    context = " ".join([msg.content for msg in messages[::-1]])  # Reverse chronological order
 
-    # Check if context exceeds 4000-token limit
-    if len(context.split()) > 4000:
-        await interaction.followup.send("Too much content to summarize (exceeds token limit).")
-        return
+    # Tokenization count threshold
+    token_limit = 4000
+    words = context.split()
 
-    summary = summarize_text(context, context_for_summary="Summarize the last 200 messages for context.")
+    # If context exceeds the token limit, split into smaller chunks
+    if len(words) > token_limit:
+        print("Context exceeds token limit. Splitting into chunks...")
+        # Split into chunks of 4000 tokens
+        chunk_size = token_limit
+        chunks = [" ".join(words[i:i + chunk_size]) for i in range(0, len(words), chunk_size)]
+        print(f"Split into {len(chunks)} chunks.")
 
-    if summary:
-        await send_large_message(interaction, f"Summary of the last 200 messages:\n{summary}")
+        summaries = []
+
+        # Summarize each chunk
+        for chunk in chunks:
+            summary = summarize_text(chunk)  # Summarize each chunk
+            print(f"Summary of chunk number {chunks.index(chunk) + 1}")
+            summaries.append(summary)
+
+        # Combine the summaries and create a final summary
+        print("Combining summaries...")
+        combined_summary = " ".join(summaries)
+        final_summary = summarize_text(combined_summary)
+        print("Final summary generated.")
+
+        if final_summary:
+            print("Sending final summary of conversation...")
+            await send_large_message(interaction, f"Summary of the last 200 messages:\n{final_summary}")
+        else:
+            await interaction.followup.send("Error: Could not generate a summary.")
     else:
-        await interaction.followup.send("Error: Could not generate a summary.")
+        # If within the token limit, summarize the whole context
+        summary = summarize_text(context)  # Summarize entire context
 
+        if summary:
+            await send_large_message(interaction, f"Summary of the last 200 messages:\n{summary}")
+        else:
+            await interaction.followup.send("Error: Could not generate a summary.")
 
 # Function for processing and responding to the research command
 async def handle_research(interaction: discord.Interaction, topic: str):

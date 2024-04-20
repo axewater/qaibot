@@ -7,6 +7,7 @@ from .discord_handles import (
     handle_summarize,
     handle_imback,
     handle_research,
+    handle_pricewatch,
 )
 
 async def setup(bot):
@@ -29,3 +30,7 @@ async def setup(bot):
     @bot.slash_command(name="research", description="Let QAI research a topic on the web for you.")
     async def research(interaction: discord.Interaction, topic: str):
         await handle_research(interaction, topic)
+        
+    @bot.slash_command(name="pricewatch", description="Search for component prices on Tweakers Pricewatch.")
+    async def pricewatch(interaction: discord.Interaction, component_name: str):
+        await handle_pricewatch(interaction, component_name)

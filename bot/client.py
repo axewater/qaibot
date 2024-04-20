@@ -6,31 +6,24 @@ from .integrations.openai_chat import process_text_with_gpt
 
 intents = Intents.default()
 intents.messages = True
-intents.message_content = True
-client = discord.Client(intents=intents)
+intents.message_content = True  # Ensure message content intent is enabled in your bot's Discord Developer Portal
 
-@client.event
+bot = discord.Bot(command_prefix="!", intents=intents)  # Use discord.Bot for better support of interactions
+
+@bot.event
 async def on_ready():
-    print(f'{client.user} has connected to Discord!')
+    print(f'{bot.user.name} has connected to Discord!')
+    await bot.sync_commands()  # Syncs application commands with Discord, correct method name is sync_commands
 
-    channel = client.get_channel(693239572158480398)
-    
-    if channel:
-        await channel.send("QAI bot initialized and ready to serve your command.")
-    else:
-        print("Error: Channel not found.")
-
-@client.event
-async def on_message(message):
-    if message.author == client.user or not message.content.startswith('/qai '):
-        return
-
-    command_text = message.content[len('/qai '):].strip()
+@bot.slash_command(name="qai", description="Interact with QAI using a specific command")
+async def qai(interaction: discord.Interaction, command_text: str):
+    """Handles the slash command /qai."""
     processed_text = process_text_with_gpt(command_text)
     if processed_text:
-        await message.channel.send(processed_text)
+        await interaction.response.send_message(processed_text)
     else:
-        print("Error: The processed text was none.")
+        await interaction.response.send_message("Error: No response received from processing.")
 
 def run():
-    client.run(DISCORD_TOKEN)
+    bot.run(DISCORD_TOKEN)
+

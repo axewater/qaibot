@@ -7,7 +7,8 @@ from openai import OpenAI
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def process_text_with_gpt(command_text):
-    systemprompt = "You are QAI, a helpful Discord chatbot."
+    print("Processing text with GPT")
+    systemprompt = "You are QAI, a helpful Discord chatbot. Answer questions, or just join the conversation printed."
     messages = [
         {"role": "system", "content": systemprompt},
         {"role": "user", "content": command_text}

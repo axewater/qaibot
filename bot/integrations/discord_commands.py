@@ -65,14 +65,18 @@ async def setup(bot):
     @bot.slash_command(name="research", description="Let QAI research a topic on the web for you.")
     async def research(interaction: discord.Interaction, topic: str):
         await interaction.response.defer()
-        
+
+        # Step 1: Process topic into a refined search query
         await interaction.followup.send("Transforming topic into a search query...")
         refined_query = process_text_with_gpt(topic, "Refine this topic into a web search query:")
         print(f"Refined search query: {refined_query}")
+        
+        # Step 2: Perform web search and fetch summaries
         await interaction.followup.send(f"Searching the web for: {refined_query}...")
         urls = perform_web_search(refined_query)
         print(f"Received URLs from search results: {urls}")
         summaries = []
+        
         for url in urls[:5]:  # Limit to the top 5 results
             await interaction.followup.send(f"Summarizing content from {url}...")
             content = fetch_website_content(url)
@@ -82,14 +86,20 @@ async def setup(bot):
             else:
                 await interaction.followup.send(f"Failed to fetch or summarize content from {url}")
 
+        # Step 3: Handle case when no summaries are found
         if not summaries:
             await interaction.followup.send("Failed to obtain usable summaries from search results.")
             return
 
+        # Step 4: Combine summaries
         combined_summary = " ".join(summaries)
         await interaction.followup.send("Synthesizing the information gathered...")
         print("Combined summary:", combined_summary)
-        final_response = process_text_with_gpt(combined_summary, "Provide a comprehensive answer or summary based on the information provided:")
+
+        # Step 5: Generate the final response with the original question
+        final_prompt = f"Original question: {topic}. Please provide a comprehensive answer or summary based on the information provided: {combined_summary}"
+        final_response = process_text_with_gpt(final_prompt, "Generate a comprehensive response based on the context.")
         print("Final response:", final_response)
 
+        # Step 6: Send final message with original question and response
         await send_large_message(interaction, f"**Original Question:** {topic}\n**Response:**\n{final_response}")

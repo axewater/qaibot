@@ -10,10 +10,10 @@ def perform_web_search(query):
         res = service.cse().list(
             q=query, cx=GOOGLE_CX, num=5
         ).execute()
-        print(f"Received search results from Google API: {res}")
+        # print(f"Received search results from Google API: {res}")
         items = res.get("items", [])
         urls = [item["link"] for item in items]
-        print(f"Received URLs from search results: {urls}")
+        # print(f"Received URLs from search results: {urls}")
         return urls
 
     except Exception as e:

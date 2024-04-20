@@ -9,14 +9,14 @@ from .google_search import perform_web_search
 
 async def setup(bot):
     @bot.slash_command(name="qai", description="Ask QAI any question... it knows all!")
-    async def qai(interaction: discord.Interaction, command_text: str):
+    async def qai(interaction: discord.Interaction, question: str):
         """Handles the slash command /qai."""
         
         
         await interaction.response.defer()
-        print(f"Received question: {command_text}")
+        print(f"Received question: {question}")
         
-        processed_text = ask_question(command_text)
+        processed_text = ask_question(question)
         if processed_text:
             
             await interaction.followup.send(processed_text)
@@ -61,6 +61,53 @@ async def setup(bot):
         else:
             await interaction.followup.send(f"Could not fetch or process content from the URL: {url}")        
             
+    @bot.slash_command(name="imback", description="I was away for a while, what happened while I was gone? Summarize the last 200 messages")
+    async def imback(interaction: discord.Interaction):
+        """Handles the slash command /imback to summarize the last 200 messages."""
+        await interaction.response.defer()
+
+        channel = interaction.channel
+        messages = await channel.history(limit=200).flatten()
+        context = " ".join([msg.content for msg in messages[::-1]])  # Reversing to maintain chronological order
+        
+        # Check if context exceeds 8000-token limit
+        if len(context.split()) > 8000:
+            await interaction.followup.send("Too much content to summarize (exceeds token limit).")
+            return
+        
+        summary = summarize_text(context, context_for_summary="Summarize the last 200 messages for context.")
+
+        if summary:
+            # If the summary exceeds Discord's 2000-character limit, split into parts
+            if len(summary) > 2000:
+                parts = [summary[i:i+2000] for i in range(0, len(summary), 2000)]
+                for part in parts:
+                    await interaction.followup.send(part)
+            else:
+                await interaction.followup.send(f"Summary of the last 200 messages:\n{summary}")
+        else:
+            await interaction.followup.send("Error: Could not generate a summary.")
+
+    async def imback(interaction: discord.Interaction):
+        """Handles the slash command /imback to summarize the last 200 messages."""
+        await interaction.response.defer()
+
+        channel = interaction.channel
+        messages = await channel.history(limit=200).flatten()
+        context = " ".join([msg.content for msg in messages[::-1]])  # Reversing to maintain chronological order
+        
+        # Assuming 8000 tokens limit, check if context exceeds token limit
+        if len(context.split()) > 8000:
+            await interaction.followup.send("Too much content to summarize (exceeds token limit).")
+            return
+
+        summary = summarize_text(context, context_for_summary="Please summarize the last 200 messages.")
+        
+        if summary:
+            await interaction.followup.send(f"Summary of the last 200 messages:\n{summary}")
+        else:
+            await interaction.followup.send("Error: Could not generate a summary.")
+
             
     @bot.slash_command(name="research", description="Let QAI research a topic on the web for you.")
     async def research(interaction: discord.Interaction, topic: str):

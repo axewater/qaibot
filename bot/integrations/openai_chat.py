@@ -6,25 +6,31 @@ from openai import OpenAI
 # Instantiate the OpenAI client with your API key
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-def process_text_with_gpt(command_text):
-    print("Processing text with GPT")
-    systemprompt = "You are QAI, a helpful Discord chatbot. Answer questions, or just join the conversation printed."
+def ask_question(question_text):
+    print("Asking a question to GPT")
+    prompt = "You are QAI, a helpful Discord chatbot. Answer the following question."
+    return process_text_with_gpt(question_text, prompt)
+
+def join_conversation(context):
+    print("Joining the conversation with GPT")
+    prompt = "You are QAI, a helpful Discord chatbot. Here is the recent conversation, join in."
+    return process_text_with_gpt(context, prompt)
+
+def process_text_with_gpt(text, system_prompt):
     messages = [
-        {"role": "system", "content": systemprompt},
-        {"role": "user", "content": command_text}
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": text}
     ]
 
     try:
         print("Sending the following request to OpenAI API: ", messages)
-        # Using the new client method to create chat completions
         response = client.chat.completions.create(
             messages=messages,
-            model="gpt-4-turbo",  # Change this to your preferred model
+            model="gpt-4-turbo",  # Adjust model as needed
             max_tokens=2500,
             temperature=0.9
         )
         print("Received the following response: ", response)
-        # Correctly accessing the response object's attributes
         return response.choices[0].message.content.strip()
     except Exception as e:
         print('Error while calling OpenAI API: ', e)

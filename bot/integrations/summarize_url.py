@@ -23,9 +23,10 @@ def fetch_website_content(url):
         return None
 
 
-def summarize_text(text):
+def summarize_text(text, context_for_summary):
     """Use the LLM to generate a summary based on the extracted text."""
     print("Summarizing the text with GPT")
-    prompt = "Summarize the following text in 1 paragraph. Write the summary in the language of the source text."
-    return process_text_with_gpt(text, prompt)
+    # add the context to the prompt
+    system_prompt = context_for_summary
+    return process_text_with_gpt(text, system_prompt)
 

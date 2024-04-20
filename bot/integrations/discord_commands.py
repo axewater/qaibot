@@ -54,7 +54,7 @@ async def setup(bot):
         await interaction.response.defer()
         content = fetch_website_content(url)
         if content:
-            summary = summarize_text(content)
+            summary = summarize_text(content, context_for_summary=f"Summarize the content at this URL: {url}")
             
             response_message = f"**SUMMARY OF:** {url}\n{summary if summary else 'Failed to generate a summary.'}"
             await interaction.followup.send(response_message)
@@ -66,9 +66,9 @@ async def setup(bot):
     async def research(interaction: discord.Interaction, topic: str):
         await interaction.response.defer()
 
-        # Step 1: Process topic into a refined search query
-        await interaction.followup.send("Transforming topic into a search query...")
-        refined_query = process_text_with_gpt(topic, "Refine this topic into a web search query:")
+        # Step 1: Process topic into a refined search query        
+        await interaction.followup.send(f"Researching the topic: {topic}...")
+        refined_query = process_text_with_gpt(topic, "This is a sentence typed by a human that we need to research online. Refine this topic into an effective web search query. Be careful not to change terminology or the language used. Keep the query in the same language as the original question from the human:")
         print(f"Refined search query: {refined_query}")
         
         # Step 2: Perform web search and fetch summaries
@@ -77,29 +77,34 @@ async def setup(bot):
         print(f"Received URLs from search results: {urls}")
         summaries = []
         
+        # Step 3: Summarize content while avoiding URL previews in Discord
         for url in urls[:5]:  # Limit to the top 5 results
-            await interaction.followup.send(f"Summarizing content from {url}...")
+            # Obfuscate the URL to prevent Discord from creating a preview
+            obfuscated_url = url.replace("http", "hxxp")
+            await interaction.followup.send(f"Summarizing content from {obfuscated_url}...")
             content = fetch_website_content(url)
             if content:
-                summary = summarize_text(content)
+                # Include the original topic to keep the summary in context
+                context_for_summary = f"Original question: {topic}. Please summarize this content in the context of this question."
+                summary = summarize_text(content, context_for_summary)
                 summaries.append(summary)
             else:
-                await interaction.followup.send(f"Failed to fetch or summarize content from {url}")
+                await interaction.followup.send(f"Failed to fetch or summarize content from {obfuscated_url}")
 
-        # Step 3: Handle case when no summaries are found
+        # Step 4: Handle case when no summaries are found
         if not summaries:
             await interaction.followup.send("Failed to obtain usable summaries from search results.")
             return
 
-        # Step 4: Combine summaries
+        # Step 5: Combine summaries
         combined_summary = " ".join(summaries)
         await interaction.followup.send("Synthesizing the information gathered...")
         print("Combined summary:", combined_summary)
 
-        # Step 5: Generate the final response with the original question
-        final_prompt = f"Original question: {topic}. Please provide a comprehensive answer or summary based on the information provided: {combined_summary}"
-        final_response = process_text_with_gpt(final_prompt, "Generate a comprehensive response based on the context.")
+        # Step 6: Generate the final response with the original question and combined summary
+        context_for_final_response = f"Original question: {topic}. {combined_summary}"
+        final_response = process_text_with_gpt(context_for_final_response, "Generate a comprehensive response based on this context.")
         print("Final response:", final_response)
 
-        # Step 6: Send final message with original question and response
+        # Step 7: Send final message with original question and response
         await send_large_message(interaction, f"**Original Question:** {topic}\n**Response:**\n{final_response}")

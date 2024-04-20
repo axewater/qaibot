@@ -2,14 +2,13 @@
 import discord
 from discord.ext import commands
 from discord import Intents
-from .config import DISCORD_TOKEN, OPENAI_API_KEY, GOOGLE_API_KEY, GOOGLE_CX
+from .config import DISCORD_TOKEN, OPENAI_API_KEY, GOOGLE_API_KEY
 from .integrations.openai_chat import ask_question, join_conversation, summarize_text, process_text_with_gpt
 
 import requests
 from bs4 import BeautifulSoup
 import validators
 from urllib.parse import quote_plus
-from googleapiclient.discovery import build
 
 intents = Intents.default()
 intents.messages = True
@@ -88,10 +87,10 @@ async def research(interaction: discord.Interaction, topic: str):
     
     await interaction.followup.send("Transforming topic into a search query...")
     refined_query = process_text_with_gpt(topic, "Refine this topic into a web search query:")
-    print(f"Refined search query: {refined_query}")
+
     await interaction.followup.send(f"Searching the web for: {refined_query}...")
     urls = perform_web_search(refined_query)
-    print(f"Received URLs from search results: {urls}")
+
     summaries = []
     for url in urls[:5]:  # Limit to the top 5 results
         await interaction.followup.send(f"Summarizing content from {url}...")
@@ -108,59 +107,75 @@ async def research(interaction: discord.Interaction, topic: str):
 
     combined_summary = " ".join(summaries)
     await interaction.followup.send("Synthesizing the information gathered...")
-    print("Combined summary:", combined_summary)
     final_response = process_text_with_gpt(combined_summary, "Provide a comprehensive answer or summary based on the information provided:")
-    print("Final response:", final_response)
 
     await interaction.followup.send(f"**Original Question:** {topic}\n**Response:**\n{final_response}")
 
-
-# def perform_web_search(query):
-#     """Performs a web search using DuckDuckGo and returns the top 5 URLs from the search results."""
-#     encoded_query = quote_plus(query)
-#     search_url = f"https://lite.duckduckgo.com/lite/?q={encoded_query}"
-
-#     try:
-#         print(f"Performing web search for: {query}")
-        
-#         response = requests.get(search_url)
-#         response.raise_for_status()  # Will raise an exception for HTTP errors
-#         print(f"Received text response from search engine: {response.text[:100]}")
-#         soup = BeautifulSoup(response.text, 'html.parser')
-#         print("Extracting URLs from search results...")
-#         # This would need to be tailored to the structure of the search results of the chosen engine
-#         links = soup.find_all('a', class_='result__url')
-#         urls = [link['href'] for link in links if validators.url(link['href'])]
-#         return urls[:5]
-#     except Exception as e:
-#         print(f"Failed to perform web search: {e}")
-#         return []
-
-
 def perform_web_search(query):
-    """Performs a web search using the Google Search API and returns the top 5 URLs."""
+    """Performs a web search using DuckDuckGo and returns the top 5 URLs from the search results."""
+    url = "https://lite.duckduckgo.com/lite/"
+    # Prepare the payload by encoding the query into the form data
+    payload = f'q={quote_plus(query)}&kl=&df='
+    headers = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+      'Accept-Language': 'en-US,en;q=0.7,nl;q=0.3',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Referer': 'https://lite.duckduckgo.com/',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Origin': 'https://lite.duckduckgo.com',
+      'DNT': '1',
+      'Connection': 'keep-alive',
+      'Upgrade-Insecure-Requests': '1',
+      'Sec-Fetch-Dest': 'document',
+      'Sec-Fetch-Mode': 'navigate',
+      'Sec-Fetch-Site': 'same-origin',
+      'Sec-Fetch-User': '?1',
+      'Pragma': 'no-cache',
+      'Cache-Control': 'no-cache'
+    }
+
     try:
         print(f"Performing web search for: {query}")
-        service = build("customsearch", "v1", developerKey=GOOGLE_API_KEY)
-        res = service.cse().list(
-            q=query, cx=GOOGLE_CX, num=5
-        ).execute()
-        print(f"Received search results from Google API: {res}")
-        items = res.get("items", [])
-        urls = [item["link"] for item in items]
-        print(f"Received URLs from search results: {urls}")
-        return urls
+        
+        # Send a POST request instead of a GET request
+        response = requests.post(url, headers=headers, data=payload)
+        response.raise_for_status()  # Will raise an exception for HTTP errors
+        print(f"Received text response from search engine: {response.text[:100]}")
 
+        soup = BeautifulSoup(response.text, 'html.parser')
+        print("Extracting URLs from search results...")
+        # This needs to be tailored to the structure of the search results page
+        links = soup.find_all('a', class_='result__url')
+        urls = [link['href'] for link in links if validators.url(link['href'])]
+        return urls[:5]
     except Exception as e:
-        print(f"Failed to perform web search using Google Search API: {e}")
+        print(f"Failed to perform web search: {e}")
         return []
+
+
+# def perform_web_search(query):
+#     """Performs a web search using the Google Search API and returns the top 5 URLs."""
+#     try:
+#         from googleapiclient.discovery import build
+
+#         service = build("customsearch", "v1", developerKey=GOOGLE_API_KEY)
+#         res = service.cse().list(
+#             q=query, cx="YOUR_SEARCH_ENGINE_ID", num=5  # Replace with your Search Engine ID
+#         ).execute()
+#         items = res.get("items", [])
+#         urls = [item["link"] for item in items]
+#         return urls
+
+#     except Exception as e:
+#         print(f"Failed to perform web search using Google Search API: {e}")
+#         return []
 
 
 def fetch_website_content(url):
     """Fetches and cleans website content from a URL."""
     try:
         response = requests.get(url)
-        print(f"Received response from {url}: {response.status_code}")
         response.raise_for_status()  # Will raise an exception for HTTP errors
         soup = BeautifulSoup(response.text, 'html.parser')
 

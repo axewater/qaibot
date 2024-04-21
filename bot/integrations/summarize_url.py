@@ -1,3 +1,4 @@
+# bot/integrations/summarize_url.py
 import requests
 from bs4 import BeautifulSoup
 from bot.integrations.openai_chat import process_text_with_gpt

@@ -75,6 +75,9 @@ async def handle_imback(interaction: discord.Interaction):
 async def handle_research(interaction: discord.Interaction, topic: str):
     await interaction.response.defer()
 
+    # Create an initial progress message
+    progress_message = await interaction.followup.send("Initializing research...")
+
     # Refine the topic into an effective web search query using GPT-3.5
     refined_query = process_text_with_gpt(
         topic,
@@ -82,14 +85,18 @@ async def handle_research(interaction: discord.Interaction, topic: str):
         gpt_version=3
     )
 
-    await interaction.followup.send(f"Researching the topic: {refined_query}...")
+    # Update progress message
+    await progress_message.edit(content=f"Refined query: {refined_query}...")
 
-    # Perform a web search and summarize each website individually
+    # Perform a web search and get the actual number of results
     urls = perform_web_search(refined_query)
 
+    # Limit processing to the top 10 results but display the correct progress
+    total_results = len(urls)  # Determine total count
     all_summaries = []
-    # Summarize each website one at a time
-    for idx, url in enumerate(urls[:10], start=1):  # Limit to the top 10 results
+
+    # Summarize each website one at a time with accurate progress indication
+    for idx, url in enumerate(urls[:10], start=1):
         content = fetch_website_content(url)
 
         if content:
@@ -98,15 +105,15 @@ async def handle_research(interaction: discord.Interaction, topic: str):
 
             if summary:
                 all_summaries.append(summary)
-                # Optional: send progress updates to the channel without displaying summarizations
-                await interaction.followup.send(f"Summarized website {idx}/{len(urls[:10])}.")
+                # Update progress in a single message
+                await progress_message.edit(content=f"Summarized website {idx}/{total_results}.")
             else:
-                await interaction.followup.send(f"Failed to summarize content from website {idx}.")
+                await progress_message.edit(content=f"Failed to summarize content from website {idx}/{total_results}.")
         else:
-            await interaction.followup.send(f"Failed to fetch content from website {idx}.")
+            await progress_message.edit(content=f"Failed to fetch content from website {idx}/{total_results}.")
 
     if not all_summaries:
-        await interaction.followup.send("Failed to obtain usable summaries from search results.")
+        await progress_message.edit(content="Failed to obtain usable summaries from search results.")
         return
 
     # Combine individual summaries and generate a final comprehensive response using GPT-4
@@ -117,6 +124,8 @@ async def handle_research(interaction: discord.Interaction, topic: str):
         "Generate a comprehensive response based on this context.",
         gpt_version=4
     )
+
+    await progress_message.edit(content="Research complete, generating response...")
 
     await send_large_message(interaction, f"**Original Question:** {topic}\n**Response:**\n{final_response}")
 

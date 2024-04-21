@@ -32,7 +32,7 @@ def search_tweakers_pricewatch(component_name):
             
             # Extract the product link from 'href'
             link = name_element["href"] if "href" in name_element.attrs else "#"
-            full_link = f"https://tweakers.net{link}"  # Ensure absolute URL
+            full_link = f"https://tweakers.net{link}" 
             
             results.append({
                 "name": name,

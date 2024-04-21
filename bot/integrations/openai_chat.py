@@ -7,36 +7,41 @@ from openai import OpenAI
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def ask_question(question_text):
-    print("Asking a question to GPT")
-    prompt = "You are QAI, a helpful Discord chatbot. Answer the following question."
-    return process_text_with_gpt(question_text, prompt)
+    print("Asking a question to GPT4")
+    prompt = "You are QAI, a helpful Discord chatbot. Answer the following question. Answer in the language of the question."
+    return process_text_with_gpt(question_text, prompt, gpt_version=4)
 
 def join_conversation(context):
-    print("Joining the conversation with GPT")
-    prompt = "You are QAI, a nerdy Discord chatbot. Here is the recent conversation, join in."
-    return process_text_with_gpt(context, prompt)
+    print("Joining the conversation with GPT4")
+    prompt = "You are QAI, a nerdy Discord chatbot. Here is the recent conversation, join in using the language of the conversation."
+    return process_text_with_gpt(context, prompt, gpt_version=4)
 
-def summarize_text(text, context_for_summary="Please summarize this text to a maximum of 1000 tokens."):
-    print("Summarizing the text with GPT")
-    return process_text_with_gpt(text, context_for_summary)
+def summarize_text(text, context_for_summary="Please summarize this text to a maximum of 750 tokens. Retain the source language of the material"):
+    print("Summarizing the text with GPT3")
+    return process_text_with_gpt(text, context_for_summary, gpt_version=3)
 
-def process_text_with_gpt(text, system_prompt):
+def process_text_with_gpt(text, system_prompt, gpt_version):
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": text}
     ]
 
+    gpt_version_map = {
+        4: "gpt-4-turbo",
+        3: "gpt-3.5-turbo"
+    }
+
+    model = gpt_version_map.get(gpt_version, "gpt-3.5-turbo")
+    
     try:
-        # print("Sending the following request to OpenAI API: ", messages)
         response = client.chat.completions.create(
             messages=messages,
-            model="gpt-4-turbo",  # Adjust model as needed
+            model=model,
             max_tokens=4000,
             temperature=0.9
         )
-        # print("Received the following response: ", response)
         return response.choices[0].message.content.strip()
     except Exception as e:
-        print('Error while calling OpenAI API: ', e)
+        print("Error while calling OpenAI API:", e)
         print(traceback.format_exc())
         return None

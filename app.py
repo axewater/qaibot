@@ -1,4 +1,4 @@
-# main.py
+# app.py
 from bot.client import run
 
 if __name__ == "__main__":

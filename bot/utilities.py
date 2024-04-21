@@ -1,3 +1,4 @@
+# bot/utilities.py
 from .integrations.openai_chat import summarize_text
 import tiktoken
 

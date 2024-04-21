@@ -1,3 +1,5 @@
+# bot/integrations/google_search.py
+
 from ..config import GOOGLE_API_KEY, GOOGLE_CX
 from googleapiclient.discovery import build
 

@@ -8,15 +8,15 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def ask_question(question_text):
     print("Asking a question to GPT4")
-    prompt = "You are QAI, a helpful Discord chatbot. Answer the following question. Answer in the language of the question."
+    prompt = "You are QAI, a helpful Discord chatbot. Answer the following question. Do not translate any language to english. RETAIN THE LANGUAGE OF THE PROVIDED TEXT. Limit your output to 1000 characters."
     return process_text_with_gpt(question_text, prompt, gpt_version=4)
 
 def join_conversation(context):
     print("Joining the conversation with GPT4")
-    prompt = "You are QAI, a nerdy Discord chatbot. Here is the recent conversation, join in using the language of the conversation."
+    prompt = "You are QAI, a nerdy Discord chatbot. Here is the recent conversation, join in using the language of the conversation. Write a reply like a human. Limit your output to 200 characters."
     return process_text_with_gpt(context, prompt, gpt_version=4)
 
-def summarize_text(text, context_for_summary="Please summarize this text to a maximum of 750 tokens. Retain the source language of the material"):
+def summarize_text(text, context_for_summary="Please summarize this text to a maximum of 500 tokens. The text may be a snippet of a larger document, if all you see if a list of data, try to summarize the most essential part of the data, retaining its structure (data pairs) .Retain the source language of the material (NEVER TRANSLATE!)"):
     print("Summarizing the text with GPT3")
     return process_text_with_gpt(text, context_for_summary, gpt_version=3)
 

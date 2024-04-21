@@ -34,26 +34,6 @@ async def handle_joinconvo(interaction: discord.Interaction):
         await interaction.followup.send("Error: No response generated.")
 
 
-# Function for processing and responding to the summarize command
-async def handle_summarize(interaction: discord.Interaction, url: str):
-    await interaction.response.defer()
-
-    if not url.startswith(("http://", "https://")):
-        url = "http://" + url
-
-    if not validators.url(url):
-        await interaction.followup.send("The provided string is not a valid URL.")
-        return
-
-    content = fetch_website_content(url)
-    if content:
-        summary = summarize_text(content, context_for_summary=f"Summarize the content at this URL: {url}")
-        response_message = f"**SUMMARY OF:** {url}\n{summary if summary else 'Failed to generate a summary.'}"
-        await send_large_message(interaction, response_message)
-    else:
-        await interaction.followup.send(f"Could not fetch or process content from the URL: {url}")
-
-
 # Function for processing and responding to the pricewatch command
 async def handle_pricewatch(interaction: discord.Interaction, component_name: str):
     await interaction.response.defer()
@@ -119,39 +99,116 @@ async def handle_imback(interaction: discord.Interaction):
         else:
             await interaction.followup.send("Error: Could not generate a summary.")
 
-
 # Function for processing and responding to the research command
 async def handle_research(interaction: discord.Interaction, topic: str):
     await interaction.response.defer()
 
-    await interaction.followup.send(f"Researching the topic: {topic}...")
+    # Refine the topic into an effective web search query using GPT-3.5
     refined_query = process_text_with_gpt(
         topic,
-        "This is a sentence typed by a human that we need to research online. Refine this topic into an effective web search query. Retain the source language of question",
+        "This is a sentence typed by a human that we need to research online. Refine this topic into an effective web search query.",
         gpt_version=3
     )
+
+    await interaction.followup.send(f"Researching the topic: {refined_query}...")
+
+    # Perform a web search and summarize each website individually
     urls = perform_web_search(refined_query)
 
-    summaries = []
-    for url in urls[:5]:  # Limit to the top 5 results
+    all_summaries = []
+    for url in urls[:15]:  # Limit to the top 15 results
         obfuscated_url = url.replace("http", "hxxp")
         content = fetch_website_content(url)
+
         if content:
-            context_for_summary = f"Original question: {topic}. Please summarize this content in the context of this question. Retain the source language of the material."
-            summary = summarize_text(content, context_for_summary)
-            summaries.append(summary)
+            # Split and summarize content if it exceeds the token limit
+            token_limit = 4000
+            words = content.split()
+
+            if len(words) > token_limit:
+                # Split into chunks and summarize each separately
+                chunk_size = token_limit
+                chunks = [" ".join(words[i:i + chunk_size]) for i in range(0, len(words), chunk_size)]
+                summaries = []
+
+                for chunk in chunks:
+                    summary = summarize_text(
+                        chunk,
+                        context_for_summary=f"Original question: {topic}. Summarize this content in the context of this question."
+                    )
+                    summaries.append(summary)
+                
+                # Combine the summaries of chunks into one summary per content
+                combined_summary = " ".join(summaries)
+                all_summaries.append(combined_summary)
+            else:
+                # Summarize content directly if it is within the token limit
+                summary = summarize_text(
+                    content,
+                    context_for_summary=f"Original question: {topic}. Summarize this content in the context of this question."
+                )
+                all_summaries.append(summary)
         else:
             await interaction.followup.send(f"Failed to fetch or summarize content from {obfuscated_url}")
 
-    if not summaries:
+    if not all_summaries:
         await interaction.followup.send("Failed to obtain usable summaries from search results.")
         return
 
-    combined_summary = " ".join(summaries)
-    context_for_final_response = f"Original question: {topic}. {combined_summary}"
+    # Combine individual summaries and generate a final comprehensive response using GPT-4
+    final_combined_summary = " ".join(all_summaries)
+    context_for_final_response = f"Original question: {topic}. {final_combined_summary}"
     final_response = process_text_with_gpt(
         context_for_final_response,
-        "Generate a comprehensive response based on this context. Include relevant information and insights. Limit output to about 2000 characters.",
-        gpt_version=4  # GPT-4 for complex responses
+        "Generate a comprehensive response based on this context. Answer the question in detail, but limit your output to about 500 tokens.",
+        gpt_version=4
     )
+
     await send_large_message(interaction, f"**Original Question:** {topic}\n**Response:**\n{final_response}")
+
+
+
+# Function for processing and responding to the summarize command
+async def handle_summarize(interaction: discord.Interaction, url: str):
+    await interaction.response.defer()
+
+    if not url.startswith(("http://", "https://")):
+        url = "http://" + url
+
+    if not validators.url(url):
+        await interaction.followup.send("The provided string is not a valid URL.")
+        return
+
+    content = fetch_website_content(url)
+
+    if content:
+        token_limit = 4000
+        words = content.split()
+
+        if len(words) > token_limit:
+            # Split into chunks and summarize each separately
+            chunk_size = token_limit
+            chunks = [" ".join(words[i:i + chunk_size]) for i in range(0, len(words), chunk_size)]
+
+            summaries = []
+            for chunk in chunks:
+                summary = summarize_text(chunk, context_for_summary=f"Summarize this part of the content.")
+                summaries.append(summary)
+
+            combined_summary = " ".join(summaries)
+            final_summary = summarize_text(
+                combined_summary,
+                context_for_summary=f"Generate a final summary from the individual summaries.",
+                gpt_version=3
+            )
+
+            response_message = f"**SUMMARY OF:** {url}\n{final_summary}"
+            await send_large_message(interaction, response_message)
+        else:
+            # Content within token limit, direct summary
+            summary = summarize_text(content, context_for_summary=f"Summarize the content at this URL: {url}")
+            response_message = f"**SUMMARY OF:** {url}\n{summary if summary else 'Failed to generate a summary.'}"
+            await send_large_message(interaction, response_message)
+    else:
+        await interaction.followup.send(f"Could not fetch or process content from the URL: {url}")
+

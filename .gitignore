@@ -5,6 +5,6 @@
 __pycache__/*
 __pycache__/
 __pycache__
-/bot/intengrations/__pycache__/*
+/bot/integrations/__pycache__/*
 /bot/commands/__pycache__/*
 /bot/__pycache__/*

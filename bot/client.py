@@ -2,7 +2,7 @@
 import discord
 from discord.ext import commands
 from discord import Intents
-from .config import DISCORD_TOKEN
+from .config import DISCORD_TOKEN, QAI_VERSION
 from .integrations import discord_commands
 
 intents = Intents.default()
@@ -14,8 +14,11 @@ bot = discord.Bot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
-    print(f'{bot.user.name} has connected to Discord!')
+    print(f'{bot.user.name} Qai version {QAI_VERSION} is ready to go!')
     await discord_commands.setup(bot)
+    print("Registering commands. This may take a few seconds.")
+    print("If this seems *stuck* connecting, you may be throttled by Discord.")
+    print("This can happen when you restart your bot too much.")
     await bot.sync_commands()
     print("Registered commands:")
     for command in bot.commands:

@@ -1,3 +1,4 @@
+# bot/commands/research.py
 import discord
 import validators
 from ..utilities import send_large_message, summarize_content
@@ -18,7 +19,7 @@ async def handle_research(interaction: discord.Interaction, topic: str):
     # Refine the topic into an effective web search query using GPT-3.5
     refined_query = process_text_with_gpt(
         topic,
-        "This is a sentence typed by a human that we need to research online. Refine this topic into an effective web search query without translating to English.",
+        "This is a sentence typed by a human that we need to research online. Refine this topic into an effective web search query without translating to another language. Keep English in English, Dutch in Dutch. etc.",
         gpt_version=3
     )
 

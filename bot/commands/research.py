@@ -2,46 +2,15 @@
 import discord
 import os
 from ..utilities import send_large_message, summarize_content
-
 from ..integrations.openai_chat import process_text_with_gpt
 from ..integrations.google_search import perform_web_search
 from ..integrations.summarize_url import fetch_website_content
+from .blacklist import load_blacklist
 import json
 
-# Function to load the blacklist and handle errors
-def load_blacklist(blacklist_filename):
-    """Loads the blacklist from a JSON file, with error handling."""
-    # Get the current script directory
-    script_directory = os.path.dirname(os.path.abspath(__file__))
-    
-    # Construct the full path to the blacklist file
-    blacklist_file_path = os.path.join(script_directory, blacklist_filename)
-    
-    if not os.path.exists(blacklist_file_path):
-        print(f"Blacklist file '{blacklist_file_path}' does not exist.")
-        return []  # Return an empty list if the file doesn't exist
-
-    if not os.path.isfile(blacklist_file_path):
-        print(f"'{blacklist_file_path}' is not a valid file.")
-        return []  # Return an empty list if it's not a valid file
-
-    try:
-        with open(blacklist_file_path, 'r') as f:
-            blacklist = json.load(f)
-            if not isinstance(blacklist, list):
-                print("Blacklist file content is not a list.")
-                return []  # Ensure the content is a list
-            print(f"Loaded {len(blacklist)} URLs from the blacklist.")
-            return blacklist
-    except json.JSONDecodeError:
-        print(f"Blacklist file '{blacklist_file_path}' contains invalid JSON.")
-        return []  # Return empty if there's a JSON error
-    except Exception as e:
-        print(f"An error occurred while loading the blacklist: {e}")
-        return []  # General exception handling
+MAX_SUMMARIES = 10
 
 
-# Function for processing and responding to the research command
 async def handle_research(interaction: discord.Interaction, topic: str):
     await interaction.response.defer()
 
@@ -54,7 +23,7 @@ async def handle_research(interaction: discord.Interaction, topic: str):
     # Refine the topic into an effective web search query using GPT-3.5
     refined_query = process_text_with_gpt(
         topic,
-        "This is a sentence typed by a human that we need to research online. Refine this topic into an effective web search query without translating to another language. Keep English in English, Dutch in Dutch. etc.",
+        "This is a sentence typed by a human that we need to research online. Refine this topic into an effective web search query without translating to another language. Keep English in English, keep Dutch in Dutch. etc.",
         gpt_version=3
     )
 
@@ -71,7 +40,7 @@ async def handle_research(interaction: discord.Interaction, topic: str):
     all_summaries = []
 
     # Summarize each website one at a time
-    for idx, url in enumerate(urls[:10], start=1):
+    for idx, url in enumerate(urls[:MAX_SUMMARIES], start=1):
         content = fetch_website_content(url)
 
         if content:
@@ -88,10 +57,10 @@ async def handle_research(interaction: discord.Interaction, topic: str):
 
     if not all_summaries:
         # If less than 10 URLs are successfully processed, perform another search
-        if len(all_summaries) < 10:
+        if len(all_summaries) < MAX_SUMMARIES:
             urls = perform_web_search(refined_query, start_index=len(urls)+1)
             # Repeat the summarization process for new URLs
-            for idx, url in enumerate(urls[:10], start=1):
+            for idx, url in enumerate(urls[:MAX_SUMMARIES], start=1):
                 content = fetch_website_content(url)
 
                 if content:

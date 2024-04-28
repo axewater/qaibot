@@ -13,7 +13,7 @@ def perform_web_search(query, start_index=1):
         res = service.cse().list(
             q=query, cx=GOOGLE_CX, num=5, start=start_index
         ).execute()
-        print(f"Received search results from Google API: {res}")
+        print(f"Received search results from Google API...")
         items = res.get("items", [])
         urls = [item["link"] for item in items]
         print(f"perform_web_search: Received URLs from search results: {urls}")

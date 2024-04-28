@@ -1,6 +1,7 @@
 # bot\integrations\discord_commands.py
 import discord
 from discord.ext import commands
+from discord import Option
 from ..commands.qai import handle_qai
 from ..commands.joinconvo import handle_joinconvo
 from ..commands.pricewatch import handle_pricewatch
@@ -27,8 +28,10 @@ async def setup(bot):
         await handle_imback(interaction)
 
     @bot.slash_command(name="qresearch", description="Let QAI research a topic on the web for you.")
-    async def research(interaction: discord.Interaction, topic: str):
-        await handle_research(interaction, topic)
+    async def research(interaction: discord.Interaction, 
+                       topic: str = Option(str, description="Enter the topic you want to research."), 
+                       depth: str = Option(str, default='normal', description="Specify the depth of research: 'quick', 'normal', or 'deep'.")):
+        await handle_research(interaction, topic, depth)
 
     @bot.slash_command(name="qpricewatch", description="Search for component prices on Tweakers Pricewatch.")
     async def pricewatch(interaction: discord.Interaction, component_name: str):

@@ -10,6 +10,9 @@ Qaibot supports the following commands:
 /imback, I was away for a while, what happened while I was gone? Summarize the last 200 messages.
 /pricewatch, Search for component prices on Tweakers Pricewatch.
 /research, Let QAI research a topic on the web for you.
+research takes 2 parameters :
+    TOPIC : the topic to research
+    DEPTH : quick, normal, deep
 
 Research is probably the coolest option. It searches the web, summarizes websites and uses them as context to answer the research question.
 

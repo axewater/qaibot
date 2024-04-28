@@ -14,7 +14,7 @@ bot = discord.Bot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
-    print(f'{bot.user.name} Qai version {QAI_VERSION} is ready to go!')
+    print(f'{bot.user.name} version {QAI_VERSION} is ready to go!')
     await discord_commands.setup(bot)
     print("Registering commands. This may take a few seconds.")
     print("If this seems *stuck* connecting, you may be throttled by Discord.")

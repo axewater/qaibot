@@ -16,7 +16,7 @@ async def handle_pricewatch(interaction: discord.Interaction, component_name: st
             name = result["name"]
             price = result["price"]
             link = result["link"]
-            formatted_results.append(f"**{name}**: {price} - [Link]({link})")
+            formatted_results.append(f"**{name}**: {price} - <{link}>")  # Wrap the link in < >
 
         # Join the formatted results into a single message
         message = "\n".join(formatted_results)

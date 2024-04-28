@@ -6,7 +6,7 @@ from ..utilities import send_large_message
 from ..integrations.summarize_url import fetch_website_content
 from ..utilities import summarize_content
 
-async def handle_summarize(interaction: discord.Interaction, url: str):
+async def  handle_summarize(interaction: discord.Interaction, url: str):
     await interaction.response.defer()
 
     if not url.startswith(("http://", "https://")):

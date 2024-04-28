@@ -17,7 +17,6 @@ async def handle_research(interaction: discord.Interaction, topic: str, depth: s
 
     depth_mapping = {'quick': 3, 'normal': 10, 'deep': 25}
     max_summaries = depth_mapping.get(depth, 10)
-    # print how many times we will loop through the search
     print(f"handle_research: Will loop through search {max_summaries} times.")
     blacklist_filename = 'blacklist_urls.json'
     blacklist = load_blacklist(blacklist_filename)
@@ -27,19 +26,17 @@ async def handle_research(interaction: discord.Interaction, topic: str, depth: s
         "This is a sentence typed by a human that we need to research online. Refine this topic into an effective web search query without translating to another language. Keep English in English, keep Dutch in Dutch. etc.",
         gpt_version=3
     )
-    # print the query and the search depth for debugging purposes
     print(f"handle_research: Searching for '{refined_query}' with depth '{depth}'")
     await progress_message.edit(content=f"Researching the topic: {refined_query}...")
 
-    urls = perform_web_search(refined_query)
+    urls = perform_web_search(refined_query, max_results=max_summaries)
 
     urls = [url for url in urls if url not in blacklist]
 
     total_results = len(urls)
     all_summaries = []
 
-    for idx, url in enumerate(urls[:max_summaries], start=1):
-        # print progress here within the loop
+    for idx, url in enumerate(urls, start=1):
         print(f"handle_research: Processing website {idx}/{max_summaries}...")
         content = fetch_website_content(url)
 
@@ -56,28 +53,9 @@ async def handle_research(interaction: discord.Interaction, topic: str, depth: s
             await progress_message.edit(content=f"Failed to fetch content from website {idx}/{max_summaries}.")
 
     if not all_summaries:
-        if len(all_summaries) < max_summaries:
-            urls = perform_web_search(refined_query, start_index=len(urls)+1)
-            for idx, url in enumerate(urls[:max_summaries], start=1):
-                content = fetch_website_content(url)
-
-                if content:
-                    context_for_summary = f"Original question: {topic}. Summarize this content in the context of this question."
-                    summary = await summarize_content(content, context_for_summary)
-
-                    if summary:
-                        all_summaries.append(summary)
-                        await progress_message.edit(content=f"Summarized website {idx}/{max_summaries}.")
-                    else:
-                        await progress_message.edit(content=f"Failed to summarize website {idx}/{max_summaries}.")
-                else:
-                    await progress_message.edit(content=f"Failed to fetch content from website {idx}/{max_summaries}.")
-
-    if not all_summaries:
         await progress_message.edit(content="Failed to obtain usable summaries from search results.")
         return
 
-    # print clear progress messages along the way here:
     print("Web search complete, processing summaries...")
     final_combined_summary = " ".join(all_summaries)
     print("Summaries processed, generating final response...")

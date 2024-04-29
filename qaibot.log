@@ -1,0 +1,114 @@
+2024-04-29 20:50:17,437:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-04-29 20:50:17,437:INFO:logging in using static token
+2024-04-29 20:50:17,920:INFO:Shard ID None has sent the IDENTIFY payload.
+2024-04-29 20:50:18,090:INFO:Shard ID None has connected to Gateway: ["gateway-prd-us-east1-b-0v4f",{"micros":60152,"calls":["id_created",{"micros":965,"calls":[]},"session_lookup_time",{"micros":303,"calls":[]},"session_lookup_finished",{"micros":18,"calls":[]},"discord-sessions-prd-1-1",{"micros":58555,"calls":["start_session",{"micros":40927,"calls":["discord-api-rpc-7bffbb9cb8-p2hhv",{"micros":36728,"calls":["get_user",{"micros":6279},"get_guilds",{"micros":2964},"send_scheduled_deletion_message",{"micros":7},"guild_join_requests",{"micros":1},"authorized_ip_coro",{"micros":7}]}]},"starting_guild_connect",{"micros":66,"calls":[]},"presence_started",{"micros":862,"calls":[]},"guilds_started",{"micros":162,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":16504,"calls":[]},"connect_finished",{"micros":16510,"calls":[]},"build_ready",{"micros":21,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: 1ee303ca02cbaf6cea76c4c14df23815).
+2024-04-29 20:50:20,115:INFO:QAI2 version 1.0.1 is ready to go!
+2024-04-29 20:50:20,116:INFO:Registering commands. This may take a few seconds.
+2024-04-29 20:50:20,116:INFO:If this seems *stuck* connecting, you may be throttled by Discord.
+2024-04-29 20:50:20,836:INFO:Registered commands:
+2024-04-29 20:50:20,836:INFO:- qqai
+2024-04-29 20:50:20,836:INFO:- qjoinconvo
+2024-04-29 20:50:20,836:INFO:- qsummarize
+2024-04-29 20:50:20,836:INFO:- qimback
+2024-04-29 20:50:20,836:INFO:- qresearch
+2024-04-29 20:50:20,836:INFO:- qpricewatch
+2024-04-29 20:50:33,847:INFO:Received signal to terminate bot and event loop.
+2024-04-29 20:50:33,847:INFO:Cleaning up tasks.
+2024-04-29 20:50:33,847:INFO:Cleaning up after 1 tasks.
+2024-04-29 20:50:33,849:INFO:All tasks finished cancelling.
+2024-04-29 20:50:33,849:INFO:Closing the event loop.
+2024-04-29 21:06:32,467:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-04-29 21:06:32,467:INFO:logging in using static token
+2024-04-29 21:06:32,912:INFO:Shard ID None has sent the IDENTIFY payload.
+2024-04-29 21:06:33,108:INFO:Shard ID None has connected to Gateway: ["gateway-prd-us-east1-b-0zpk",{"micros":87962,"calls":["id_created",{"micros":767,"calls":[]},"session_lookup_time",{"micros":229,"calls":[]},"session_lookup_finished",{"micros":24,"calls":[]},"discord-sessions-prd-1-220",{"micros":86652,"calls":["start_session",{"micros":65365,"calls":["discord-api-rpc-7bffbb9cb8-hhw88",{"micros":59445,"calls":["get_user",{"micros":9586},"get_guilds",{"micros":7062},"send_scheduled_deletion_message",{"micros":10},"guild_join_requests",{"micros":2},"authorized_ip_coro",{"micros":10}]}]},"starting_guild_connect",{"micros":73,"calls":[]},"presence_started",{"micros":6375,"calls":[]},"guilds_started",{"micros":153,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":14655,"calls":[]},"connect_finished",{"micros":14661,"calls":[]},"build_ready",{"micros":20,"calls":[]},"clean_ready",{"micros":0,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: 5af25773c5fff6b80193acb02d1749a6).
+2024-04-29 21:06:35,122:INFO:QAI2 version 1.0.1 started
+2024-04-29 21:06:36,239:INFO:- qqai
+2024-04-29 21:06:36,240:INFO:- qjoinconvo
+2024-04-29 21:06:36,240:INFO:- qsummarize
+2024-04-29 21:06:36,240:INFO:- qimback
+2024-04-29 21:06:36,240:INFO:- qresearch
+2024-04-29 21:06:36,240:INFO:- qpricewatch
+2024-04-29 21:07:34,624:INFO:Received signal to terminate bot and event loop.
+2024-04-29 21:07:34,625:INFO:Cleaning up tasks.
+2024-04-29 21:07:34,625:INFO:Cleaning up after 1 tasks.
+2024-04-29 21:07:34,625:INFO:All tasks finished cancelling.
+2024-04-29 21:07:34,625:INFO:Closing the event loop.
+2024-04-29 21:07:36,834:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-04-29 21:07:36,834:INFO:logging in using static token
+2024-04-29 21:07:37,216:INFO:Shard ID None has sent the IDENTIFY payload.
+2024-04-29 21:07:37,430:INFO:Shard ID None has connected to Gateway: ["gateway-prd-us-east1-d-h7kz",{"micros":106301,"calls":["id_created",{"micros":1366,"calls":[]},"session_lookup_time",{"micros":2292,"calls":[]},"session_lookup_finished",{"micros":15,"calls":[]},"discord-sessions-prd-1-63",{"micros":102297,"calls":["start_session",{"micros":65800,"calls":["discord-api-rpc-7bffbb9cb8-9th7s",{"micros":59834,"calls":["get_user",{"micros":11499},"get_guilds",{"micros":3472},"send_scheduled_deletion_message",{"micros":7},"guild_join_requests",{"micros":182},"authorized_ip_coro",{"micros":9}]}]},"starting_guild_connect",{"micros":77,"calls":[]},"presence_started",{"micros":19666,"calls":[]},"guilds_started",{"micros":133,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":16585,"calls":[]},"connect_finished",{"micros":16592,"calls":[]},"build_ready",{"micros":23,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: ca5a85d2a54def6c4aeffaa52e25fa28).
+2024-04-29 21:07:39,450:INFO:QAI2 version 1.0.1 
+2024-04-29 21:07:41,062:INFO:- qqai
+2024-04-29 21:07:41,062:INFO:- qjoinconvo
+2024-04-29 21:07:41,062:INFO:- qsummarize
+2024-04-29 21:07:41,062:INFO:- qimback
+2024-04-29 21:07:41,062:INFO:- qresearch
+2024-04-29 21:07:41,062:INFO:- qpricewatch
+2024-04-29 21:09:40,462:INFO:Received signal to terminate bot and event loop.
+2024-04-29 21:09:40,462:INFO:Cleaning up tasks.
+2024-04-29 21:09:40,462:INFO:Cleaning up after 1 tasks.
+2024-04-29 21:09:40,463:INFO:All tasks finished cancelling.
+2024-04-29 21:09:40,463:INFO:Closing the event loop.
+2024-04-29 21:09:41,962:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-04-29 21:09:41,962:INFO:logging in using static token
+2024-04-29 21:09:42,357:INFO:Shard ID None has sent the IDENTIFY payload.
+2024-04-29 21:09:42,546:INFO:Shard ID None has connected to Gateway: ["gateway-prd-us-east1-b-x8kh",{"micros":86079,"calls":["id_created",{"micros":891,"calls":[]},"session_lookup_time",{"micros":299,"calls":[]},"session_lookup_finished",{"micros":10,"calls":[]},"discord-sessions-prd-1-181",{"micros":84574,"calls":["start_session",{"micros":73927,"calls":["discord-api-continuous-canary-rpc-7bd46c96c6-gdbbb",{"micros":67711,"calls":["get_user",{"micros":11883},"get_guilds",{"micros":7329},"send_scheduled_deletion_message",{"micros":6},"guild_join_requests",{"micros":2},"authorized_ip_coro",{"micros":8}]}]},"starting_guild_connect",{"micros":55,"calls":[]},"presence_started",{"micros":310,"calls":[]},"guilds_started",{"micros":162,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":10090,"calls":[]},"connect_finished",{"micros":10095,"calls":[]},"build_ready",{"micros":19,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: bce5b7371ec85fa329cd14c1bb530bf9).
+2024-04-29 21:09:44,551:INFO:QAI2 version 1.0.1 
+2024-04-29 21:09:45,338:INFO:- qqai
+2024-04-29 21:09:45,338:INFO:- qjoinconvo
+2024-04-29 21:09:45,338:INFO:- qsummarize
+2024-04-29 21:09:45,338:INFO:- qimback
+2024-04-29 21:09:45,339:INFO:- qresearch
+2024-04-29 21:09:45,339:INFO:- qpricewatch
+2024-04-29 21:11:19,551:INFO:Pricewatch command called with component name: atari 800
+2024-04-29 21:18:35,076:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-04-29 21:18:35,077:INFO:logging in using static token
+2024-04-29 21:18:35,441:INFO:Shard ID None has sent the IDENTIFY payload.
+2024-04-29 21:18:35,714:INFO:Shard ID None has connected to Gateway: ["gateway-prd-us-east1-d-v8sq",{"micros":169854,"calls":["id_created",{"micros":1235,"calls":[]},"session_lookup_time",{"micros":446,"calls":[]},"session_lookup_finished",{"micros":15,"calls":[]},"discord-sessions-prd-1-180",{"micros":167757,"calls":["start_session",{"micros":139176,"calls":["discord-api-rpc-7bffbb9cb8-dv9x4",{"micros":110315,"calls":["get_user",{"micros":10471},"get_guilds",{"micros":8284},"send_scheduled_deletion_message",{"micros":13},"guild_join_requests",{"micros":2},"authorized_ip_coro",{"micros":9}]}]},"starting_guild_connect",{"micros":71,"calls":[]},"presence_started",{"micros":389,"calls":[]},"guilds_started",{"micros":148,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":27942,"calls":[]},"connect_finished",{"micros":27948,"calls":[]},"build_ready",{"micros":17,"calls":[]},"clean_ready",{"micros":0,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":3,"calls":[]}]}]}] (Session ID: 0f8a09273831cb7b19dbc0baa3f63991).
+2024-04-29 21:18:37,769:INFO:QAI2 version 1.0.1 
+2024-04-29 21:18:38,621:INFO:- qqai
+2024-04-29 21:18:38,621:INFO:- qjoinconvo
+2024-04-29 21:18:38,621:INFO:- qsummarize
+2024-04-29 21:18:38,621:INFO:- qimback
+2024-04-29 21:18:38,621:INFO:- qresearch
+2024-04-29 21:18:38,621:INFO:- qpricewatch
+2024-04-29 21:19:03,368:INFO:Pricewatch command called with component name: atari
+2024-04-29 21:19:03,796:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:03,796:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:03,797:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:03,797:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:03,797:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:03,797:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:03,797:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:03,798:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:03,798:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:03,798:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:03,798:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:03,798:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:03,798:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:03,799:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:03,799:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:03,799:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:03,799:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:03,799:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:03,799:WARNING:Missing essential elements in result for atari
+2024-04-29 21:19:11,192:INFO:Pricewatch command called with component name: atari 800
+2024-04-29 21:19:11,608:ERROR:Failed to fetch data from Tweakers Pricewatch for atari 800
+2024-04-29 21:22:56,011:INFO:Received signal to terminate bot and event loop.
+2024-04-29 21:22:56,011:INFO:Cleaning up tasks.
+2024-04-29 21:22:56,011:INFO:Cleaning up after 1 tasks.
+2024-04-29 21:22:56,011:INFO:All tasks finished cancelling.
+2024-04-29 21:22:56,011:INFO:Closing the event loop.
+2024-04-29 21:23:00,582:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-04-29 21:23:00,582:INFO:logging in using static token
+2024-04-29 21:23:01,010:INFO:Shard ID None has sent the IDENTIFY payload.
+2024-04-29 21:23:02,283:INFO:Shard ID None has connected to Gateway: ["gateway-prd-us-east1-c-8g1x",{"micros":1165715,"calls":["id_created",{"micros":1021,"calls":[]},"session_lookup_time",{"micros":328,"calls":[]},"session_lookup_finished",{"micros":23,"calls":[]},"discord-sessions-prd-1-293",{"micros":1164025,"calls":["start_session",{"micros":1118305,"calls":["discord-api-rpc-7bffbb9cb8-fvc9w",{"micros":1113502,"calls":["get_user",{"micros":8293},"get_guilds",{"micros":4929},"send_scheduled_deletion_message",{"micros":10},"guild_join_requests",{"micros":169},"authorized_ip_coro",{"micros":10}]}]},"starting_guild_connect",{"micros":67,"calls":[]},"presence_started",{"micros":317,"calls":[]},"guilds_started",{"micros":151,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":45150,"calls":[]},"connect_finished",{"micros":45157,"calls":[]},"build_ready",{"micros":22,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: 05c02444900d9bad010365f47aaa274c).
+2024-04-29 21:23:04,295:INFO:QAI2 version 1.0.1 
+2024-04-29 21:23:04,975:INFO:- qqai
+2024-04-29 21:23:04,975:INFO:- qjoinconvo
+2024-04-29 21:23:04,975:INFO:- qsummarize
+2024-04-29 21:23:04,975:INFO:- qimback
+2024-04-29 21:23:04,975:INFO:- qresearch
+2024-04-29 21:23:04,975:INFO:- qpricewatch
+2024-04-29 21:23:24,452:INFO:Pricewatch command called with component name: atari 800
+2024-04-29 21:23:24,891:ERROR:Network or HTTP error occurred while fetching data for atari 800: 404 Client Error: Not Found for url: https://tweakers.net/pricewatch/zoeken/?keyword=atari%20800

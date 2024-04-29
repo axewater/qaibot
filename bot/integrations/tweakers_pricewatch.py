@@ -1,61 +1,69 @@
-# bot/integrations/tweakers_pricewatch.py
 import requests
 from bs4 import BeautifulSoup
-import json  # For JSON output
+import json
 import sys
+import logging
 
 cookies = {
     "SSLB": "1",
     "tbb": "false",
 }
 
-
-# Function to search component prices on Tweakers Pricewatch
 def search_tweakers_pricewatch(component_name):
     base_url = "https://tweakers.net/pricewatch/"
     search_url = base_url + "zoeken/?keyword=" + component_name
-    response = requests.get(search_url, cookies=cookies)
+    try:
+        response = requests.get(search_url, cookies=cookies)
+        response.raise_for_status()  # Raises HTTPError for bad responses
+    except requests.RequestException as e:
+        logging.error(f"Network or HTTP error occurred while fetching data for {component_name}: {e}")
+        return None  # Return None to indicate failure
 
-    if response.status_code != 200:
-        raise Exception("Failed to fetch data from Tweakers Pricewatch.")
-
-    soup = BeautifulSoup(response.content, "html.parser")
-
-    results = []
-    for item in soup.select("table.listing tr"):
-        name_element = item.select_one(".editionName")
-        price_element = item.select_one("td.price-score > p.price > a")
-        
-        if name_element and price_element:
-            name = name_element.text.strip()
-            price = price_element.text.strip()
+    try:
+        soup = BeautifulSoup(response.content, "html.parser")
+        results = []
+        for item in soup.select("table.listing tr"):
+            name_element = item.select_one(".editionName")
+            price_element = item.select_one("td.price-score > p.price > a")
             
-            # Extract the product link from 'href'
-            link = name_element["href"] if "href" in name_element.attrs else "#"
-            
-            results.append({
-                "name": name,
-                "price": price,
-                "link": link,
-            })
-        else:
-            pass
+            if name_element and price_element:
+                name = name_element.text.strip()
+                price = price_element.text.strip()
+                link = name_element["href"] if "href" in name_element.attrs else "#"
+                
+                if name and price and link != "#":
+                    results.append({
+                        "name": name,
+                        "price": price,
+                        "link": link,
+                    })
+                else:
+                    logging.warning(f"Skipping incomplete result for {component_name}: Name={name}, Price={price}, Link={link}")
+            else:
+                logging.warning(f"Missing essential elements in result for {component_name}")
 
-    return results
+        if not results:
+            logging.info(f"No valid results found for {component_name}")
+            return None  # Return None to indicate no valid results
 
-# Command-line interface to use the function from the command line
+        return results
+    except Exception as e:
+        logging.error(f"Error parsing HTML content for {component_name}: {e}")
+        return None  # Return None to indicate parsing failure
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python tweakers_pricewatch.py \"<component_name>\"")
         sys.exit(1)
 
-    component_name = " ".join(sys.argv[1:])  # Join all arguments to handle spaces in the name
+    component_name = " ".join(sys.argv[1:])
     try:
         print(f"Searching for '{component_name}' on Tweakers Pricewatch...")
         results = search_tweakers_pricewatch(component_name)
-        
-        # Output results in JSON format
-        results_json = json.dumps(results, indent=4)  # Serialize to JSON with indentation
-        print(results_json)  # Print JSON output
+        if results is None:
+            print("Failed to retrieve or parse search results.")
+        else:
+            results_json = json.dumps(results, indent=4)
+            print(results_json)
     except Exception as e:
         print(f"Error: {e}")

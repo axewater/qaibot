@@ -9,18 +9,17 @@ async def handle_pricewatch(interaction: discord.Interaction, component_name: st
 
     results = search_tweakers_pricewatch(component_name)
 
-    if results:
-        # Create a formatted list of results, one item per line
+    if results is None:
+        await interaction.followup.send(f"No results found for '{component_name}'. (Or failed to fetch data from Tweakers Pricewatch.)")
+    elif not results:
+        await interaction.followup.send(f"No results found for '{component_name}'.")
+    else:
         formatted_results = []
         for result in results:
             name = result["name"]
             price = result["price"]
             link = result["link"]
-            formatted_results.append(f"**{name}**: {price} - [LINK!](<{link}>)")  # Wrap the URL in < > to avoid Discord previews
+            formatted_results.append(f"**{name}**: {price} - [LINK!](<{link}>)")
 
-        # Join the formatted results into a single message
         message = "\n".join(formatted_results)
-
         await send_large_message(interaction, f"**Search Results for '{component_name}':**\n{message}")
-    else:
-        await interaction.followup.send(f"No results found for '{component_name}'.")

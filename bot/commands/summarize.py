@@ -6,7 +6,7 @@ from ..utilities import send_large_message
 from ..integrations.summarize_url import fetch_website_content
 from ..utilities import summarize_content
 
-async def  handle_summarize(interaction: discord.Interaction, url: str):
+async def handle_summarize(interaction: discord.Interaction, url: str, context: str = None):
     await interaction.response.defer()
 
     if not url.startswith(("http://", "https://")):
@@ -19,7 +19,8 @@ async def  handle_summarize(interaction: discord.Interaction, url: str):
     content = fetch_website_content(url)
 
     if content:
-        context = f"Summarize the content at this URL: {url}."
+        if context is None:
+            context = f"Summarize the content at this URL: {url}."
 
         final_summary = await summarize_content(content, context)
 

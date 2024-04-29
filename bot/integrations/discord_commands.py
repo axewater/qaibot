@@ -25,10 +25,10 @@ async def setup(bot):
         await handle_joinconvo(interaction)
 
     @bot.slash_command(name="qsummarize", description="QAI will summarize the content of a given URL.")
-    async def summarize(interaction: discord.Interaction, url: str):
-        logging.info(f"Summarize command called with URL: {url}")
-        print(f"Summarize command called with URL: {url}")
-        await handle_summarize(interaction, url)
+    async def summarize(interaction: discord.Interaction, url: str, context: str = Option(str, default=None, required=False, description="Optional context to guide the summarization.")):
+        logging.info(f"Summarize command called with URL: {url} and context: {context}")
+        print(f"Summarize command called with URL: {url} and context: {context}")
+        await handle_summarize(interaction, url, context)
 
     @bot.slash_command(name="qimback", description="I was away for a while, what happened while I was gone? Summarize the last 200 messages.")
     async def imback(interaction: discord.Interaction):

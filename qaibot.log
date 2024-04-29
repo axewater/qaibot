@@ -112,3 +112,8 @@
 2024-04-29 21:23:04,975:INFO:- qpricewatch
 2024-04-29 21:23:24,452:INFO:Pricewatch command called with component name: atari 800
 2024-04-29 21:23:24,891:ERROR:Network or HTTP error occurred while fetching data for atari 800: 404 Client Error: Not Found for url: https://tweakers.net/pricewatch/zoeken/?keyword=atari%20800
+2024-04-29 21:46:39,643:INFO:Received signal to terminate bot and event loop.
+2024-04-29 21:46:39,643:INFO:Cleaning up tasks.
+2024-04-29 21:46:39,643:INFO:Cleaning up after 1 tasks.
+2024-04-29 21:46:39,644:INFO:All tasks finished cancelling.
+2024-04-29 21:46:39,644:INFO:Closing the event loop.

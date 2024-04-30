@@ -7,7 +7,6 @@ import urllib.parse
 
 def scrape_marktplaats_items(search_query):
     base_url = "https://www.marktplaats.nl/q/"
-    # Properly encode the search query to handle spaces and special characters
     query_encoded = urllib.parse.quote_plus(search_query)
     url = base_url + query_encoded + "/"
 
@@ -15,6 +14,7 @@ def scrape_marktplaats_items(search_query):
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
     }
     
+    logging.info(f"Fetching URL: {url}")
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()  # Raises HTTPError for bad responses
@@ -25,17 +25,22 @@ def scrape_marktplaats_items(search_query):
     try:
         soup = BeautifulSoup(response.content, "html.parser")
         results = []
-        ## print(soup.prettify())
-        for item in soup.select(".hz-Listing.hz-Listing--list-item"):
-            print(f"item: {item}")
+        items = soup.select(".hz-Listing.hz-Listing--list-item")
+        logging.info(f"Found {len(items)} items on the page.")
+        
+        for item in items:
             title_element = item.select_one(".hz-Listing-title")
-            print(f"title_element: {title_element}")
             price_element = item.select_one(".hz-Listing-price")
-            print(f"price_element: {price_element}")
+
+            if not title_element:
+                logging.warning("No title element found for an item.")
+            if not price_element:
+                logging.warning("No price element found for an item.")
 
             title = title_element.text.strip() if title_element else "No title found"
             price = price_element.text.strip() if price_element else "Bieden"
 
+            logging.info(f"Item found: Title: {title}, Price: {price}")
             results.append({
                 "title": title,
                 "price": price
@@ -57,7 +62,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     search_query = " ".join(sys.argv[1:])
-    print(f"Searching for '{search_query}' on Marktplaats...")
+    logging.info(f"Searching for '{search_query}' on Marktplaats...")
     items = scrape_marktplaats_items(search_query)
     if items is None:
         print("Failed to retrieve or parse items.")

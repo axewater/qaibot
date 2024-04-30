@@ -117,3 +117,14 @@
 2024-04-29 21:46:39,643:INFO:Cleaning up after 1 tasks.
 2024-04-29 21:46:39,644:INFO:All tasks finished cancelling.
 2024-04-29 21:46:39,644:INFO:Closing the event loop.
+2024-04-29 22:36:14,094:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-04-29 22:36:14,094:INFO:logging in using static token
+2024-04-29 22:36:14,511:INFO:Shard ID None has sent the IDENTIFY payload.
+2024-04-29 22:36:14,675:INFO:Shard ID None has connected to Gateway: ["gateway-prd-us-east1-b-fznh",{"micros":61865,"calls":["id_created",{"micros":617,"calls":[]},"session_lookup_time",{"micros":256,"calls":[]},"session_lookup_finished",{"micros":16,"calls":[]},"discord-sessions-prd-1-274",{"micros":60004,"calls":["start_session",{"micros":42334,"calls":["discord-api-rpc-7bffbb9cb8-fd56f",{"micros":38073,"calls":["get_user",{"micros":5467},"get_guilds",{"micros":3274},"send_scheduled_deletion_message",{"micros":10},"guild_join_requests",{"micros":1},"authorized_ip_coro",{"micros":10}]}]},"starting_guild_connect",{"micros":64,"calls":[]},"presence_started",{"micros":6618,"calls":[]},"guilds_started",{"micros":157,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":10802,"calls":[]},"connect_finished",{"micros":10808,"calls":[]},"build_ready",{"micros":16,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: 2277fd66673f02f3bd86a623065eb787).
+2024-04-29 22:36:16,707:INFO:QAI2 version 1.0.1 
+2024-04-29 22:36:17,342:INFO:- qqai
+2024-04-29 22:36:17,342:INFO:- qjoinconvo
+2024-04-29 22:36:17,342:INFO:- qsummarize
+2024-04-29 22:36:17,342:INFO:- qimback
+2024-04-29 22:36:17,342:INFO:- qresearch
+2024-04-29 22:36:17,342:INFO:- qpricewatch

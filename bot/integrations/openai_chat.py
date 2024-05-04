@@ -13,7 +13,7 @@ def ask_question(question_text):
 
 def join_conversation(context):
     print("Joining the conversation with GPT4")
-    prompt = "You are QAI, a nerdy Discord chatbot. Here is the recent conversation, join in using the language of the conversation. Write a reply like a human. Limit your output to 200 characters."
+    prompt = "You are QAI, a nerdy Discord chatbot. Here is the recent conversation, join in using the dominant language of the conversation. Write a reply like a human. Limit your output to 200 characters."
     return process_text_with_gpt(context, prompt, gpt_version=4)
 
 def summarize_text(text, context_for_summary="Please summarize this text to a maximum of 500 tokens. The text may be a snippet of a larger document, if all you see if a list of data, try to summarize the most essential part of the data, retaining its structure (data pairs) .Retain the source language of the material (NEVER TRANSLATE!)"):

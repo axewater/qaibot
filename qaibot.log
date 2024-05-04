@@ -178,3 +178,108 @@
 2024-05-04 10:34:22,717:INFO:Item found: Title: Commodore 64 StarDatei, Price: € 35,00
 2024-05-04 10:34:22,735:INFO:Item found: Title: Commodore 64 SuperBase boek, Price: € 5,00
 2024-05-04 10:34:22,752:INFO:Item found: Title: Seiko - egyé - Unisex - 1980-1989, Price: € 500,00
+2024-05-04 10:38:13,468:INFO:Received signal to terminate bot and event loop.
+2024-05-04 10:38:13,468:INFO:Cleaning up tasks.
+2024-05-04 10:38:13,468:INFO:Cleaning up after 1 tasks.
+2024-05-04 10:38:13,470:INFO:All tasks finished cancelling.
+2024-05-04 10:38:13,470:INFO:Closing the event loop.
+2024-05-04 10:43:47,393:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-05-04 10:43:47,393:INFO:logging in using static token
+2024-05-04 10:43:47,767:INFO:Shard ID None has sent the IDENTIFY payload.
+2024-05-04 10:43:47,949:INFO:Shard ID None has connected to Gateway: ["gateway-prd-us-east1-d-g7jt",{"micros":81139,"calls":["id_created",{"micros":1260,"calls":[]},"session_lookup_time",{"micros":946,"calls":[]},"session_lookup_finished",{"micros":14,"calls":[]},"discord-sessions-prd-1-81",{"micros":78610,"calls":["start_session",{"micros":50406,"calls":["discord-api-rpc-8647c4dbdb-n4hmh",{"micros":46049,"calls":["get_user",{"micros":6064},"get_guilds",{"micros":2783},"send_scheduled_deletion_message",{"micros":9},"guild_join_requests",{"micros":761},"authorized_ip_coro",{"micros":10}]}]},"starting_guild_connect",{"micros":58,"calls":[]},"presence_started",{"micros":361,"calls":[]},"guilds_started",{"micros":163,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":27598,"calls":[]},"connect_finished",{"micros":27603,"calls":[]},"build_ready",{"micros":14,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: 37cae2d04e1747a202d71e4bc2f12a25).
+2024-05-04 10:43:49,969:INFO:QAI2 version 1.0.1 
+2024-05-04 10:43:50,657:INFO:- qqai
+2024-05-04 10:43:50,657:INFO:- qjoinconvo
+2024-05-04 10:43:50,657:INFO:- qsummarize
+2024-05-04 10:43:50,658:INFO:- qimback
+2024-05-04 10:43:50,658:INFO:- qresearch
+2024-05-04 10:43:50,658:INFO:- qpricewatch
+2024-05-04 10:43:50,658:INFO:- qmarktplaats
+2024-05-04 10:45:31,568:INFO:Received signal to terminate bot and event loop.
+2024-05-04 10:45:31,568:INFO:Cleaning up tasks.
+2024-05-04 10:45:31,568:INFO:Cleaning up after 1 tasks.
+2024-05-04 10:45:31,569:INFO:All tasks finished cancelling.
+2024-05-04 10:45:31,569:INFO:Closing the event loop.
+2024-05-04 10:45:41,266:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-05-04 10:45:41,267:INFO:logging in using static token
+2024-05-04 10:45:41,610:INFO:Shard ID None has sent the IDENTIFY payload.
+2024-05-04 10:45:41,786:INFO:Shard ID None has connected to Gateway: ["gateway-prd-us-east1-d-jdjm",{"micros":75369,"calls":["id_created",{"micros":752,"calls":[]},"session_lookup_time",{"micros":8560,"calls":[]},"session_lookup_finished",{"micros":11,"calls":[]},"discord-sessions-prd-1-78",{"micros":65732,"calls":["start_session",{"micros":57929,"calls":["discord-api-rpc-8647c4dbdb-nn69p",{"micros":52839,"calls":["get_user",{"micros":8609},"get_guilds",{"micros":3750},"send_scheduled_deletion_message",{"micros":8},"guild_join_requests",{"micros":1},"authorized_ip_coro",{"micros":13}]}]},"starting_guild_connect",{"micros":69,"calls":[]},"presence_started",{"micros":2908,"calls":[]},"guilds_started",{"micros":137,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":4660,"calls":[]},"connect_finished",{"micros":4666,"calls":[]},"build_ready",{"micros":17,"calls":[]},"clean_ready",{"micros":0,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: a10aea1b0f3d3edf396bc20bdb3b4113).
+2024-05-04 10:45:43,813:INFO:QAI2 version 1.0.1 
+2024-05-04 10:45:44,341:INFO:- qqai
+2024-05-04 10:45:44,341:INFO:- qjoinconvo
+2024-05-04 10:45:44,341:INFO:- qsummarize
+2024-05-04 10:45:44,342:INFO:- qimback
+2024-05-04 10:45:44,342:INFO:- qresearch
+2024-05-04 10:45:44,342:INFO:- qpricewatch
+2024-05-04 10:45:44,342:INFO:- qmarktplaats
+2024-05-04 10:53:38,559:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-05-04 10:53:38,559:INFO:logging in using static token
+2024-05-04 10:53:38,967:INFO:Shard ID None has sent the IDENTIFY payload.
+2024-05-04 10:53:39,165:INFO:Shard ID None has connected to Gateway: ["gateway-prd-us-east1-d-4xd2",{"micros":95707,"calls":["id_created",{"micros":553,"calls":[]},"session_lookup_time",{"micros":3935,"calls":[]},"session_lookup_finished",{"micros":13,"calls":[]},"discord-sessions-prd-1-51",{"micros":90296,"calls":["start_session",{"micros":42799,"calls":["discord-api-rpc-8647c4dbdb-ptcsj",{"micros":37926,"calls":["get_user",{"micros":5146},"get_guilds",{"micros":2754},"send_scheduled_deletion_message",{"micros":8},"guild_join_requests",{"micros":1},"authorized_ip_coro",{"micros":25}]}]},"starting_guild_connect",{"micros":82,"calls":[]},"presence_started",{"micros":229,"calls":[]},"guilds_started",{"micros":160,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":46993,"calls":[]},"connect_finished",{"micros":46999,"calls":[]},"build_ready",{"micros":21,"calls":[]},"clean_ready",{"micros":0,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: 3e6cae7d373ef5a524ff6cf319ab865c).
+2024-05-04 10:53:41,172:INFO:QAI2 version 1.0.1 
+2024-05-04 10:53:42,016:INFO:- qqai
+2024-05-04 10:53:42,016:INFO:- qjoinconvo
+2024-05-04 10:53:42,016:INFO:- qsummarize
+2024-05-04 10:53:42,016:INFO:- qimback
+2024-05-04 10:53:42,016:INFO:- qresearch
+2024-05-04 10:53:42,016:INFO:- qpricewatch
+2024-05-04 10:53:42,017:INFO:- qmarktplaats
+2024-05-04 11:00:43,143:INFO:Marktplaats command called with search query: atari 800
+2024-05-04 11:00:44,941:INFO:Fetching URL: https://www.marktplaats.nl/q/atari+800/
+2024-05-04 11:00:53,648:INFO:Found 34 items on the page.
+2024-05-04 11:00:53,681:INFO:Item found: Title: Atari 800 XL - Console - Boxed, Price: € 299,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1496866527-atari-800-xl-console-boxed
+2024-05-04 11:00:53,705:INFO:Item found: Title: Atari 400/800/1200/ XE - Joust, Price: € 30,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1486707550-atari-400-800-1200-xe-joust
+2024-05-04 11:00:53,729:INFO:Item found: Title: Atari 400/800/1200/ XE - Pengo, Price: € 20,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1496948579-atari-400-800-1200-xe-pengo
+2024-05-04 11:00:53,751:INFO:Item found: Title: Atari 400/800/1200/ XE - Kickback, Price: € 15,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1496982311-atari-400-800-1200-xe-kickback
+2024-05-04 11:00:53,773:INFO:Item found: Title: Atari 800 XL - Console - Boxed, Price: € 299,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1496866527-atari-800-xl-console-boxed
+2024-05-04 11:00:53,797:INFO:Item found: Title: Atari 400/800/1200/ XE - Joust, Price: € 30,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1486707550-atari-400-800-1200-xe-joust
+2024-05-04 11:00:53,821:INFO:Item found: Title: cassette games voor Atari xl/xe/800, Price: € 25,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/games-atari/m2103316097-cassette-games-voor-atari-xl-xe-800
+2024-05-04 11:00:53,844:INFO:Item found: Title: Atari 400/800/1200/ XE - Pengo, Price: € 20,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1496948579-atari-400-800-1200-xe-pengo
+2024-05-04 11:00:53,868:INFO:Item found: Title: Atari 400/800/1200/ XE - Kickback, Price: € 15,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1496982311-atari-400-800-1200-xe-kickback
+2024-05-04 11:00:53,891:INFO:Item found: Title: Emerald Isle - Atari - Level 9 computing, Price: Bieden, URL: None
+2024-05-04 11:00:53,914:INFO:Item found: Title: Atari 400/800/1200/ XE - Soccer, Price: € 25,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1497040447-atari-400-800-1200-xe-soccer
+2024-05-04 11:00:53,938:INFO:Item found: Title: Atari 400/800/1200/ XE - Dig Dug, Price: € 20,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1496948580-atari-400-800-1200-xe-dig-dug
+2024-05-04 11:00:53,961:INFO:Item found: Title: Decathlon for Atari 800 /800XL/130XE Cassette Game, Price: € 16,00, URL: None
+2024-05-04 11:00:53,986:INFO:Item found: Title: Atari 400/800/1200/ XE - Ms. Pac-Man, Price: € 40,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1496983104-atari-400-800-1200-xe-ms-pac-man
+2024-05-04 11:00:54,009:INFO:Item found: Title: Atari 400/800/1200/ XE - Crossfire, Price: € 25,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1496948569-atari-400-800-1200-xe-crossfire
+2024-05-04 11:00:54,032:INFO:Item found: Title: Atari 400/800 Student Pilot reference guide, Price: Bieden, URL: None
+2024-05-04 11:00:54,055:INFO:Item found: Title: Atari 400/800 - Sierrravision - Crossfire, Price: € 69,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1498764278-atari-400-800-sierrravision-crossfire
+2024-05-04 11:00:54,079:INFO:Item found: Title: Atari 400/800/1200/ XE - Centipede, Price: € 15,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1499192840-atari-400-800-1200-xe-centipede
+2024-05-04 11:00:54,103:INFO:Item found: Title: Vintage Spel Superman, voor Atari 400/800, Price: Bieden, URL: None
+2024-05-04 11:00:54,128:INFO:Item found: Title: Atari 400/800 - Sierravision - Mr. Cool, Price: € 69,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1498764283-atari-400-800-sierravision-mr-cool
+2024-05-04 11:00:54,151:INFO:Item found: Title: Atari 400/800/1200/ XE - PlatterMania, Price: € 69,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1496983103-atari-400-800-1200-xe-plattermania
+2024-05-04 11:00:54,177:INFO:Item found: Title: RF kabel Atari Commodore MSX, Price: € 4,95, URL: https://www.marktplaats.nl/v/audio-tv-en-foto/audiokabels-en-televisiekabels/m2092217534-rf-kabel-atari-commodore-msx
+2024-05-04 11:00:54,200:INFO:Item found: Title: Atari 400/800/1200/ XE - Eastern Front - 1941, Price: € 35,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1486705318-atari-400-800-1200-xe-eastern-front-1941
+2024-05-04 11:00:54,224:INFO:Item found: Title: Atari 400/800/1200/ XE - Space Invaders, Price: € 18,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1499192842-atari-400-800-1200-xe-space-invaders
+2024-05-04 11:00:54,247:INFO:Item found: Title: AC/DC adapter Atari 400/800/XL/XE serie, Price: € 35,00, URL: None
+2024-05-04 11:00:54,271:INFO:Item found: Title: Atari 400/800/1200/ XE - Mr. Cool, Price: € 49,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1496982302-atari-400-800-1200-xe-mr-cool
+2024-05-04 11:00:54,294:INFO:Item found: Title: Atari 600/800 - Ariola Soft - Slotmachine, Price: € 99,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1496948553-atari-600-800-ariola-soft-slotmachine
+2024-05-04 11:00:54,318:INFO:Item found: Title: Atari XL boek - Writing stategy games on your atari, Price: Bieden, URL: https://www.marktplaats.nl/v/computers-en-software/vintage-computers/m2082811304-atari-xl-boek-writing-stategy-games-on-your-atari
+2024-05-04 11:00:54,341:INFO:Item found: Title: Atari 400/800/XE - Cassette - Archon, Price: € 35,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1497040446-atari-400-800-xe-cassette-archon
+2024-05-04 11:00:54,364:INFO:Item found: Title: Atari 600/800 - Ariola Soft - Cromwell-House, Price: € 99,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1496948560-atari-600-800-ariola-soft-cromwell-house
+2024-05-04 11:00:54,386:INFO:Item found: Title: Atari XL boek - Writing stategy games on your atari, Price: € 25,00, URL: https://www.marktplaats.nl/v/computers-en-software/vintage-computers/m2099585302-atari-xl-boek-writing-stategy-games-on-your-atari
+2024-05-04 11:00:54,410:INFO:Item found: Title: Atari 400/800/1200/ XE - Submarine Commander, Price: € 15,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1496982307-atari-400-800-1200-xe-submarine-commander
+2024-05-04 11:00:54,433:INFO:Item found: Title: Atari 400/800/1200/ XE - Ms. Pac-Man, Price: € 25,00, URL: https://www.marktplaats.nl/v/spelcomputers-en-games/spelcomputers-atari/a1500305415-atari-400-800-1200-xe-ms-pac-man
+2024-05-04 11:00:54,457:INFO:Item found: Title: Classic Space Invaders - Atari 400/800 cartridge, Price: Gereserveerd, URL: None
+2024-05-04 11:02:29,994:INFO:Received signal to terminate bot and event loop.
+2024-05-04 11:02:29,994:INFO:Cleaning up tasks.
+2024-05-04 11:02:29,994:INFO:Cleaning up after 1 tasks.
+2024-05-04 11:02:29,995:INFO:All tasks finished cancelling.
+2024-05-04 11:02:29,995:INFO:Closing the event loop.
+2024-05-04 11:02:33,962:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-05-04 11:02:33,963:INFO:logging in using static token
+2024-05-04 11:02:34,610:INFO:Shard ID None has sent the IDENTIFY payload.
+2024-05-04 11:02:34,899:INFO:Shard ID None has connected to Gateway: ["gateway-prd-us-east1-c-650d",{"micros":183101,"calls":["id_created",{"micros":1321,"calls":[]},"session_lookup_time",{"micros":220,"calls":[]},"session_lookup_finished",{"micros":7,"calls":[]},"discord-sessions-prd-1-194",{"micros":180403,"calls":["start_session",{"micros":130922,"calls":["discord-api-rpc-8647c4dbdb-qf9w7",{"micros":124597,"calls":["get_user",{"micros":11992},"get_guilds",{"micros":4466},"send_scheduled_deletion_message",{"micros":6},"guild_join_requests",{"micros":153},"authorized_ip_coro",{"micros":5}]}]},"starting_guild_connect",{"micros":56,"calls":[]},"presence_started",{"micros":216,"calls":[]},"guilds_started",{"micros":108,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":49069,"calls":[]},"connect_finished",{"micros":49075,"calls":[]},"build_ready",{"micros":19,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: 8b48c02d87e2ff80bd50181331f2223c).
+2024-05-04 11:02:36,930:INFO:QAI2 version 1.0.1 
+2024-05-04 11:02:37,667:INFO:- qqai
+2024-05-04 11:02:37,667:INFO:- qjoinconvo
+2024-05-04 11:02:37,668:INFO:- qsummarize
+2024-05-04 11:02:37,668:INFO:- qimback
+2024-05-04 11:02:37,668:INFO:- qresearch
+2024-05-04 11:02:37,668:INFO:- qpricewatch
+2024-05-04 11:02:37,668:INFO:- qmarktplaats
+2024-05-04 11:03:02,999:INFO:Received signal to terminate bot and event loop.
+2024-05-04 11:03:02,999:INFO:Cleaning up tasks.
+2024-05-04 11:03:02,999:INFO:Cleaning up after 1 tasks.
+2024-05-04 11:03:02,999:INFO:All tasks finished cancelling.
+2024-05-04 11:03:02,999:INFO:Closing the event loop.

@@ -1,3 +1,5 @@
+# bot/commands/marktplaats.py
+
 import discord
 from ..utilities import send_large_message
 from ..integrations.marktplaats_search import scrape_marktplaats_items
@@ -16,7 +18,10 @@ async def handle_marktplaats(interaction: discord.Interaction, search_query: str
         for result in results:
             title = result["title"]
             price = result["price"]
-            formatted_results.append(f"**{title}**: {price}")
+            link = result["url"]
+            
+            # Adding a clickable 'LINK!' text that points to the URL
+            formatted_results.append(f"**{title}**: {price} - [LINK!](<{link}>)")
 
         message = "\n".join(formatted_results)
         await send_large_message(interaction, f"**Search Results for '{search_query}':**\n{message}")

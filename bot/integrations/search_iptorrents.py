@@ -29,11 +29,11 @@ def load_cookies(driver, path_to_cookie_file):
 
 
 def scrape_iptorrents(search_query):
-    base_url = "https://www.iptorrents.com/t?q="
-    search_url = f"{base_url}{search_query.replace(' ', '+')}"
+    base_url = "https://www.iptorrents.com"
+    search_url = f"{base_url}/t?q={search_query.replace(' ', '+')}"
 
     driver = init_driver()
-    driver.get("https://www.iptorrents.com")  # Load the website to set initial cookies
+    driver.get(base_url)  # Load the website to set initial cookies
 
     # Load the cookies for authentication
     load_cookies(driver, "./bot/integrations/cookie_iptorrents.json")
@@ -48,7 +48,8 @@ def scrape_iptorrents(search_query):
         table = soup.find('table', {'id': 'torrents'})
         results = []
         
-        for row in table.find('tbody').find_all('tr'):
+        rows = table.find('tbody').find_all('tr')[:12]  # Limit to 12 results
+        for row in rows:
             cols = row.find_all('td')
             if not cols:
                 continue
@@ -60,7 +61,7 @@ def scrape_iptorrents(search_query):
                 'Snatches': cols[6].text.strip(),
                 'Seeders': cols[7].text.strip(),
                 'Leechers': cols[8].text.strip(),
-                'Download Link': cols[3].find('a')['href'] if cols[3].find('a') else 'No link'
+                'Download Link': base_url + cols[3].find('a')['href'] if cols[3].find('a') else 'No link'
             }
             results.append(result)
             logging.info(f"Found result: {result}")
@@ -75,6 +76,7 @@ def scrape_iptorrents(search_query):
         driver.quit()
 
     return results
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:

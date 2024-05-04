@@ -19,7 +19,8 @@ async def handle_iptorrents(interaction: discord.Interaction, search_query: str)
             seeders = result["Seeders"]
             leechers = result["Leechers"]
             download_link = result["Download Link"]
-            formatted_results.append(f"**{name}** - Size: {size}, Seeders: {seeders}, Leechers: {leechers}, [Download](<{download_link}>)")
+            # formatted_results.append(f"**{name}** - Size: {size}, Seeders: {seeders}, Leechers: {leechers}, [DOWNLOAD!](<{download_link}>)")
+            formatted_results.append(f"**{name}** - Size: {size}, Peers: {seeders}/{leechers}, [LINK!](<{download_link}>)")
 
         message = "\n".join(formatted_results)
-        await send_large_message(interaction, f"**Torrent Search Results for '{search_query}':**\n{message}")
+        await send_large_message(interaction, f"**IPTorrents Search Results for '{search_query}':**\n{message}")

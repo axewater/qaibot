@@ -10,3 +10,4 @@ __pycache__
 /bot/commands/__pycache__/*
 /test/*
 /qaibot.log
+qaibot.log

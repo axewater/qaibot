@@ -10,6 +10,7 @@ from ..commands.summarize import handle_summarize
 from ..commands.research import handle_research
 from ..commands.imback import handle_imback
 from ..commands.marktplaats import handle_marktplaats
+from ..commands.torrent import handle_torrent
 
 async def setup(bot):
     # Define slash commands and connect them to their respective handlers
@@ -56,3 +57,9 @@ async def setup(bot):
         logging.info(f"Marktplaats command called with search query: {search_query}")
         print(f"Marktplaats command called with search query: {search_query}")
         await handle_marktplaats(interaction, search_query)
+
+    @bot.slash_command(name="qtorrent", description="Search for torrents on MagnetDL.")
+    async def torrent(interaction: discord.Interaction, search_query: str):
+        logging.info(f"Torrent command called with search query: {search_query}")
+        print(f"Torrent command called with search query: {search_query}")
+        await handle_torrent(interaction, search_query)

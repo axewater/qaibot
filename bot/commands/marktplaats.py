@@ -14,14 +14,17 @@ async def handle_marktplaats(interaction: discord.Interaction, search_query: str
     elif not results:
         await interaction.followup.send(f"No results found for '{search_query}'.")
     else:
-        formatted_results = []
         for result in results:
             title = result["title"]
             price = result["price"]
             link = result["url"]
-            
-            # Adding a clickable 'LINK!' text that points to the URL
-            formatted_results.append(f"**{title}**: {price} - [LINK!](<{link}>)")
+            image_url = result["image_url"]
 
-        message = "\n".join(formatted_results)
-        await send_large_message(interaction, f"**Search Results for '{search_query}':**\n{message}")
+            # Create embed for each item
+            embed = discord.Embed(title=title, url=link, description=f"{price}", color=discord.Color.blue())
+            if image_url != "No image available":
+                embed.set_image(url=image_url)
+            embed.set_footer(text="Click the title to view the item on Marktplaats")
+
+            # Send the embed
+            await interaction.followup.send(embed=embed)

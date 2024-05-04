@@ -13,25 +13,29 @@ def scrape_marktplaats_items(search_query):
     logging.info(f"Fetching URL: {url}")
     try:
         driver.get(url)
-        time.sleep(5)  # Allow some time for the page to load
+        time.sleep(2)  # time for the page to load
         results = []
         items = driver.find_elements(By.CSS_SELECTOR, ".hz-Listing.hz-Listing--list-item")
-
+        items = items[:5] 
+        
         logging.info(f"Found {len(items)} items on the page.")
         for item in items:
             title_element = item.find_element(By.CSS_SELECTOR, ".hz-Listing-title")
             price_element = item.find_element(By.CSS_SELECTOR, ".hz-Listing-price")
             link_element = item.find_element(By.CSS_SELECTOR, "a")  # Assuming the link is in the first <a> element
+            image_element = item.find_element(By.CSS_SELECTOR, "img") if item.find_elements(By.CSS_SELECTOR, "img") else None
 
             title = title_element.text.strip() if title_element else "No title found"
             price = price_element.text.strip() if price_element else "Bieden"
             item_url = link_element.get_attribute('href') if link_element else "URL not found"
+            image_url = image_element.get_attribute('src') if image_element else "No image available"
 
             logging.info(f"Item found: Title: {title}, Price: {price}, URL: {item_url}")
             results.append({
                 "title": title,
                 "price": price,
-                "url": item_url  # Adding URL to the results
+                "url": item_url,
+                "image_url": image_url
             })
 
         if not results:

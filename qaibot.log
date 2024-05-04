@@ -283,3 +283,60 @@
 2024-05-04 11:03:02,999:INFO:Cleaning up after 1 tasks.
 2024-05-04 11:03:02,999:INFO:All tasks finished cancelling.
 2024-05-04 11:03:02,999:INFO:Closing the event loop.
+2024-05-04 11:32:05,951:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-05-04 11:32:05,951:INFO:logging in using static token
+2024-05-04 11:32:06,306:INFO:Shard ID None has sent the IDENTIFY payload.
+2024-05-04 11:32:06,495:INFO:Shard ID None has connected to Gateway: ["gateway-prd-us-east1-b-ptrv",{"micros":87750,"calls":["id_created",{"micros":950,"calls":[]},"session_lookup_time",{"micros":4963,"calls":[]},"session_lookup_finished",{"micros":14,"calls":[]},"discord-sessions-prd-1-262",{"micros":80590,"calls":["start_session",{"micros":47262,"calls":["discord-api-rpc-8647c4dbdb-qlk4j",{"micros":42768,"calls":["get_user",{"micros":9311},"get_guilds",{"micros":5024},"send_scheduled_deletion_message",{"micros":7},"guild_join_requests",{"micros":1},"authorized_ip_coro",{"micros":8}]}]},"starting_guild_connect",{"micros":57,"calls":[]},"presence_started",{"micros":266,"calls":[]},"guilds_started",{"micros":150,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":32832,"calls":[]},"connect_finished",{"micros":32838,"calls":[]},"build_ready",{"micros":13,"calls":[]},"clean_ready",{"micros":0,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: 38f31a46e2031ebffd642bbf11e4f70d).
+2024-05-04 11:32:08,523:INFO:QAI2 version 1.0.1 
+2024-05-04 11:32:09,147:INFO:- qqai
+2024-05-04 11:32:09,147:INFO:- qjoinconvo
+2024-05-04 11:32:09,148:INFO:- qsummarize
+2024-05-04 11:32:09,148:INFO:- qimback
+2024-05-04 11:32:09,148:INFO:- qresearch
+2024-05-04 11:32:09,148:INFO:- qpricewatch
+2024-05-04 11:32:09,148:INFO:- qmarktplaats
+2024-05-04 11:32:25,202:INFO:Marktplaats command called with search query: testing rig
+2024-05-04 11:32:27,028:INFO:Fetching URL: https://www.marktplaats.nl/q/testing+rig/
+2024-05-04 11:32:32,400:INFO:Found 10 items on the page.
+2024-05-04 11:32:32,455:INFO:Item found: Title: Moonraker Whizz Whip, Price: € 129,95, URL: https://www.marktplaats.nl/v/telecommunicatie/overige-telecommunicatie/a1414162686-moonraker-whizz-whip
+2024-05-04 11:32:32,495:INFO:Item found: Title: Muscle Testing, Price: Bieden, URL: None
+2024-05-04 11:32:32,535:INFO:Item found: Title: Guru rig case en rig box, Price: Zie omschrijving, URL: None
+2024-05-04 11:32:32,574:INFO:Item found: Title: READY RIG GS STANDARD, Price: Bieden, URL: None
+2024-05-04 11:32:32,613:INFO:Item found: Title: Eleiko RIG, Price: Bieden, URL: None
+2024-05-04 11:32:32,651:INFO:Item found: Title: Moonraker Whizz Whip, Price: € 129,95, URL: https://www.marktplaats.nl/v/telecommunicatie/overige-telecommunicatie/a1414162686-moonraker-whizz-whip
+2024-05-04 11:32:32,688:INFO:Item found: Title: Mining rig, Price: € 100,00, URL: None
+2024-05-04 11:32:32,725:INFO:Item found: Title: Collective chest rig, Price: Bieden, URL: None
+2024-05-04 11:32:32,762:INFO:Item found: Title: Muscle Testing, Price: € 75,00, URL: None
+2024-05-04 11:32:32,798:INFO:Item found: Title: Patch USAF NDT - Non Destructive Testing AF ( met Velcro ), Price: Bieden, URL: None
+2024-05-04 11:33:36,427:INFO:Received signal to terminate bot and event loop.
+2024-05-04 11:33:36,427:INFO:Cleaning up tasks.
+2024-05-04 11:33:36,427:INFO:Cleaning up after 1 tasks.
+2024-05-04 11:33:36,428:INFO:All tasks finished cancelling.
+2024-05-04 11:33:36,428:INFO:Closing the event loop.
+2024-05-04 11:33:38,382:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-05-04 11:33:38,383:INFO:logging in using static token
+2024-05-04 11:33:38,736:INFO:Shard ID None has sent the IDENTIFY payload.
+2024-05-04 11:33:38,948:INFO:Shard ID None has connected to Gateway: ["gateway-prd-us-east1-d-vp44",{"micros":105665,"calls":["id_created",{"micros":689,"calls":[]},"session_lookup_time",{"micros":2143,"calls":[]},"session_lookup_finished",{"micros":16,"calls":[]},"discord-sessions-prd-1-258",{"micros":101462,"calls":["start_session",{"micros":48680,"calls":["discord-api-rpc-8647c4dbdb-f4pvv",{"micros":44253,"calls":["get_user",{"micros":5238},"get_guilds",{"micros":2489},"send_scheduled_deletion_message",{"micros":7},"guild_join_requests",{"micros":656},"authorized_ip_coro",{"micros":24}]}]},"starting_guild_connect",{"micros":58,"calls":[]},"presence_started",{"micros":27618,"calls":[]},"guilds_started",{"micros":157,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":24925,"calls":[]},"connect_finished",{"micros":24930,"calls":[]},"build_ready",{"micros":14,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: 794a55f7b5c30ebd6bc5764fd7ddb03f).
+2024-05-04 11:33:40,963:INFO:QAI2 version 1.0.1 
+2024-05-04 11:33:41,442:INFO:- qqai
+2024-05-04 11:33:41,442:INFO:- qjoinconvo
+2024-05-04 11:33:41,442:INFO:- qsummarize
+2024-05-04 11:33:41,443:INFO:- qimback
+2024-05-04 11:33:41,443:INFO:- qresearch
+2024-05-04 11:33:41,443:INFO:- qpricewatch
+2024-05-04 11:33:41,443:INFO:- qmarktplaats
+2024-05-04 11:34:15,299:INFO:QAI command called with question: test
+2024-05-04 11:34:16,821:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-04 11:34:22,196:INFO:Marktplaats command called with search query: oude munten
+2024-05-04 11:34:24,126:INFO:Fetching URL: https://www.marktplaats.nl/q/oude+munten/
+2024-05-04 11:34:27,266:INFO:Found 5 items on the page.
+2024-05-04 11:34:27,317:INFO:Item found: Title: LAMINAAT haal je bij Bebo Parket nu v.a. 0.98 cent !!!!!!!!!, Price: € 5,98, URL: https://www.marktplaats.nl/v/doe-het-zelf-en-verbouw/vloerdelen-en-plavuizen/a1000170871-laminaat-haal-je-bij-bebo-parket-nu-v-a-0-98-cent
+2024-05-04 11:34:27,354:INFO:Item found: Title: Koningin Beatrix DUO slab 1 gulden 2001 SP67 PCGS 1e Ontwerp, Price: € 17.500,00, URL: https://www.marktplaats.nl/v/postzegels-en-munten/munten-nederland/a1497782053-koningin-beatrix-duo-slab-1-gulden-2001-sp67-pcgs-1e-ontwerp
+2024-05-04 11:34:27,392:INFO:Item found: Title: 2 stuiverstuk Hollandia, Price: € 29,95, URL: https://www.marktplaats.nl/v/postzegels-en-munten/munten-en-bankbiljetten-verzamelingen/a1438431513-2-stuiverstuk-hollandia
+2024-05-04 11:34:27,431:INFO:Item found: Title: Ring - 18 karaat Platina, Roségoud - 0.47 tw. Diamant, Price: € 700,00, URL: https://www.marktplaats.nl/v/sieraden-tassen-en-uiterlijk/antieke-sieraden/a1501111853-ring-18-karaat-platina-rosegoud-0-47-tw-diamant
+2024-05-04 11:34:27,471:INFO:Item found: Title: Sterke pot | blok | dubbel | dubbelzijdige magneten, Price: Zie omschrijving, URL: https://www.marktplaats.nl/v/doe-het-zelf-en-verbouw/ijzerwaren-en-bevestigingsmiddelen/a1206525501-sterke-pot-blok-dubbel-dubbelzijdige-magneten
+2024-05-04 11:35:08,992:INFO:Received signal to terminate bot and event loop.
+2024-05-04 11:35:08,993:INFO:Cleaning up tasks.
+2024-05-04 11:35:08,993:INFO:Cleaning up after 1 tasks.
+2024-05-04 11:35:08,993:INFO:All tasks finished cancelling.
+2024-05-04 11:35:08,993:INFO:Closing the event loop.

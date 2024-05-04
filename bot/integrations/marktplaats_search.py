@@ -3,7 +3,10 @@ import json
 import logging
 import time
 from selenium.webdriver.common.by import By
-from .chrome_webdriver import init_driver
+try:
+    from .chrome_webdriver import init_driver
+except ImportError:
+    from chrome_webdriver import init_driver
 
 def scrape_marktplaats_items(search_query):
     base_url = "https://www.marktplaats.nl/q/"

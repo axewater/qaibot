@@ -5,6 +5,7 @@ from discord.ext import commands
 from discord import Intents
 from .config import DISCORD_TOKEN, QAI_VERSION
 from .integrations import discord_commands
+from .models import init_db, Session, BotStatistics
 
 logging.basicConfig(filename='qaibot.log', level=logging.INFO, format='%(asctime)s:%(levelname)s:%(message)s')
 
@@ -28,6 +29,19 @@ async def on_ready():
     for command in bot.commands:
         logging.info(f"- {command.name}")
         print(f"- {command.name}")
+
+    # Initialize the database
+    try:
+        init_db()
+        session = Session()
+        new_stat = BotStatistics(notes=f"{QAI_VERSION}")
+        session.add(new_stat)
+        session.commit()
+        session.close()
+        print("Database initialized and bot start time logged.")
+    except Exception as e:
+        logging.error(f"Failed to initialize database or log start time: {str(e)}")
+        print(f"Failed to initialize database or log start time: {str(e)}")
 
 def run():
     bot.run(DISCORD_TOKEN)

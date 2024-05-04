@@ -12,6 +12,7 @@ from ..commands.imback import handle_imback
 from ..commands.marktplaats import handle_marktplaats
 from ..commands.torrent import handle_torrent
 from ..commands.iptorrents import handle_iptorrents
+from ..commands.mobygames import handle_mobygames
 
 async def setup(bot):
     # Define slash commands and connect them to their respective handlers
@@ -70,3 +71,9 @@ async def setup(bot):
         logging.info(f"IPTorrents command called with search query: {search_query}")
         print(f"IPTorrents command called with search query: {search_query}")
         await handle_iptorrents(interaction, search_query)
+
+    @bot.slash_command(name="qmobygames", description="Search for games on MobyGames.")
+    async def mobygames(interaction: discord.Interaction, search_query: str):
+        logging.info(f"MobyGames command called with search query: {search_query}")
+        print(f"MobyGames command called with search query: {search_query}")
+        await handle_mobygames(interaction, search_query)

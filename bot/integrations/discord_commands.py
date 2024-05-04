@@ -9,6 +9,7 @@ from ..commands.pricewatch import handle_pricewatch
 from ..commands.summarize import handle_summarize
 from ..commands.research import handle_research
 from ..commands.imback import handle_imback
+from ..commands.marktplaats import handle_marktplaats
 
 async def setup(bot):
     # Define slash commands and connect them to their respective handlers
@@ -49,3 +50,9 @@ async def setup(bot):
         logging.info(f"Pricewatch command called with component name: {component_name}")
         print(f"Pricewatch command called with component name: {component_name}")
         await handle_pricewatch(interaction, component_name)
+
+    @bot.slash_command(name="qmarktplaats", description="Search for items on Marktplaats.")
+    async def marktplaats(interaction: discord.Interaction, search_query: str):
+        logging.info(f"Marktplaats command called with search query: {search_query}")
+        print(f"Marktplaats command called with search query: {search_query}")
+        await handle_marktplaats(interaction, search_query)

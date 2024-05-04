@@ -18,7 +18,7 @@ Research is probably the coolest option. It searches the web, summarizes website
 
 ## Requirements:
 
-You need to have 3 things:
+You need to have these things:
 
 - DISCORD TOKEN
 Get this from Discord developers portal
@@ -31,6 +31,8 @@ https://platform.openai.com
 - GOOGLE API KEY
 Get this from Google 
 https://console.cloud.google.com/apis
+
+For Marktplaats and others commands, you need Chrome webbrowser installed on your system, and have the same version of 'chromedriver' in the qaibot integrations folder. Download the latest versions here : https://googlechromelabs.github.io/chrome-for-testing/#stable
 
 ## Instructions:
 You must configure an .env file with your API keys

@@ -1,0 +1,45 @@
+[
+{
+    "domain": ".iptorrents.com",
+    "expirationDate": 1716020652.760761,
+    "hostOnly": false,
+    "httpOnly": true,
+    "name": "cf_clearance",
+    "path": "/",
+    "sameSite": "no_restriction",
+    "secure": true,
+    "session": false,
+    "storeId": "0",
+    "value": "YjF2ZOpTR9LnWsWS.HqAnarh1UfyB4gKxgDWVXA8Wv0-1684484652-0-150",
+    "id": 1
+},
+
+{
+    "domain": "www.iptorrents.com",
+    "expirationDate": 1717701797.591296,
+    "hostOnly": true,
+    "httpOnly": true,
+    "name": "pass",
+    "path": "/",
+    "sameSite": "unspecified",
+    "secure": false,
+    "session": false,
+    "storeId": "0",
+    "value": "ee512bb151e63b20e8debc35efdf7493",
+    "id": 4
+},
+{
+    "domain": "www.iptorrents.com",
+    "expirationDate": 1717701797.591274,
+    "hostOnly": true,
+    "httpOnly": true,
+    "name": "uid",
+    "path": "/",
+    "sameSite": "unspecified",
+    "secure": false,
+    "session": false,
+    "storeId": "0",
+    "value": "451419",
+    "id": 5
+}
+]

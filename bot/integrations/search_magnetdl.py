@@ -33,7 +33,7 @@ def search_torrents(search_query):
         response.raise_for_status()
     except requests.RequestException as e:
         logging.error(f"Failed to retrieve data: {e}")
-        return {'error': f"Failed to retrieve data: {e}"}
+        return [] 
 
     logging.info(f"Received response with status code: {response.status_code}")
 
@@ -43,7 +43,7 @@ def search_torrents(search_query):
 
     if not table:
         logging.warning("No results found - no table present on the page.")
-        return {'error': "No results found"}
+        return [] 
 
     results = []
     rows = table.find_all('tr')[1:]  # Skip header row

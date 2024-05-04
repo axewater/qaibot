@@ -74,7 +74,7 @@ def search_torrents(search_query):
             'Detail Page URL': details_page_url
         }
         results.append(result)
-        if len(results) == 10:  # Limit results to 10 items
+        if len(results) == 8:  # Limit results to 10 items
             break
 
     if not results:

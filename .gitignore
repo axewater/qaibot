@@ -12,4 +12,6 @@ __pycache__
 /qaibot.log
 qaibot.log
 bot\integrations\cookie_iptorrents.json
+/bot/integrations/cookie_iptorrents.json
+bot/integrations/cookie_iptorrents.json
 cookie_iptorrents.json

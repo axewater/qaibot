@@ -2,7 +2,7 @@
 
 import discord
 from ..utilities import send_large_message
-from ..integrations.marktplaats_search import scrape_marktplaats_items
+from ..integrations.search_marktplaats import scrape_marktplaats_items
 
 async def handle_marktplaats(interaction: discord.Interaction, search_query: str):
     await interaction.response.defer()

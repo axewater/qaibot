@@ -2,7 +2,7 @@
 
 import discord
 from ..utilities import send_large_message
-from ..integrations.tweakers_pricewatch import search_tweakers_pricewatch
+from ..integrations.search_pricewatch import search_tweakers_pricewatch
 
 async def handle_pricewatch(interaction: discord.Interaction, component_name: str):
     await interaction.response.defer()

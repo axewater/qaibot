@@ -3,7 +3,7 @@ import discord
 import os
 from ..utilities import send_large_message, summarize_content
 from ..integrations.openai_chat import process_text_with_gpt
-from ..integrations.google_search import perform_web_search
+from ..integrations.search_google import perform_web_search
 from ..integrations.summarize_url import fetch_website_content
 from .blacklist import load_blacklist
 

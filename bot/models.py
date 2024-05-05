@@ -1,8 +1,8 @@
-from sqlalchemy import create_engine, Column, String, Integer, Boolean, ForeignKey, DateTime
+# bot/models.py
+from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, DateTime, BigInteger
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.orm import relationship
 import datetime
-from .config import SQLALCHEMY_DATABASE_URI
 
 Base = declarative_base()
 
@@ -17,6 +17,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String, unique=True, nullable=False)
     date_first_seen = Column(DateTime, default=datetime.datetime.utcnow)
+    user_discord_id = Column(BigInteger, unique=True, nullable=True)
     settings = relationship("UserSetting", back_populates="user")
     logs = relationship("Log", back_populates="user")
 
@@ -26,6 +27,7 @@ class UserSetting(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     setting_name = Column(String)
     setting_value = Column(String)
+    learn_about_me = Column(Boolean, default=True)
     user = relationship("User", back_populates="settings")
 
 class AdminSetting(Base):
@@ -41,10 +43,3 @@ class Log(Base):
     timestamp = Column(DateTime, default=datetime.datetime.utcnow)
     message = Column(String)
     user = relationship("User", back_populates="logs")
-
-# Setup the engine and session
-engine = create_engine(SQLALCHEMY_DATABASE_URI)
-Session = sessionmaker(bind=engine)
-
-def init_db():
-    Base.metadata.create_all(engine)

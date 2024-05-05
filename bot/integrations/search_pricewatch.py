@@ -1,8 +1,7 @@
+# bot/integrations/search_pricewatch.py
 import requests
 from bs4 import BeautifulSoup
-import json
-import sys
-import logging
+import json, sys, logging
 
 cookies = {
     "SSLB": "1",
@@ -10,6 +9,7 @@ cookies = {
 }
 
 def search_tweakers_pricewatch(component_name):
+    logging.info(f"search_tweakers_pricewatch: Called with component name '{component_name}'")
     base_url = "https://tweakers.net/pricewatch/"
     search_url = base_url + "zoeken/?keyword=" + component_name
     try:
@@ -20,6 +20,7 @@ def search_tweakers_pricewatch(component_name):
         return None  # Return None to indicate failure
 
     try:
+        logging.info(f"search_tweakers_pricewatch: Souping HTML content...")
         soup = BeautifulSoup(response.content, "html.parser")
         results = []
         for item in soup.select("table.listing tr"):
@@ -38,17 +39,17 @@ def search_tweakers_pricewatch(component_name):
                         "link": link,
                     })
                 else:
-                    logging.warning(f"Skipping incomplete result for {component_name}: Name={name}, Price={price}, Link={link}")
+                    logging.warning(f"search_tweakers_pricewatch: Skipping incomplete result for {component_name}: Name={name}, Price={price}, Link={link}")
             else:
-                logging.warning(f"Missing essential elements in result for {component_name}")
+                logging.warning(f"search_tweakers_pricewatch: Missing essential elements in result for {component_name}")
 
         if not results:
-            logging.info(f"No valid results found for {component_name}")
+            logging.info(f"search_tweakers_pricewatch: No valid results found for {component_name}")
             return None  # Return None to indicate no valid results
 
         return results
     except Exception as e:
-        logging.error(f"Error parsing HTML content for {component_name}: {e}")
+        logging.error(f"search_tweakers_pricewatch: Error parsing HTML content for {component_name}: {e}")
         return None  # Return None to indicate parsing failure
 
 if __name__ == "__main__":

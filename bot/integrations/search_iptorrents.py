@@ -1,7 +1,5 @@
-import json
-import logging
-import sys
-import time
+# bot/integrations/search_iptorrents.py
+import json, sys, logging, time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -20,12 +18,12 @@ def load_cookies(driver, path_to_cookie_file):
     with open(path_to_cookie_file, 'r') as file:
         cookies = json.load(file)
         for cookie in cookies:
-            # Adjust the sameSite attribute to a valid value if necessary
+            
             if 'sameSite' in cookie:
                 if cookie['sameSite'].lower() in ['no_restriction', 'unspecified']:
-                    cookie['sameSite'] = 'None'  # 'None' should be set explicitly where cross-site cookies are allowed
+                    cookie['sameSite'] = 'None'
                 else:
-                    cookie['sameSite'] = 'Lax'  # Default to 'Lax' if not set to 'Strict' or 'None'
+                    cookie['sameSite'] = 'Lax'
             driver.add_cookie(cookie)
 
 
@@ -46,26 +44,28 @@ def scrape_iptorrents(search_query):
     # Load the cookies for authentication
     load_cookies(driver, "./bot/integrations/cookie_iptorrents.json")
 
-    logging.info(f"Fetching URL: {search_url}")
+    logging.info(f"scrape_iptorrents: Fetching URL {search_url}")
     try:
         driver.get(search_url)
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "torrents")))
+        logging.info("scrape_iptorrents: Page loaded successfully, waiting for 2 seconds...")
         time.sleep(2)  # Allow page to fully load
-
+        logging.info("scrape_iptorrents: Page fully loaded, souping results...")
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         table = soup.find('table', {'id': 'torrents'})
         results = []
 
         rows = table.find('tbody').find_all('tr')[:12]  # Limit to 12 results
+        logging.info(f"scrape_iptorrents: Found {len(rows)} results")
         for row in rows:
             cols = row.find_all('td')
             if not cols:
                 continue
-
+            
             # Use get_clean_text to extract the text properly from the <a> tag
             name_link = cols[1].find('a')
             name = get_clean_text(name_link) if name_link else "No name found"
-
+            logging.info(f"scrape_iptorrents: Cleaned name: {name}")
             result = {
                 'Type': cols[0].find('img')['alt'] if cols[0].find('img') else 'No type',
                 'Name': name,
@@ -97,10 +97,10 @@ if __name__ == "__main__":
         sys.exit(1)
 
     search_query = sys.argv[1]
-    logging.info(f"Searching for '{search_query}' on IPTorrents...")
+    logging.info(f"search_iptorrents: Initiating scrape for '{search_query}' on IPTorrents...")
     items = scrape_iptorrents(search_query)
     if items is None:
-        print("Failed to retrieve or parse items.")
+        logging.error("search_iptorrents: Failed to retrieve or parse items from IPTorrents.")
     else:
         items_json = json.dumps(items, indent=4)
-        print(items_json)
+        logging.info(f"search_iptorrents: Results: {items_json}")

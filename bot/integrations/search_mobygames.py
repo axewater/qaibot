@@ -1,26 +1,21 @@
-import requests
-import json
-import sys
-import urllib.parse
-
-# Import the API key directly from your configuration file
+# bot/integrations/search_mobygames.py
+import requests, json, sys, urllib.parse, logging
 from ..config import MOBYGAMES_API_KEY
-print(f"Imported API key: {MOBYGAMES_API_KEY}")
 
 def search_mobygames(game_name):
     encoded_game_name = urllib.parse.quote(game_name)  # Ensure the game name is URL-encoded
-    print(f"Encoded game name: {encoded_game_name}")
+    logging.info(f"search_mobygames: Called with game name '{game_name}'")
     url = f"https://api.mobygames.com/v1/games?title={encoded_game_name}&api_key={MOBYGAMES_API_KEY}?format=normal"
-    print(f"URL: {url}")
+    
     try:
-        print(f"Searching for '{game_name}' using MobyGames API...")
+        logging.info(f"search_mobygames: Searching for '{game_name}' using MobyGames API...")
         response = requests.get(url)
         response.raise_for_status()  # Raises HTTPError for bad responses
         data = response.json()
-        print(f"Data: {data}")
+        logging.info(f"Data: {data}")
         return data
     except requests.RequestException as e:
-        print(f"Error occurred while fetching data: {e}")
+        logging.error(f"search_mobygames: Error occurred while fetching data: {e}")
         return None
 
 if __name__ == "__main__":

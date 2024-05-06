@@ -19,7 +19,7 @@ def summarize_text(text, context_for_summary="Please summarize this text to a ma
     logging.info("summarize_text: Summarizing the text with GPT3")
     return process_text_with_gpt(text, context_for_summary, gpt_version=3)
 
-def process_text_with_gpt(text, system_prompt, gpt_version):
+def process_text_with_gpt(text, system_prompt, gpt_version=3):
     logging.info(f"process_text_with_gpt: Processing text with GPT (version: " + str(gpt_version) + ")")
     messages = [
         {"role": "system", "content": system_prompt},

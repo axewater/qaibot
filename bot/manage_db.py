@@ -3,7 +3,12 @@ import sys
 from sqlalchemy import create_engine, text
 from sqlalchemy_utils import database_exists, drop_database, create_database
 from sqlalchemy.exc import SQLAlchemyError
-from config import SQLALCHEMY_DATABASE_URI
+
+try:
+    from .config import SQLALCHEMY_DATABASE_URI
+except ImportError:
+    from config import SQLALCHEMY_DATABASE_URI
+
 
 def main():
     engine = create_engine(SQLALCHEMY_DATABASE_URI)

@@ -11,6 +11,7 @@ class BotStatistics(Base):
     id = Column(Integer, primary_key=True)
     start_time = Column(DateTime, default=datetime.datetime.utcnow)
     notes = Column(String)
+    last_registered_version = Column(String)
 
 class User(Base):
     __tablename__ = 'users'

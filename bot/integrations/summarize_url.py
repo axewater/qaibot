@@ -1,7 +1,28 @@
-# bot/integrations/summarize_url.py
-import requests, logging
+import requests
+import logging
+import sys
 from bs4 import BeautifulSoup
-from bot.integrations.openai_chat import process_text_with_gpt
+import argparse
+import re
+
+try:
+    from bot.integrations.openai_chat import process_text_with_gpt
+except ImportError:
+    from openai_chat import process_text_with_gpt
+
+
+def validate_url(url):
+    """Validate the URL format using a regular expression."""
+    regex = re.compile(
+        r'^(?:http|ftp)s?://'  # http://, https://, or ftp://
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+'  # domain names
+        r'[A-Z]{2,6}\.?|'  # top level domain
+        r'localhost|'  # localhost
+        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
+        r'(?::\d+)?'  # optional port
+        r'(?:/?|[/?]\S+)$', re.IGNORECASE)  # path
+    return re.match(regex, url) is not None
+
 
 
 def fetch_website_content(url):
@@ -14,14 +35,14 @@ def fetch_website_content(url):
         "Accept-Encoding": "gzip, deflate",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
         "Connection": "keep-alive",
-        "Referer": "https://www.google.com", 
+        "Referer": "https://www.google.com",
         "Cache-Control": "no-cache",
     }
     try:
-        response = requests.get(url, headers=headers) 
+        response = requests.get(url, headers=headers)
         logging.info(f"fetch_website_content: Received response from {url}: {response.status_code}")
         response.raise_for_status()  # raise exception for HTTP errors
-        
+
         soup = BeautifulSoup(response.text, 'html.parser')
 
         # Remove unwanted tag elements
@@ -43,3 +64,19 @@ def summarize_text(text, context_for_summary):
     system_prompt = context_for_summary
     return process_text_with_gpt(text, system_prompt)
 
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Fetch and summarize website content.")
+    parser.add_argument('url', type=str, help='The URL of the website to summarize')
+    args = parser.parse_args()
+
+    if not validate_url(args.url):
+        print("Invalid URL provided.")
+        sys.exit(1)
+
+    content = fetch_website_content(args.url)
+    if content:
+        summary = summarize_text(content, "Please summarize this text:")
+        print(summary)
+    else:
+        print("Failed to fetch content from the URL.")

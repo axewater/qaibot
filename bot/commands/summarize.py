@@ -1,8 +1,18 @@
 # bot/commands/summarize.py
-import discord, validators, logging
-from ..utilities import send_large_message
-from ..integrations.summarize_url import fetch_website_content
-from ..utilities import summarize_content
+import discord, logging
+try:
+    from ..utilities import send_large_message, summarize_content
+    from ..integrations.summarize_url import fetch_website_content
+except ImportError:
+    # Fallback to absolute imports
+    from bot.utilities import send_large_message, summarize_content
+    from integrations.summarize_url import fetch_website_content
+# suggest install 'validators' if not installed
+try:
+    import validators
+except ImportError:
+    print("Module 'validators' is not installed. Please install it using 'pip install validators'")
+    raise
 
 async def handle_summarize(interaction: discord.Interaction, url: str, context: str = None):
     await interaction.response.defer()

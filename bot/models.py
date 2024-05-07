@@ -20,7 +20,8 @@ class User(Base):
     date_first_seen = Column(DateTime, default=datetime.datetime.utcnow)
     user_discord_id = Column(BigInteger, unique=True, nullable=True)
     settings = relationship("UserSetting", back_populates="user")
-    logs = relationship("Log", back_populates="user")
+    log_entries = relationship("Log", back_populates="user")
+    message_logs = relationship("MessageLog", back_populates="user")
 
 class UserSetting(Base):
     __tablename__ = 'user_settings'
@@ -43,4 +44,16 @@ class Log(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     timestamp = Column(DateTime, default=datetime.datetime.utcnow)
     message = Column(String)
-    user = relationship("User", back_populates="logs")
+    user = relationship("User", back_populates="log_entries")
+
+class MessageLog(Base):
+    __tablename__ = 'message_logs'
+    id = Column(Integer, primary_key=True)
+    server_id = Column(String)
+    server_name = Column(String)
+    channel_id = Column(String)
+    channel_name = Column(String)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    message_content = Column(String)
+    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+    user = relationship("User", back_populates="message_logs")

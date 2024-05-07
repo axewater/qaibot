@@ -12,6 +12,7 @@ from ..commands.torrent import handle_torrent
 from ..commands.iptorrents import handle_iptorrents
 from ..commands.mobygames import handle_mobygames
 from ..commands.manage import handle_manage
+from ..commands.imdb import handle_imdb
 
 async def setup(bot):
     
@@ -73,3 +74,8 @@ async def setup(bot):
     async def settings(interaction: discord.Interaction):
         logging.info("Manage command called")
         await handle_manage(interaction)
+
+    @bot.slash_command(name="qimdb", description="Search for movies and shows on IMDb.")
+    async def imdb(interaction: discord.Interaction, search_query: str):
+        logging.info(f"IMDb command called with search query: {search_query}")
+        await handle_imdb(interaction, search_query)

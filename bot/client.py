@@ -14,7 +14,7 @@ from .manage_db import main as manage_db_main
 logging.basicConfig(filename='qaibot.log', level=logging.INFO, format='%(asctime)s:%(levelname)s:%(message)s')
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--register", help="Force registration of commands", action="store_true")
+parser.add_argument("--noregister", help="Prevent registration of commands", action="store_true")
 parser.add_argument("--purge", help="Purge and recreate the database", action="store_true")
 args = parser.parse_args()
 
@@ -40,7 +40,7 @@ async def on_ready():
     session = SessionLocal()
     try:
         last_stat = session.query(BotStatistics).order_by(BotStatistics.id.desc()).first()
-        should_register = args.register or (last_stat is None or last_stat.last_registered_version != QAI_VERSION)
+        should_register = not args.noregister
 
         if should_register:
             await discord_commands.setup(bot)
@@ -59,7 +59,7 @@ async def on_ready():
             session.commit()
             logging.info(f"QAIBOT: Commands registered with version {QAI_VERSION}.")
         else:
-            logging.info(f"QAIBOT: Commands already registered with version {QAI_VERSION}.")
+            logging.error(f"QAIBOT: Commands already registered with version {QAI_VERSION}. This shouldn't happen.")
         if args.purge:
             manage_db_main()
 

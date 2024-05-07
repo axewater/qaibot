@@ -1,5 +1,6 @@
 # bot/commands/iptorrents.py
 import discord, logging
+from urllib.parse import urlparse, urlunparse, quote
 from ..utilities import send_large_message
 from ..integrations.search_iptorrents import scrape_iptorrents
 
@@ -22,10 +23,18 @@ async def handle_iptorrents(interaction: discord.Interaction, search_query: str)
             size = result["Size"]
             seeders = result["Seeders"]
             leechers = result["Leechers"]
-            download_link = result["Download Link"]
-            # formatted_results.append(f"**{name}** - Size: {size}, Seeders: {seeders}, Leechers: {leechers}, [DOWNLOAD!](<{download_link}>)")
-            formatted_results.append(f"**{name}** - Size: {size}, Peers: {seeders}/{leechers}, [LINK!](<{download_link}>)")
+            parsed_url = urlparse(result["Download Link"])
+            # Reconstruct URL with the path and query components encoded
+            safe_url = urlunparse((
+                parsed_url.scheme,
+                parsed_url.netloc,
+                quote(parsed_url.path),
+                parsed_url.params,
+                quote(parsed_url.query),
+                parsed_url.fragment
+            ))
+            formatted_results.append(f"**{name}** - Size: {size}, Peers: {seeders}/{leechers}, [LINK!](<{safe_url}>)")
 
         message = "\n".join(formatted_results)
-        logging.info(f"Sending {len(results)} results for '{search_query} to Discord'")
+        logging.info(f"Sending {len(results)} results for '{search_query}' to Discord")
         await send_large_message(interaction, f"**IPTorrents Search Results for '{search_query}':**\n{message}")

@@ -46,6 +46,7 @@ async def on_ready():
             await discord_commands.setup(bot)
             print("QAIBOT: Registering commands. This may take a few seconds.")
             print("QAIBOT: If this seems *stuck* connecting, you may be RATE LIMITED by Discord.")
+            print(f"QAIBOT: Registered with version {QAI_VERSION}.")
             await bot.sync_commands()
             
             print("QAIBOT: Registered commands:")
@@ -57,7 +58,8 @@ async def on_ready():
             session.add(new_stat)
             session.commit()
             logging.info(f"QAIBOT: Commands registered with version {QAI_VERSION}.")
-
+        else:
+            logging.info(f"QAIBOT: Commands already registered with version {QAI_VERSION}.")
         if args.purge:
             manage_db_main()
 

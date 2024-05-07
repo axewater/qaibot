@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import logging
 import argparse
+import json
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -83,8 +84,8 @@ def main():
 
     results = search_imdb(args.query)
     if results:
-        for result in results:
-            print(f"Title: {result['title']}, Year: {result['year']}, Actors: {result['actors']}, Link: {result['link']}")
+        results_json = json.dumps(results, indent=4)
+        print(results_json)
     else:
         print("No results found or an error occurred.")
 

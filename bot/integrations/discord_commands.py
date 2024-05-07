@@ -13,6 +13,7 @@ from ..commands.iptorrents import handle_iptorrents
 from ..commands.mobygames import handle_mobygames
 from ..commands.manage import handle_manage
 from ..commands.imdb import handle_imdb
+from ..commands.amazon import handle_amazon
 
 async def setup(bot):
     
@@ -79,3 +80,8 @@ async def setup(bot):
     async def imdb(interaction: discord.Interaction, search_query: str):
         logging.info(f"IMDb command called with search query: {search_query}")
         await handle_imdb(interaction, search_query)
+
+    @bot.slash_command(name="qamazon", description="Search for products on Amazon.")
+    async def amazon(interaction: discord.Interaction, search_query: str):
+        logging.info(f"Amazon command called with search query: {search_query}")
+        await handle_amazon(interaction, search_query)

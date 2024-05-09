@@ -53,7 +53,7 @@ class MessageLog(Base):
     server_name = Column(String)
     channel_id = Column(String)
     channel_name = Column(String)
-    user_id = Column(Integer, ForeignKey('users.id'))
+    user_id = Column(BigInteger, ForeignKey('users.user_discord_id'))
     message_content = Column(String)
     timestamp = Column(DateTime, default=datetime.datetime.utcnow)
     user = relationship("User", back_populates="message_logs")

@@ -10,6 +10,7 @@ from .models import BotStatistics
 from .database import init_db, SessionLocal
 import datetime
 from .manage_db import main as manage_db_main
+from .integrations.message_logger import setup as setup_message_logger
 
 logging.basicConfig(filename='qaibot.log', level=logging.INFO, format='%(asctime)s:%(levelname)s:%(message)s')
 
@@ -44,6 +45,7 @@ async def on_ready():
 
         if should_register:
             await discord_commands.setup(bot)
+            setup_message_logger(bot)
             print("QAIBOT: Registering commands. This may take a few seconds.")
             print("QAIBOT: If this seems *stuck* connecting, you may be RATE LIMITED by Discord.")
             print(f"QAIBOT: Registered with version {QAI_VERSION}.")

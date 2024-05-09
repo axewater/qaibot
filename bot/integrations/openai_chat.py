@@ -6,6 +6,7 @@ from openai import OpenAI
 import tiktoken
 import time
 
+
 # Instantiate the OpenAI client with your API key
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 

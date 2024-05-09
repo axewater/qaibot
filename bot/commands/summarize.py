@@ -38,7 +38,7 @@ async def handle_summarize(interaction: discord.Interaction, url: str, context: 
 
         if final_summary:
             logging.info("handle_summarize: Summary generated. Sending it to Discord now.")
-            await send_large_message(interaction, f"**SUMMARY OF:** <{url}>\n{final_summary}")
+            await send_large_message(interaction, f"**SUMMARY OF:** <{url}>\n{final_summary} Context: \n\n{context}")
         else:
             logging.error("handle_summarize: Sorry, no summary was generated.")
             await interaction.followup.send("Error: Could not generate a summary.")

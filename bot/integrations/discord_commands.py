@@ -1,5 +1,6 @@
 # bot/integrations/discord_commands.py
-import discord, logging
+import discord
+import logging
 from discord import Option
 from ..commands.qai import handle_qai
 from ..commands.joinconvo import handle_joinconvo
@@ -14,6 +15,7 @@ from ..commands.mobygames import handle_mobygames
 from ..commands.manage import handle_manage
 from ..commands.imdb import handle_imdb
 from ..commands.amazon import handle_amazon
+from ..integrations.image_generator import generate_image
 
 async def setup(bot):
     
@@ -85,3 +87,12 @@ async def setup(bot):
     async def amazon(interaction: discord.Interaction, search_query: str):
         logging.info(f"Amazon command called with search query: {search_query}")
         await handle_amazon(interaction, search_query)
+
+    @bot.slash_command(name="qimage", description="Generate an image based on a text prompt.")
+    async def image(interaction: discord.Interaction, prompt: str):
+        logging.info(f"Image command called with prompt: {prompt}")
+        image_path = await generate_image(prompt)
+        if image_path:
+            await interaction.response.send_message(file=discord.File(image_path))
+        else:
+            await interaction.response.send_message("Failed to generate image.")

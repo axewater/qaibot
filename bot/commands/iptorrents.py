@@ -5,6 +5,10 @@ from ..utilities import send_large_message
 from ..integrations.search_iptorrents import scrape_iptorrents
 
 async def handle_iptorrents(interaction: discord.Interaction, search_query: str):
+    """
+    Handle IPTorrents search command for Discord.
+    """
+    
     await interaction.response.defer()
     logging.info(f"Starting to scrape IPTorrents for '{search_query}'")
     results = scrape_iptorrents(search_query)

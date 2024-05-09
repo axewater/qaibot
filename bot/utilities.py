@@ -2,9 +2,11 @@
 from .integrations.openai_chat import summarize_text
 import tiktoken
 import logging
+import time
 
 TOKEN_LIMIT = 8000
 DISCORD_LIMIT = 2000  # Maximum characters for Discord messages
+
 
 # Function to send large messages, respecting Discord's character limit
 async def send_large_message(interaction, message):
@@ -27,29 +29,31 @@ async def send_large_message(interaction, message):
                     end = start + DISCORD_LIMIT
 
             part = message[start:end]
-            logging.info(f"Sending message chunk {start // DISCORD_LIMIT + 1}")
+            logging.info(f"send_large_message: Sending message chunk {start // DISCORD_LIMIT + 1}")
             await interaction.followup.send(part)
             
             # Move to the next chunk
             start = end
 
 # Function to summarize content, handling token limits
-async def summarize_content(content, context):
+async def summarize_content(content, context, max_chunks=10):
     """Summarize the content, splitting into chunks if it exceeds the token limit."""
     chunks = chunk_text(content)
     total_chunks = len(chunks)  # Determine the total number of chunks
     summaries = []
 
-    # Processing each chunk with a chunk counter
     for i, chunk in enumerate(chunks):
-        logging.info(f"Processing chunk {i + 1} of {total_chunks}")  # Display current chunk and total
+        if i >= max_chunks:
+            logging.info(f"summarize_content: Limit reached. Processed {max_chunks} chunks out of {total_chunks}.")
+            break
+        logging.info(f"summarize_content: Processing chunk {i + 1} of {max_chunks}")  # Display current chunk and total
         summary = summarize_text(chunk, context)  # Summarize each chunk
         summaries.append(summary)
 
     # If more than one summary, combine and summarize again
     if len(summaries) > 1:
         combined_summary = " ".join(summaries)
-        logging.info("Summarizing the mother of all summaries")  # When creating a combined summary
+        logging.info("summarize_content: Summarizing the mother of all summaries")  # When creating a combined summary
         final_summary = summarize_text(combined_summary, context)
         return final_summary
     else:
@@ -64,7 +68,7 @@ def chunk_text(content, token_limit=TOKEN_LIMIT):
 
     # Print console message if the content is too large
     if len(tokens) > token_limit:
-        logging.info(f"Content too large! {len(tokens)} tokens detected. Will split into chunks of {token_limit} tokens.")
+        logging.info(f"chunk_text: Content too large! {len(tokens)} tokens detected. Will split into chunks of {token_limit} tokens.")
 
     # Split the tokens into chunks
     chunks = []

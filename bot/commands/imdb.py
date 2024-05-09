@@ -3,17 +3,25 @@
 from ..integrations.search_imdb import search_imdb
 from ..utilities import send_large_message
 import discord
+import logging
+
 
 async def handle_imdb(interaction: discord.Interaction, query: str):
     """
     Handle IMDb search command for Discord.
     """
+    await interaction.response.defer()
+    logging.info(f"Starting to scrape IMDB for '{query}'")
     results = search_imdb(query)
     if not results:
-        await interaction.response.send_message("No results found for your query.", ephemeral=True)
+        await interaction.followup.send("IMDB Search: No results found for your query.")
     else:
-        embed = discord.Embed(title="IMDb Search Results", description=f"Top results for '{query}':", color=0x00ff00)
+        formatted_results = []
         for result in results:
-            embed.add_field(name=f"{result['title']} ({result['year']})", value=f"[Link]({result['link']})", inline=False)
-            embed.add_field(name="Actors", value=result['actors'], inline=False)
-        await send_large_message(interaction, embed)
+            title = result['title']
+            year = result['year']
+            actors = result['actors']
+            link = result['link']
+            formatted_results.append(f"**{title} ({year})** - Actors: {actors}, [Link](<{link}>)")
+        message = "\n".join(formatted_results)
+        await send_large_message(interaction, f"**IMDb Search Results for '{query}':**\n{message}")

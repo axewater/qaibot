@@ -12,12 +12,12 @@ def search_amazon(query):
     Search Amazon for a given query and return the top results.
     """
     if not query:
-        logging.error("No search query provided.")
+        logging.error("search_amazon: No search query provided.")
         return []
     user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
 
     try:
-        logging.info(f"Searching Amazon for '{query}'...")
+        logging.info(f"search_amazon: Searching Amazon for '{query}'...")
         # Placeholder for URL and headers, adjust as necessary based on Amazon's API or scraping method
         url = f"https://www.amazon.com/s?k={query.replace(' ', '+')}"
         headers = {
@@ -32,7 +32,7 @@ def search_amazon(query):
 
         response = requests.get(url, headers=headers)
         response.raise_for_status()
-        logging.info("Request successful, processing results...")
+        logging.info("search_amazon: Request successful, processing results...")
 
         soup = BeautifulSoup(response.text, 'html.parser')
         results = []
@@ -61,14 +61,14 @@ def search_amazon(query):
                 'Delivery Date': delivery_date
             })
 
-        logging.info(f"Found {len(results)} results.")
+        logging.info(f"search_amazon: Found {len(results)} results.")
         return json.dumps(results)
 
     except requests.RequestException as e:
-        logging.error(f"Request failed: {e}")
+        logging.error(f"search_amazon: Request failed: {e}")
         return json.dumps({'error': str(e)})
     except Exception as e:
-        logging.error(f"An error occurred: {e}")
+        logging.error(f"search_amazon: An error occurred: {e}")
         return json.dumps({'error': str(e)})
 
 def main():

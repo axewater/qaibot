@@ -1,5 +1,6 @@
 # bot/commands/summarize.py
-import discord, logging
+import discord
+import logging
 try:
     from ..utilities import send_large_message, summarize_content
     from ..integrations.summarize_url import fetch_website_content
@@ -33,7 +34,7 @@ async def handle_summarize(interaction: discord.Interaction, url: str, context: 
             context = f"Summarize the content at this URL: {url}."
 
         logging.info("handle_summarize: Summarizing content.")
-        final_summary = await summarize_content(content, context)
+        final_summary = await summarize_content(content, context, max_chunks=10)
 
         if final_summary:
             logging.info("handle_summarize: Summary generated. Sending it to Discord now.")

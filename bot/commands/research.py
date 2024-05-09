@@ -40,7 +40,7 @@ async def handle_research(interaction: discord.Interaction, topic: str, depth: s
             
             context_for_summary = f"Original question: {topic}. Summarize this content in the context of this question."
             logging.info(f"handle_research: Fetched content, now summarizing website {idx}/{max_summaries}...")
-            summary = await summarize_content(content, context_for_summary)
+            summary = await summarize_content(content, context_for_summary, max_chunks=4)
 
             if summary:
                 logging.info(f"handle_research: Summarized website {idx}/{max_summaries}.")

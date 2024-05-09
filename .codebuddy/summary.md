@@ -1,33 +1,19 @@
 # Project Summary
 
 ## Overview
-- **Languages**: Python
-- **Frameworks**: SQLAlchemy
-- **Main Libraries**: discord.py, selenium, dotenv
+- **Languages:** PowerShell, Batch
+- **Purpose:** The project provides scripts to activate and deactivate a Python virtual environment on Windows.
+- **Source Files:** 
+  - `/venv/Scripts/activate`
+  - `/venv/Scripts/activate.bat`
 
-## Purpose
-The project appears to be a Discord bot that integrates various functionalities such as searching Amazon, managing databases, handling user interactions, and more.
+## Configuration Files
+- `/venv/Scripts/activate` - PowerShell script to activate the virtual environment.
+- `/venv/Scripts/activate.bat` - Batch script to activate the virtual environment.
 
-## Relevant Files
-- **Configuration Files**:
-  - `/bot/config.py`
-- **Database Files**:
-  - `/bot/database.py`
-- **Database Management Files**:
-  - `/bot/manage_db.py`
-- **Model Files**:
-  - `/bot/models.py`
-- **Command Files**:
-  - `/bot/commands/amazon.py`
-  - `/bot/commands/blacklist.py`
-- **Integration Files**:
-  - `/bot/integrations/chrome_webdriver.py`
-- **Virtual Environment Configuration**:
-  - `/venv/pyvenv.cfg`
-
-## Source Files Directory
-- Source files for commands: `/bot/commands`
-- Source files for integrations: `/bot/integrations`
+## Directories
+- **Source Files:** The source files for the project are located in the `/venv/Scripts/` directory.
+- **Virtual Environment Directory:** The virtual environment directory is located at `C:\scripts\qaibot\venv`.
 
 ## Documentation Files
-No specific documentation files were mentioned in the provided file list.
+- The project does not contain separate documentation files.

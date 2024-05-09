@@ -51,6 +51,8 @@ def search_amazon(query):
             num_ratings = num_ratings_element.text if num_ratings_element else 'No ratings'
             delivery_date_element = item.find('span', {'class': 'a-color-base'})
             delivery_date = delivery_date_element.text if delivery_date_element else 'No delivery date'
+            link_element = item.find('a', {'class': 'a-link-normal'}, href=True)
+            link = f"https://www.amazon.com{link_element['href']}" if link_element else 'No link'
             results.append({
                 'ASIN': asin,
                 'Title': title,
@@ -58,7 +60,8 @@ def search_amazon(query):
                 'Price': price,
                 'Rating': rating,
                 'Number of Ratings': num_ratings,
-                'Delivery Date': delivery_date
+                'Delivery Date': delivery_date,
+                'Link': link
             })
 
         logging.info(f"search_amazon: Found {len(results)} results.")

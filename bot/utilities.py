@@ -10,23 +10,18 @@ DISCORD_LIMIT = 2000  # Maximum characters for Discord messages
 
 # Function to send large messages, respecting Discord's character limit
 async def send_large_message(interaction, message):
-    """Send a large message in chunks to respect Discord's character limit without cutting words in half."""
+    """Send a large message in chunks to respect Discord's character limit without cutting lines in half."""
     if len(message) <= DISCORD_LIMIT:
         await interaction.followup.send(message)
     else:
-        # Break the message into chunks, avoiding word cuts
+        # Break the message into chunks, avoiding line cuts
         start = 0
         while start < len(message):
             end = start + DISCORD_LIMIT  # Initial end point
 
-            # If the message is too long, find a space or newline to break at
-            if end < len(message):
-                while end > start and message[end - 1] not in [' ', '\n']:
-                    end -= 1  # Move backward to find a space or newline
-
-                # If no space or newline found, reset to the initial chunk size
-                if end == start:
-                    end = start + DISCORD_LIMIT
+            # If the message is too long, find a newline to break at
+            if end < len(message) and '\n' in message[start:end]:
+                end = message.rfind('\n', start, end) + 1
 
             part = message[start:end]
             logging.info(f"send_large_message: Sending message chunk {start // DISCORD_LIMIT + 1}")

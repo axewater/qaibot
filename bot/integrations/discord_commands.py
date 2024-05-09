@@ -16,6 +16,7 @@ from ..commands.manage import handle_manage
 from ..commands.imdb import handle_imdb
 from ..commands.amazon import handle_amazon
 from ..integrations.image_generator import generate_image
+from ..commands.handle_nmap import handle_nmap
 
 async def setup(bot):
     
@@ -79,9 +80,9 @@ async def setup(bot):
         await handle_manage(interaction)
 
     @bot.slash_command(name="qimdb", description="Search for movies and shows on IMDb.")
-    async def imdb(interaction: discord.Interaction, search_query: str):
+    async def imdb(interaction: discord.Interaction, search_query: str, type: str = Option(str, default='movie', choices=['movie', 'tv'], description="Specify the type: 'movie' or 'tv'.")):
         logging.info(f"IMDb command called with search query: {search_query}")
-        await handle_imdb(interaction, search_query)
+        await handle_imdb(interaction, search_query, type)
 
     @bot.slash_command(name="qamazon", description="Search for products on Amazon.")
     async def amazon(interaction: discord.Interaction, search_query: str):
@@ -96,3 +97,7 @@ async def setup(bot):
             await interaction.response.send_message(file=discord.File(image_path))
         else:
             await interaction.response.send_message("Failed to generate image.")
+
+    @bot.slash_command(name="qnmap", description="Perform a port scan on a specified IP address or domain.")
+    async def nmap(interaction: discord.Interaction, target: str, port_range: str = Option(str, default=None, required=False, description="Specify the port range (e.g., 1-1000).")):
+        await handle_nmap(interaction, target, port_range)

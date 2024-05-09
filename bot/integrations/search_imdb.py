@@ -7,7 +7,7 @@ import json
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def search_imdb(query):
+def search_imdb(query, type='movie'):
     """
     Search IMDB for a given query and return the top results.
     """
@@ -16,9 +16,9 @@ def search_imdb(query):
         return []
 
     try:
-        logging.info(f"Searching IMDb for '{query}'...")
-        # Construct the search URL
-        url = f"https://www.imdb.com/find?q={query.replace(' ', '+')}&s=tt&ttype=ft&ref_=fn_ft"
+        logging.info(f"Searching IMDb for '{query}' with type '{type}'...")
+        ttype = 'ft' if type == 'movie' else 'tv'
+        url = f"https://www.imdb.com/find?q={query.replace(' ', '+')}&s=tt&ttype={ttype}&ref_=fn_ft"
 
         # Headers to mimic a regular browser request
         headers = {
@@ -76,13 +76,14 @@ def search_imdb(query):
 def main():
     parser = argparse.ArgumentParser(description='Search IMDb for a given query and return the top results including title, link, year, and main actors.')
     parser.add_argument('query', type=str, nargs='?', help='The search query string')
+    parser.add_argument('--type', type=str, default='movie', choices=['movie', 'tv'], help="Specify the type: 'movie' or 'tv'.")
     args = parser.parse_args()
 
     if not args.query:
         parser.print_help()
         return
 
-    results = search_imdb(args.query)
+    results = search_imdb(args.query, args.type)
     if results:
         results_json = json.dumps(results, indent=4)
         print(results_json)

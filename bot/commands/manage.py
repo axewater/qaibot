@@ -40,7 +40,7 @@ async def handle_manage(interaction):
         button_label = "Disable Learn About Me" if user_setting.learn_about_me else "Enable Learn About Me"
         button = Button(label=button_label, style=discord.ButtonStyle.primary)
 
-        async def toggle_learn_about_me(interaction: discord.Interaction):
+        async def toggle_learn_about_me(interaction: discord.Interaction, session=session):
             try:
                 new_setting = not user_setting.learn_about_me
                 logging.info(f"handle_manage: User {user.id} toggled Learn About Me setting to {new_setting}.")
@@ -51,7 +51,7 @@ async def handle_manage(interaction):
                 await interaction.response.edit_message(view=view)
             except Exception as e:
                 logging.error(f"Error during database commit: {str(e)}")
-                await interaction.response.send_message(f"An error occurred during update: {str(e)}")
+                await interaction.response.send_message(f"An error occurred during update: {str(e)}", ephemeral=True)
 
         button.callback = toggle_learn_about_me
         view = View()
@@ -60,7 +60,7 @@ async def handle_manage(interaction):
 
     except Exception as e:
         logging.error(f"An error occurred while managing settings: {str(e)}")
-        await interaction.response.send_message(f"An error occurred: {str(e)}")
+        await interaction.response.send_message(f"An error occurred: {str(e)}", ephemeral=True)
     finally:
-        session.close()
-        logging.info("Database session closed.")
+        # Keep the session open for the button callback
+        logging.info("Session will remain open for button callback.")

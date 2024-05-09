@@ -6,13 +6,13 @@ import discord
 import logging
 
 
-async def handle_imdb(interaction: discord.Interaction, query: str):
+async def handle_imdb(interaction: discord.Interaction, query: str, type: str = 'movie'):
     """
     Handle IMDb search command for Discord.
     """
     await interaction.response.defer()
-    logging.info(f"Starting to scrape IMDB for '{query}'")
-    results = search_imdb(query)
+    logging.info(f"Starting to scrape IMDB for '{query}' with type '{type}'")
+    results = search_imdb(query, type)
     if not results:
         await interaction.followup.send("IMDB Search: No results found for your query.")
     else:

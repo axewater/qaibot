@@ -1,6 +1,12 @@
 # bot/integrations/search_mobygames.py
 import requests, json, sys, urllib.parse, logging
-from ..config import MOBYGAMES_API_KEY
+
+
+try:
+    from ..config import MOBYGAMES_API_KEY
+except ImportError:
+    from config import MOBYGAMES_API_KEY
+
 
 def search_mobygames(game_name):
     encoded_game_name = urllib.parse.quote(game_name)  # Ensure the game name is URL-encoded

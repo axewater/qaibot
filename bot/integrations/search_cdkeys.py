@@ -4,7 +4,10 @@ import logging
 import time
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
-from chrome_webdriver import init_driver
+try:
+    from .chrome_webdriver import init_driver
+except ImportError:
+    from chrome_webdriver import init_driver
 
 def fetch_game_details(game_name):
     # Prepare the search URL

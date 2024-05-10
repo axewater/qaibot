@@ -8,10 +8,9 @@ from .config import DISCORD_TOKEN, QAI_VERSION
 from .integrations import discord_commands
 from .models import BotStatistics
 from .database import init_db, SessionLocal
-import datetime
 from .manage_db import main as manage_db_main
 from .integrations.message_logger import setup as setup_message_logger
-
+print("Discord client: initiating logs")
 logging.basicConfig(filename='qaibot.log', level=logging.INFO, format='%(asctime)s:%(levelname)s:%(message)s')
 
 parser = argparse.ArgumentParser()
@@ -71,6 +70,7 @@ async def on_ready():
         session.close()
 
 def run(argv):
+    print(f"QAIBOT args: {argv}")
     global args
     args = parser.parse_args(argv)
     bot.run(DISCORD_TOKEN)

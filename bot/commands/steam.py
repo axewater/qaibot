@@ -1,7 +1,7 @@
 import discord
 from ..integrations.search_steam import search_steam
 
-async def handle_search_steam_command(interaction: discord.Interaction, game_name: str):
+async def handle_steam(interaction: discord.Interaction, game_name: str):
     await interaction.response.defer()
     results = search_steam(game_name)
     if results:

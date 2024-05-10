@@ -17,9 +17,9 @@ from ..commands.imdb import handle_imdb
 from ..commands.amazon import handle_amazon
 from .openai_image_generator import generate_image
 from .readback_handler import ReadbackHandler, setup as setup_readback_handler
-from ..commands.image_command import handle_image_command
-from ..commands.steam import handle_search_steam_command
-from ..commands.cdkeys import handle_search_cdkeys_command
+from ..commands.makeimage import handle_makeimage
+from ..commands.steam import handle_steam
+from ..commands.cdkeys import handle_cdkeys
 
 async def setup(bot):
     
@@ -109,15 +109,15 @@ async def setup(bot):
 
     @bot.slash_command(name="qmakeimage", description="Generate an image based on a prompt.")
     async def image_command(interaction: discord.Interaction, prompt: str):
-        await handle_image_command(interaction, prompt)
+        await handle_makeimage(interaction, prompt)
 
     @bot.slash_command(name="qsteam", description="Search for games on Steam.")
     async def steam_search(interaction: discord.Interaction, game_name: str):
-        await handle_search_steam_command(interaction, game_name)
+        await handle_steam(interaction, game_name)
 
     @bot.slash_command(name="qcdkeys", description="Search for game deals on CDKeys.")
     async def cdkeys_search(interaction: discord.Interaction, game_name: str):
-        await handle_search_cdkeys_command(interaction, game_name)
+        await handle_cdkeys(interaction, game_name)
 
     # Register additional handlers
     setup_readback_handler(bot)

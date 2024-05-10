@@ -1,5 +1,5 @@
-# bot/manage_db.py
 import sys
+import os
 from sqlalchemy import create_engine, text
 from sqlalchemy_utils import database_exists, drop_database, create_database
 from sqlalchemy.exc import SQLAlchemyError
@@ -9,6 +9,10 @@ try:
 except ImportError:
     from config import SQLALCHEMY_DATABASE_URI
 
+def restart_application():
+    """Restart the application using the same arguments, excluding the --purge argument."""
+    filtered_args = [arg for arg in sys.argv if arg != '--purge']
+    os.execv(sys.executable, ['python'] + filtered_args)
 
 def main():
     engine = create_engine(SQLALCHEMY_DATABASE_URI)
@@ -44,6 +48,11 @@ def main():
             # Create a new, empty database
             create_database(engine.url)
             print("New database created successfully.")
+            
+            # Restart the application
+            print("Restarting the application...")
+            restart_application()
+
         except Exception as e:
             print(f"Error during dropping and recreating the database: {str(e)}")
             sys.exit(1)

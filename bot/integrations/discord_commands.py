@@ -16,7 +16,8 @@ from ..commands.manage import handle_manage
 from ..commands.imdb import handle_imdb
 from ..commands.amazon import handle_amazon
 from ..integrations.image_generator import generate_image
-from ..commands.handle_nmap import handle_nmap
+from .readback_handler import ReadbackHandler, setup as setup_readback_handler
+
 
 async def setup(bot):
     
@@ -98,6 +99,11 @@ async def setup(bot):
         else:
             await interaction.response.send_message("Failed to generate image.")
 
-    @bot.slash_command(name="qnmap", description="Perform a port scan on a specified IP address or domain.")
-    async def nmap(interaction: discord.Interaction, target: str, port_range: str = Option(str, default=None, required=False, description="Specify the port range (e.g., 1-1000).")):
-        await handle_nmap(interaction, target, port_range)
+    @bot.slash_command(name="qreadback", description="Index all messages from all channels in this server.")
+    async def readback(interaction: discord.Interaction):
+        handler = ReadbackHandler(bot)
+        await handler.index_server_messages(interaction)
+        await interaction.response.send_message("Server indexing complete.")
+
+    # Register additional handlers
+    setup_readback_handler(bot)

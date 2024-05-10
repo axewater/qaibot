@@ -57,3 +57,9 @@ class MessageLog(Base):
     message_content = Column(String)
     timestamp = Column(DateTime, default=datetime.datetime.utcnow)
     user = relationship("User", back_populates="message_logs")
+
+class ServerIndexMarker(Base):
+    __tablename__ = 'server_index_markers'
+    id = Column(Integer, primary_key=True)
+    server_id = Column(String, unique=True)
+    indexed = Column(Boolean, default=False)

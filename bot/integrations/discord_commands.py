@@ -30,20 +30,29 @@ async def setup(bot):
         print(f"QAI command called with question: {question}")
         await handle_qai(interaction, question)
 
+    @bot.slash_command(name="qmakeimage", description="Generate an image based on a text prompt.")
+    async def image(interaction: discord.Interaction, prompt: str):
+        logging.info(f"Image command called with prompt: {prompt}")
+        image_path = await generate_image(prompt)
+        if image_path:
+            await interaction.response.send_message(file=discord.File(image_path))
+        else:
+            await interaction.response.send_message("Failed to generate image.")
+
     @bot.slash_command(name="qjoinconvo", description="Let QAI join the conversation (reads last 15 messages).")
     async def joinconvo(interaction: discord.Interaction):
         logging.info("JoinConvo command called")
         await handle_joinconvo(interaction)
+    
+    @bot.slash_command(name="qimback", description="I was away for a while, what happened while I was gone? Summarize the last 200 messages.")
+    async def imback(interaction: discord.Interaction):
+        logging.info("ImBack command called")
+        await handle_imback(interaction)
 
     @bot.slash_command(name="qsummarize", description="QAI will summarize the content of a given URL.")
     async def summarize(interaction: discord.Interaction, url: str, context: str = Option(str, default=None, required=False, description="Optional context to guide the summarization.")):
         logging.info(f"Summarize command called with URL: {url} and context: {context}")
         await handle_summarize(interaction, url, context)
-
-    @bot.slash_command(name="qimback", description="I was away for a while, what happened while I was gone? Summarize the last 200 messages.")
-    async def imback(interaction: discord.Interaction):
-        logging.info("ImBack command called")
-        await handle_imback(interaction)
 
     @bot.slash_command(name="qresearch", description="Let QAI research a topic on the web for you.")
     async def research(interaction: discord.Interaction, 
@@ -72,15 +81,11 @@ async def setup(bot):
         logging.info(f"IPTorrents command called with search query: {search_query}")
         await handle_iptorrents(interaction, search_query)
 
-    @bot.slash_command(name="qmobygames", description="Search for games on MobyGames.")
-    async def mobygames(interaction: discord.Interaction, search_query: str):
-        logging.info(f"MobyGames command called with search query: {search_query}")
-        await handle_mobygames(interaction, search_query)
+    # @bot.slash_command(name="qmobygames", description="Search for games on MobyGames.")
+    # async def mobygames(interaction: discord.Interaction, search_query: str):
+    #     logging.info(f"MobyGames command called with search query: {search_query}")
+    #     await handle_mobygames(interaction, search_query)
 
-    @bot.slash_command(name="qmanage", description="Manage your settings.")
-    async def settings(interaction: discord.Interaction):
-        logging.info("Manage command called")
-        await handle_manage(interaction)
 
     @bot.slash_command(name="qimdb", description="Search for movies and shows on IMDb.")
     async def imdb(interaction: discord.Interaction, search_query: str, type: str = Option(str, default='movie', choices=['movie', 'tv'], description="Specify the type: 'movie' or 'tv'.")):
@@ -92,25 +97,6 @@ async def setup(bot):
         logging.info(f"Amazon command called with search query: {search_query}")
         await handle_amazon(interaction, search_query)
 
-    @bot.slash_command(name="qimage", description="Generate an image based on a text prompt.")
-    async def image(interaction: discord.Interaction, prompt: str):
-        logging.info(f"Image command called with prompt: {prompt}")
-        image_path = await generate_image(prompt)
-        if image_path:
-            await interaction.response.send_message(file=discord.File(image_path))
-        else:
-            await interaction.response.send_message("Failed to generate image.")
-
-    @bot.slash_command(name="qreadback", description="Index all messages from all channels in this server.")
-    async def readback(interaction: discord.Interaction):
-        handler = ReadbackHandler(bot)
-        await handler.index_server_messages(interaction)
-        await interaction.response.send_message("Server indexing complete.")
-
-    @bot.slash_command(name="qmakeimage", description="Generate an image based on a prompt.")
-    async def image_command(interaction: discord.Interaction, prompt: str):
-        await handle_makeimage(interaction, prompt)
-
     @bot.slash_command(name="qsteam", description="Search for games on Steam.")
     async def steam_search(interaction: discord.Interaction, game_name: str):
         await handle_steam(interaction, game_name)
@@ -118,6 +104,17 @@ async def setup(bot):
     @bot.slash_command(name="qcdkeys", description="Search for game deals on CDKeys.")
     async def cdkeys_search(interaction: discord.Interaction, game_name: str):
         await handle_cdkeys(interaction, game_name)
+        
+    @bot.slash_command(name="qreadback", description="Index all messages from all channels in this server.")
+    async def readback(interaction: discord.Interaction):
+        handler = ReadbackHandler(bot)
+        await handler.index_server_messages(interaction)
+        await interaction.response.send_message("Server indexing complete.")
+
+    @bot.slash_command(name="qmanage", description="Manage your settings.")
+    async def settings(interaction: discord.Interaction):
+        logging.info("Manage command called")
+        await handle_manage(interaction)
 
     # Register additional handlers
     setup_readback_handler(bot)

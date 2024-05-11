@@ -1,7 +1,9 @@
-import discord, logging
+import discord
+import logging
 from discord.ext import commands
 from ..database import SessionLocal
 from ..models import ServerIndexMarker, MessageLog, User
+
 
 class ReadbackHandler(commands.Cog):
     def __init__(self, bot):
@@ -36,7 +38,7 @@ class ReadbackHandler(commands.Cog):
                     async for message in channel.history(limit=None):
                         if not message.author.bot:
                             user_ids.add((message.author.id, message.author.name))
-            
+
             # Ensure all users are in the database
             existing_users = {user.user_discord_id for user in db_session.query(User.user_discord_id).filter(User.user_discord_id.in_([uid for uid, _ in user_ids]))}
             new_users = [User(user_discord_id=uid, username=name) for uid, name in user_ids if uid not in existing_users]
@@ -46,6 +48,7 @@ class ReadbackHandler(commands.Cog):
 
             # Fetch and log all messages
             logging.info(f"readback_handler: Fetching messages for server '{server.name}'")
+            message_count = 0
             for channel in server.channels:
                 if isinstance(channel, discord.TextChannel):
                     async for message in channel.history(limit=None):
@@ -59,15 +62,18 @@ class ReadbackHandler(commands.Cog):
                                 message_content=message.content,
                                 timestamp=message.created_at
                             )
-                            #print a count of the messages
-                            logging.info(f"readback_handler: Logged Message #{len(db_session.query(MessageLog).all())}: in {server.name}/{channel.name}")
+                            message_count += 1
                             db_session.add(log_entry)
+                            if message_count % 100 == 0:  # Commit every 100 messages
+                                db_session.commit()
+                                logging.info(f"readback_handler: Logged 100 messages in {server.name}/{channel.name}")
             db_session.commit()
             await interaction.followup.send("readback_handler: Server indexing complete.")
         except Exception as e:
             await interaction.followup.send(f"readback_handler: Failed to index server {server.name}: {e}")
         finally:
             db_session.close()
+
 
 def setup(bot):
     bot.add_cog(ReadbackHandler(bot))

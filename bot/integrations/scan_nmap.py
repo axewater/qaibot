@@ -35,7 +35,12 @@ def scan(target):
     try:
         # Run the nmap command and capture the output
         print(f"Scanning {target} with nmap...")
-        nmap_output = subprocess.check_output([nmap_path, "-sV", target], stderr=subprocess.STDOUT).decode("utf-8")
+        process = subprocess.Popen([nmap_path, "-sV", target], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        nmap_output, nmap_errors = process.communicate()
+        nmap_output = nmap_output.decode("utf-8")
+        if process.returncode != 0:
+            logging.error(f"Nmap scan failed with errors: {nmap_errors.decode('utf-8')}")
+            return
         if "failed to resolve" in nmap_output.lower():
             logging.error("Nmap scan failed, target could not be resolved.")
             return

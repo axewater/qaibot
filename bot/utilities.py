@@ -12,9 +12,7 @@ DISCORD_LIMIT = 2000  # Maximum characters for Discord messages
 # Function to determine if a user is member of the Discord server role 'qbotadmins'
 def is_admin(user):
     """Check if a user is a member of the Discord server role 'qbotadmins'."""
-    if user.guild_membership.role.name == 'qbotadmins':
-        return True
-    return False
+    return any(role.name == 'qbotadmins' for role in user.roles)
 
 # Function to send large messages, respecting Discord's character limit
 async def send_large_message(interaction, message):

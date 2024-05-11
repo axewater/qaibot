@@ -11,12 +11,11 @@ from ..commands.imback import handle_imback
 from ..commands.marktplaats import handle_marktplaats
 from ..commands.torrent import handle_torrent
 from ..commands.iptorrents import handle_iptorrents
-from ..commands.mobygames import handle_mobygames
+# from ..commands.mobygames import handle_mobygames
 from ..commands.manage import handle_manage
 from ..commands.imdb import handle_imdb
 from ..commands.amazon import handle_amazon
-from .openai_image_generator import generate_image
-from .readback_handler import ReadbackHandler, setup as setup_readback_handler
+from ..commands.readback_handler import ReadbackHandler, setup as setup_readback_handler
 from ..commands.makeimage import handle_makeimage
 from ..commands.steam import handle_steam
 from ..commands.cdkeys import handle_cdkeys
@@ -27,17 +26,13 @@ async def setup(bot):
     @bot.slash_command(name="qqai", description="Ask QAI any question... it knows all!")
     async def qai(interaction: discord.Interaction, question: str):
         logging.info(f"QAI command called with question: {question}")
-        print(f"QAI command called with question: {question}")
         await handle_qai(interaction, question)
-
-    @bot.slash_command(name="qmakeimage", description="Generate an image based on a text prompt.")
+            
+            
+    @bot.slash_command(name="qmakeimage", description="Generate an image based on your text prompt.")
     async def image(interaction: discord.Interaction, prompt: str):
         logging.info(f"Image command called with prompt: {prompt}")
-        image_path = await generate_image(prompt)
-        if image_path:
-            await interaction.response.send_message(file=discord.File(image_path))
-        else:
-            await interaction.response.send_message("Failed to generate image.")
+        await handle_makeimage(interaction, prompt)
 
     @bot.slash_command(name="qjoinconvo", description="Let QAI join the conversation (reads last 15 messages).")
     async def joinconvo(interaction: discord.Interaction):

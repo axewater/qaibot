@@ -2,6 +2,7 @@ import discord
 from ..integrations.search_cdkeys import fetch_game_details
 from urllib.parse import urlparse, urlunparse, quote
 from ..utilities import send_large_message
+import logging
 
 async def handle_cdkeys(interaction: discord.Interaction, game_name: str):
     await interaction.response.defer()
@@ -27,4 +28,5 @@ async def handle_cdkeys(interaction: discord.Interaction, game_name: str):
         message = "\n".join(formatted_results)
         await send_large_message(interaction, message)
     else:
+        logging.warning("No results found or there was an error fetching game details.")
         await interaction.followup.send("No results found or there was an error.")

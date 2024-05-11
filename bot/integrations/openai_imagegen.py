@@ -6,24 +6,19 @@ import json
 from openai import OpenAI, BadRequestError
 
 def generate_image(prompt, size='square', quality='standard'):
-    # Instantiate the OpenAI client with your API key
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-    # Set up basic logging
     logging.basicConfig(level=logging.INFO)
     
-    # Define size mappings
     size_options = {
         'square': '1024x1024',
         'tiktok': '1024x1792',
         'boomer': '1792x1024'
     }
-    # Define quality mappings
     quality_options = {
         'standard': 'standard',
         'hd': 'hd'
     }
     
-    # Get the size and quality from the options
     selected_size = size_options.get(size)
     selected_quality = quality_options.get(quality)
     
@@ -44,11 +39,22 @@ def generate_image(prompt, size='square', quality='standard'):
             "status": "success"
         }
     except BadRequestError as e:
+        logging.error(f"Error generating image: {str(e)}")
         result = {
             "prompt": prompt,
             "size": size,
             "quality": quality,
-            "error": str(e)
+            "error": str(e),
+            "status": "failed"
+        }
+    except Exception as e:
+        logging.error(f"Unexpected error: {str(e)}")
+        result = {
+            "prompt": prompt,
+            "size": size,
+            "quality": quality,
+            "error": "An unexpected error occurred.",
+            "status": "failed"
         }
     
     return json.dumps(result, indent=4)

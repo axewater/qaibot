@@ -27,19 +27,18 @@ def fetch_game_details(game_name):
         for idx, result in enumerate(results, 1):
             game_title = result.find_element(By.CSS_SELECTOR, 'h3[itemprop="name"]').text.strip()
             price = result.find_element(By.CSS_SELECTOR, 'span[itemprop="lowPrice"]').text.strip()
-            buy_now_link = result.find_element(By.CSS_SELECTOR, 'form[data-role="tocart-form"]').get_attribute('action')
             thumbnail_url = result.find_element(By.CSS_SELECTOR, 'img[itemprop="image"]').get_attribute('src')
+            detail_url = result.find_element(By.CSS_SELECTOR, 'div.result-thumbnail > a').get_attribute('href')
 
             games_data.append({
                 'game_title': game_title,
                 'price': price,
-                'buy_now_link': buy_now_link,
-                'thumbnail_url': thumbnail_url
+                'thumbnail_url': thumbnail_url,
+                'detail_url': detail_url
             })
-            logging.info(f"Extracted details for game {idx}")
+            logging.info(f"Extracted details for game {idx} including detail URL")
     except NoSuchElementException as e:
-        logging.error(f"Error: {e}")
-        return None
+        logging.error(f"Failed to extract details for one of the games: {e}")
     finally:
         driver.quit()
 

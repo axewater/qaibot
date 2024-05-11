@@ -8,12 +8,11 @@ def search_steam(game_name=None, output_format='json'):
         # If no game name is provided, read from command line arguments
         if len(sys.argv) > 1:
             game_name = sys.argv[1]
+            output_format = 'json' if '--json' in sys.argv else 'table'
         else:
-            if output_format == 'table':
-                print("Usage: search_steam.py <game_name>")
-                return
+            print("Usage: search_steam.py <game_name> [--json]")
             return json.dumps({"error": "No game name provided"})
-
+    
     try:
         # Replace spaces with '+' for the URL
         game_name_formatted = game_name.replace(' ', '+')
@@ -39,7 +38,8 @@ def search_steam(game_name=None, output_format='json'):
         return json.dumps({"error": str(e)})
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        print(search_steam(output_format='table'))
+    if len(sys.argv) > 2:
+        print(search_steam())
     else:
-        print("Usage: search_steam.py <game_name>")
+        # print proper usage information
+        print("Usage: search_steam.py <game_name> [--json]")

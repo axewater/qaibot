@@ -11,9 +11,9 @@ async def handle_cdkeys(interaction: discord.Interaction, game_name: str):
         for result in results:
             game_title = result['game_title']
             price = result['price']
-            buy_now_link = result['buy_now_link']
+            detail_url = result['detail_url']
             # Ensure the URL is safe for Discord
-            parsed_url = urlparse(buy_now_link)
+            parsed_url = urlparse(detail_url)
             safe_url = urlunparse((
                 parsed_url.scheme,
                 parsed_url.netloc,

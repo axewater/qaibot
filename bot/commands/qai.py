@@ -10,7 +10,14 @@ async def handle_qai(interaction: discord.Interaction, question: str):
     
     if processed_text:
         logging.info("Qai has generated an answer and is sending it to Discord now.")
-        await send_large_message(interaction, processed_text)
+        # Example of how to include original question in the response
+        # await send_large_message(interaction, f"**Original Question:** {topic}\n**Response:**\n{final_response}")
+        await send_large_message(f"**Original Question:** {question}\n**Response:**\n{processed_text}")
+        # await send_large_message(interaction, processed_text)
+        
     else:
         logging.error("Error: No response received from processing at OpenAI.")
         await interaction.followup.send("Error: No response received from processing.")
+
+
+        

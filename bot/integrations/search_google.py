@@ -1,8 +1,16 @@
 # bot/integrations/google_search.py
 
-import json, logging
-from ..config import GOOGLE_API_KEY, GOOGLE_CX
+import json, logging, sys, os
+
+# Dynamically add the bot directory to the Python path
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+try:
+    from ..config import GOOGLE_API_KEY, GOOGLE_CX
+except ImportError:
+    from config import GOOGLE_API_KEY, GOOGLE_CX
 from googleapiclient.discovery import build
+
 
 
 def perform_web_search(query, start_index=1, max_results=5):

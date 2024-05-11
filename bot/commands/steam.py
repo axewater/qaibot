@@ -15,9 +15,12 @@ async def handle_steam(interaction: discord.Interaction, game_name: str):
             formatted_results = []
             for result in results_dict['items']:
                 game_name = result['name']
+                game_id = result['id']
                 price_info = result.get('price', {})
-                price = f"${price_info.get('final', 0) / 100:.2f}" if 'final' in price_info else "Price not available"
-                formatted_results.append(f"**{game_name}** - Price: {price}")
+                price = f"{price_info.get('currency', 'USD')} {price_info.get('final', 0) / 100:.2f}" if 'final' in price_info else "Price not available"
+                tiny_image = result.get('tiny_image', 'Image not available')
+                steam_link = f"[LINK!](https://store.steampowered.com/app/{game_id})"
+                formatted_results.append(f"**{game_name}** - Price: {price} - ![Image]({tiny_image}) {steam_link}")
 
             message = "\n".join(formatted_results)
             await send_large_message(interaction, message)

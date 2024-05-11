@@ -1,7 +1,6 @@
 import discord, logging
 import json
 from ..integrations.openai_imagegen import generate_image
-from ..utilities import send_large_message
 
 async def handle_makeimage(interaction: discord.Interaction, prompt: str):
     # Acknowledge the interaction first and defer the response

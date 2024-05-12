@@ -13,7 +13,7 @@ async def handle_qai(interaction: discord.Interaction, question: str):
         # Example of how to include original question in the response
         # await send_large_message(interaction, f"**Original Question:** {topic}\n**Response:**\n{final_response}")
         message = f"**Original Question:** {question}\n**Response:**\n{processed_text}"
-        await send_large_message(message)
+        await send_large_message(interaction, message)
         # await send_large_message(interaction, processed_text)
         
     else:

@@ -1,7 +1,3 @@
-# Copyright (c) 1993-2004 Microsoft Corp.
-#
-# This file contains port numbers for well-known services defined by IANA
-#
 # Format:
 #
 # <service name>  <port number>/<protocol>  [aliases...]   [#<comment>]

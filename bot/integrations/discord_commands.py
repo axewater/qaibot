@@ -21,6 +21,8 @@ from ..commands.imdb import handle_imdb
 from ..commands.steam import handle_steam
 from ..commands.cdkeys import handle_cdkeys
 from ..commands.amazon import handle_amazon
+from ..commands.pornhub import search_pornhub
+from ..utilities import send_large_message
 
 async def setup(bot):
     
@@ -93,9 +95,6 @@ async def setup(bot):
         logging.info(f"IPTorrents command called with search query: {search_query}")
         await handle_iptorrents(interaction, search_query)
 
-
-
-
     @bot.slash_command(name="qqamazon", description="Search for products on Amazon.")
     async def amazon(interaction: discord.Interaction, search_query: str):
         logging.info(f"Amazon command called with search query: {search_query}")
@@ -109,12 +108,6 @@ async def setup(bot):
     async def cdkeys_search(interaction: discord.Interaction, game_name: str):
         await handle_cdkeys(interaction, game_name)
         
-    @bot.slash_command(name="qqreadback", description="Index all messages from all channels in this server.")
-    async def readback(interaction: discord.Interaction):
-        handler = ReadbackHandler(bot)
-        await handler.index_server_messages(interaction)
-        await interaction.response.send_message("Server indexing complete.")
-
     @bot.slash_command(name="qqmanage", description="Manage your settings.")
     async def settings(interaction: discord.Interaction):
         logging.info("Manage command called")
@@ -124,7 +117,6 @@ async def setup(bot):
     async def admin_settings(interaction: discord.Interaction):
         logging.info("Admin Settings command called")
         await handle_admin_settings(interaction)
-    
 
 
     # Register additional handlers

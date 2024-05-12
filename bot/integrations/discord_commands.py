@@ -2,24 +2,25 @@
 import discord
 import logging
 from discord import Option
+
 from ..commands.qai import handle_qai
 from ..commands.joinconvo import handle_joinconvo
-from ..commands.pricewatch import handle_pricewatch
+from ..commands.imback import handle_imback
 from ..commands.summarize import handle_summarize
 from ..commands.research import handle_research
-from ..commands.imback import handle_imback
-from ..commands.marktplaats import handle_marktplaats
-from ..commands.torrent import handle_torrent
-from ..commands.iptorrents import handle_iptorrents
-# from ..commands.mobygames import handle_mobygames
 from ..commands.manage import handle_manage
-from ..commands.imdb import handle_imdb
-from ..commands.amazon import handle_amazon
 from ..commands.readback_handler import ReadbackHandler, setup as setup_readback_handler
 from ..commands.makeimage import handle_makeimage
+from ..commands.admin_settings import handle_admin_settings
+from ..commands.marktplaats import handle_marktplaats
+from ..commands.pricewatch import handle_pricewatch
+from ..commands.torrent import handle_torrent
+from ..commands.iptorrents import handle_iptorrents
+from ..commands.virustotal import handle_virustotal
+from ..commands.imdb import handle_imdb
 from ..commands.steam import handle_steam
 from ..commands.cdkeys import handle_cdkeys
-from ..commands.admin_settings import handle_admin_settings
+from ..commands.amazon import handle_amazon
 
 async def setup(bot):
     
@@ -77,11 +78,6 @@ async def setup(bot):
         logging.info(f"IPTorrents command called with search query: {search_query}")
         await handle_iptorrents(interaction, search_query)
 
-    # @bot.slash_command(name="qmobygames", description="Search for games on MobyGames.")
-    # async def mobygames(interaction: discord.Interaction, search_query: str):
-    #     logging.info(f"MobyGames command called with search query: {search_query}")
-    #     await handle_mobygames(interaction, search_query)
-
 
     @bot.slash_command(name="qqimdb", description="Search for movies and shows on IMDb.")
     async def imdb(interaction: discord.Interaction, search_query: str, type: str = Option(str, default='movie', choices=['movie', 'tv'], description="Specify the type: 'movie' or 'tv'.")):
@@ -116,6 +112,12 @@ async def setup(bot):
     async def admin_settings(interaction: discord.Interaction):
         logging.info("Admin Settings command called")
         await handle_admin_settings(interaction)
+
+    
+    @bot.slash_command(name="qqvirustotal", description="Query VirusTotal for URLs, domains, IPs, and hashes.")
+    async def virustotal(interaction: discord.Interaction, query: str):
+        logging.info(f"VirusTotal command called with query: {query}")
+        await handle_virustotal(interaction, query)
 
     # Register additional handlers
     setup_readback_handler(bot)

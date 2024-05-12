@@ -14,11 +14,11 @@ async def handle_virustotal(interaction: discord.Interaction, query: str, report
         # Format Domain Information
         if report_type == 'quick' or report_type == 'full':
             domain_info = processed_results['Domain Information']
-            formatted_results.append("**Domain Information**\n" + "\n".join([f"{key}: {value}" for key, value in domain_info.items()]))
+            # formatted_results.append("**Domain Information**\n" + "\n".join([f"{key}: {value}" for key, value in domain_info.items()]))
         # Format Security Overview
         if report_type == 'quick' or report_type == 'full':
             security_overview = processed_results['Security Overview']
-            formatted_results.append("\n**Security Overview**\n" + "\n".join([f"{key}: {value}" for key, value in security_overview.items()]))
+            # formatted_results.append("\n**Security Overview**\n" + "\n".join([f"{key}: {value}" for key, value in security_overview.items()]))
         # Format DNS Records
         if report_type == 'full':
             dns_records = processed_results['DNS Records']

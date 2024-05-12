@@ -12,8 +12,7 @@ async def handle_makeimage(interaction: discord.Interaction, prompt: str):
 
     if result['status'] == 'success':
         # Use followup to send the message since we deferred the initial response
-        await interaction.followup.send(f"Here's your image: Prompt: {prompt} Image: {result['url']}")
+        await interaction.followup.send(f"Here's the image I made: [{prompt}]({result['url']})")
     else:
         # If image generation failed, inform the user using followup as well
         await interaction.followup.send("Failed to generate image.")
-

@@ -3,9 +3,9 @@ import sys
 import argparse
 import json
 import requests
-from tabulate import tabulate
-import re
 import logging
+import re
+from tabulate import tabulate
 
 # Dynamically add the bot directory to the Python path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -15,101 +15,220 @@ try:
 except ImportError:
     from config import VIRUSTOTAL_API_KEY
 
-def is_valid_input(input_string):
-    logging.info(f"is_valid_input: Validating input: {input_string}")
-    url_pattern = r'^https?:\/\/(?:www\.)?[\w\-\.]+(?:\/[\w\-\.\/]*)?$'
+def is_valid_url(input_string):
+    print(f"is_valid_url: Validating URL: {input_string}")
+    url_pattern = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
     if re.match(url_pattern, input_string):
-        logging.info(f"is_valid_input: URL is valid: {input_string}")
-        return "url"
-    ip_pattern = r'^\d{1,3}(\.\d{1,3}){3}$'
+        print(f"is_valid_url: URL is valid: {input_string}")
+        return True
+    return False
+
+def is_valid_ip(input_string):
+    print(f"is_valid_ip: Validating IP address: {input_string}")
+    ip_pattern = r'^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$'
     if re.match(ip_pattern, input_string):
-        logging.info(f"is_valid_input: IP is valid: {input_string}")
-        return "ip"
+        print(f"is_valid_ip: IP address is valid: {input_string}")
+        return True
+    return False
+
+def is_valid_hash(input_string):
+    print(f"is_valid_hash: Validating file hash: {input_string}")
+    hash_pattern = r'^[a-fA-F0-9]{32}$|^[a-fA-F0-9]{40}$|^[a-fA-F0-9]{64}$'
+    if re.match(hash_pattern, input_string):
+        print(f"is_valid_hash: File hash is valid: {input_string}")
+        return True
+    return False
+
+def is_valid_domain(input_string):
+    print(f"is_valid_domain: Validating domain: {input_string}")
     domain_pattern = r'^[\w\-\.]+\.\w+$'
     if re.match(domain_pattern, input_string):
-        logging.info(f"is_valid_input: Domain is valid: {input_string}")
-        return "domain"
-    elif len(input_string) in [32, 40, 64]:
-        logging.info(f"is_valid_input: Hash is valid: {input_string}")
-        return "hash"
-    return None
+        print(f"is_valid_domain: Domain is valid: {input_string}")
+        return True
+    return False
 
-def query_virustotal(query, input_type):
-    logging.info(f"query_virustotal: Querying VirusTotal for '{query}'")
-    url = f"https://www.virustotal.com/api/v3/{input_type}s/{query}"
+def query_domain(domain):
+    print(f"query_domain: Querying VirusTotal for '{domain}'")
+    url = f"https://www.virustotal.com/api/v3/domains/{domain}"
     headers = {
         "x-apikey": VIRUSTOTAL_API_KEY
     }
     response = requests.get(url, headers=headers)
-    logging.info(f"query_virustotal: API response: {response.text}")
+    print(f"query_domain: API response code: {response.status_code}")
+    return response.json()
+
+def query_url(url):
+    print(f"query_url: Querying VirusTotal for URL: '{url}'")
+    url = "https://www.virustotal.com/api/v3/urls"
+    headers = {
+        "x-apikey": VIRUSTOTAL_API_KEY
+    }
+    response = requests.post(url, headers=headers, data={"url": url})
+    print(f"query_url: API response code: {response.status_code}")
+    return response.json()
+
+def query_ip(ip):
+    print(f"query_ip: Querying VirusTotal for IP address: '{ip}'")
+    url = f"https://www.virustotal.com/api/v3/ip_addresses/{ip}"
+    headers = {
+        "x-apikey": VIRUSTOTAL_API_KEY
+    }
+    response = requests.get(url, headers=headers)
+    print(f"query_ip: API response code: {response.status_code}")
+    return response.json()
+
+def query_file_hash(file_hash):
+    print(f"query_file_hash: Querying VirusTotal for file hash: '{file_hash}'")
+    url = f"https://www.virustotal.com/api/v3/files/{file_hash}"
+    headers = {
+        "x-apikey": VIRUSTOTAL_API_KEY
+    }
+    response = requests.get(url, headers=headers)
+    print(f"query_file_hash: API response code: {response.status_code}")
     return response.json()
 
 def process_data(data):
-    # Check if the expected keys are present in the data
-    logging.info(f"process_data: Processing data: {data}")
-    if 'data' not in data or 'attributes' not in data['data']:
-        return {"error": "Missing *data* or *attributes* in API response"}
+    print(f"process_data: Processing API response: {data}")
+    if 'data' not in data:
+        return {"error": "Missing *data* in API response"}
 
+    data_type = data['data']['type']
+    if data_type == 'file' or data_type == 'ip_address' or data_type == 'domain':
+        if 'attributes' not in data['data']:
+            return {"error": "Missing *attributes* in API response"}
+        if data_type == 'file':
+            return process_file_hash_data(data)
+        elif data_type == 'ip_address':
+            return process_ip_address_data(data)
+        elif data_type == 'domain':
+            return process_domain_data(data)
+    elif data_type == 'analysis':
+        return process_url_data(data)
+    else:
+        return {"error": "Unsupported data type"}
+
+def process_file_hash_data(data):
     attributes = data['data']['attributes']
-    logging.info(f"process_data: processing summary...")
-    # Initialize summary dictionary with safety checks for each field
-    summary = {
-        "Domain Information": {
-            "Domain": data['data'].get('id', 'Unknown'),
-            "Registrar": attributes.get('registrar', 'Unknown'),
-            "Reputation": attributes.get('reputation', 0),
-            "Creation Date": attributes.get('creation_date', 'Unknown')
-        },
-        "Security Overview": {
-            "Harmless": attributes['last_analysis_stats'].get('harmless', 0),
-            "Undetected": attributes['last_analysis_stats'].get('undetected', 0),
-            "Malicious": attributes['last_analysis_stats'].get('malicious', 0)
-        },
-        "DNS Records": [
-            {"Type": record['type'], "Value": record['value']}
-            for record in attributes.get('last_dns_records', [])
-            if record['type'] != 'TXT'
-        ]
+    analysis_results = attributes.get('last_analysis_results', {})
+    analysis_summary = {
+        "md5": attributes.get('md5', 'Unknown'),
+        "sha1": attributes.get('sha1', 'Unknown'),
+        "sha256": attributes.get('sha256', 'Unknown'),
+        "reputation": attributes.get('reputation', 0),
+        "type_description": attributes.get('type_description', 'Unknown'),
+        "malicious_votes": attributes['last_analysis_stats'].get('malicious', 0),
+        "undetected_votes": attributes['last_analysis_stats'].get('undetected', 0),
+        "Antivirus Results": {k: v['result'] for k, v in analysis_results.items() if v['result']}
     }
-    logging.info(f"process_data: processing certificate validity...")
-    # Check for HTTPS certificate data safely
-    certificate_data = attributes.get('last_https_certificate', {}).get('validity', {})
-    summary["Certificate Validity"] = {
-        "Not Before": certificate_data.get('not_before', 'Unknown'),
-        "Not After": certificate_data.get('not_after', 'Unknown')
-    }
+    return analysis_summary
 
-    return summary
+def process_ip_address_data(data):
+    attributes = data['data']['attributes']
+    ip_address_info = {
+        "IP Address": data['data']['id'],
+        "Network": attributes.get('network', 'Unknown'),
+        "Continent": attributes.get('continent', 'Unknown'),
+        "Reputation": attributes.get('reputation', 0),
+        "Last Modification Date": attributes.get('last_modification_date', 'Unknown'),
+        "Crowdsourced Context": [
+            {
+                "Timestamp": context['timestamp'],
+                "Details": context['details'],
+                "Title": context['title'],
+                "Severity": context['severity'],
+                "Source": context['source']
+            } for context in attributes.get('crowdsourced_context', [])
+        ],
+        "Analysis Results": {
+            engine['engine_name']: {
+                "Category": engine['category'],
+                "Result": engine['result']
+            } for engine in attributes['last_analysis_results'].values()
+        },
+        "Whois Information": attributes.get('whois', 'Unknown')
+    }
+    return ip_address_info
+
+def process_url_data(data):
+    if 'links' not in data['data']:
+        return {"error": "Missing *links* in URL analysis response"}
+    report_url = data['data']['links'].get('self', 'No report URL available')
+    return {"Report URL": report_url}
+
+def process_domain_data(data):
+    attributes = data['data']['attributes']
+    domain_info = {
+        "Domain ID": data['data']['id'],
+        "Last DNS Records": attributes.get('last_dns_records', []),
+        "Last Modification Date": attributes.get('last_modification_date', 'Unknown'),
+        "Last HTTPS Certificate Date": attributes.get('last_https_certificate_date', 'Unknown'),
+        "Tags": attributes.get('tags', []),
+        "Creation Date": attributes.get('creation_date', 'Unknown'),
+        "Last Analysis Stats": attributes.get('last_analysis_stats', {}),
+        "Whois Information": attributes.get('whois', 'Unknown'),
+        "Last DNS Records Date": attributes.get('last_dns_records_date', 'Unknown'),
+        "Total Votes": attributes.get('total_votes', {}),
+        "Last Analysis Date": attributes.get('last_analysis_date', 'Unknown'),
+        "Last Update Date": attributes.get('last_update_date', 'Unknown'),
+        "Reputation": attributes.get('reputation', 0),
+        "Registrar": attributes.get('registrar', 'Unknown'),
+        "TLD": attributes.get('tld', 'Unknown'),
+        "Last Analysis Results": {engine['engine_name']: {
+            "Method": engine['method'],
+            "Category": engine['category'],
+            "Result": engine['result']
+        } for engine in attributes['last_analysis_results'].values()},
+        "Popularity Ranks": attributes.get('popularity_ranks', {}),
+        "Last HTTPS Certificate": attributes.get('last_https_certificate', {}),
+        "JARM": attributes.get('jarm', 'Unknown'),
+        "Categories": attributes.get('categories', {})
+    }
+    return domain_info
 
 def format_output(data, output_format):
-    # logging statements should show progress and counts of objects found
-    logging.info(f"format_output: Formatting output to: {output_format}")
     if output_format == 'json':
+        
         processed_data = process_data(data)
-        logging.info(f"format_output: returning JSON dump with : {len(processed_data)} number of elements")
         return json.dumps(processed_data, indent=4)
     elif output_format == 'table':
         if 'data' in data:
             headers = data['data'][0].keys()
             rows = [x.values() for x in data['data']]
-            logging.info(f"format_output: returning table with : {len(rows)} number of rows")
             return tabulate(rows, headers=headers)
         return "No data available"
     return "Invalid format"
 
 def main():
-    parser = argparse.ArgumentParser(description='Search URLs, domains, IPs, and hashes in VirusTotal.')
-    parser.add_argument('query', help='The query string (URL, domain, IP, or hash)')
+    parser = argparse.ArgumentParser(description='Search domains in VirusTotal.')
+    parser.add_argument('query', help='The query to search')
+    parser.add_argument('--type', choices=['domain', 'url', 'ip', 'hash'], default='domain', help='Type of query')
     parser.add_argument('--output', choices=['json', 'table'], default='json', help='Output format')
     args = parser.parse_args()
 
-    input_type = is_valid_input(args.query)
-    if not input_type:
-        print("Invalid input. Please enter a valid URL, domain, IP address, or hash.")
+    if args.type == 'domain':
+        if not is_valid_domain(args.query):
+            print("Invalid domain. Please enter a valid domain.")
+            return
+        result = query_domain(args.query)
+    elif args.type == 'url':
+        if not is_valid_url(args.query):
+            print("Invalid URL. Please enter a valid URL.")
+            return
+        result = query_url(args.query)
+    elif args.type == 'ip':
+        if not is_valid_ip(args.query):
+            print("Invalid IP address. Please enter a valid IP address.")
+            return
+        result = query_ip(args.query)
+    elif args.type == 'hash':
+        if not is_valid_hash(args.query):
+            print("Invalid file hash. Please enter a valid file hash.")
+            return
+        result = query_file_hash(args.query)
+    else:
+        print("Invalid query type. Please enter a valid query type.")
         return
 
-    logging.info(f"virustotal main: input_type: {input_type} and query: {args.query}")
-    result = query_virustotal(args.query, input_type)
     print(format_output(result, args.output))
 
 if __name__ == "__main__":

@@ -1,106 +1,544 @@
-# bot/integrations/search_pornhub.py
-# searches pornhub for terms and returns video URLs in JSON format
-
-import json, sys, logging, time
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from bs4 import BeautifulSoup, NavigableString
-
-try:
-    from .chrome_webdriver import init_driver
-except ImportError:
-    from chrome_webdriver import init_driver
+import discord
+from discord.ext import commands
+import requests
+import urllib
+import json
+import math
+from bs4 import BeautifulSoup
+import asyncio
 
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+class PornHub:
 
-def scrape_pornhub(search_query):
+    categories = [
+        ["60fps", "video?c=105"],
+     
+        ["Virtual Reality", "vr"],
+        ["Webcam", "video?c=61"]
+    ]
+
+    def __init__(self, bot):
+        self.bot = bot
+        self.tasks = []
+
+    async def displayHelp(self):
+        helpEmbed = discord.Embed(title='__PornHub Command Help__', colour=discord.Colour(0xFF9900))
+        helpEmbed.add_field(name="Some Useful Tips",
+                            value="1. Arguments in < > are mandatory for the command to work\n"
+                                  "2. Arguments in [ ] are optional and usually have a default value\n"
+                                  "3. *<You must have a subscription to Pr0nBot Gold to view this Useful Tip!>*",
+                            inline=False)
+        helpEmbed.add_field(name=".pornhub help", value="Displays this message.", inline=False)
+        helpEmbed.add_field(name=".pornhub home", value='Lists some of the "Hottest" and "Most Viewed" videos from the front page of PornHub', inline=False)
+        helpEmbed.add_field(name=".pornhub search <query> [page] [minRating]", value="Allows you to search PornHub for videos. Simple as that!", inline=False)
+        helpEmbed.add_field(name=".pornhub category <categoryName> [page] [minRating]", value="Allows you to browse PornHub by category", inline=False)
+        helpEmbed.add_field(name=".pornhub category list", value="Sends you a comprehensive list of all available categories you can use with *.pornhub category*", inline=False)
+        helpEmbed.add_field(name=".pornhub hottest [page] [minRating]", value='Allows you to browse the "Hottest" videos on PornHub', inline=False)
+        helpEmbed.add_field(name=".pornhub mostviewed [page] [minRating]", value='Allows you to browse the "Most Viewed" videos on PornHub', inline=False)
+        helpEmbed.add_field(name=".pornhub toprated [page] [minRating]", value='Allows you to browse the "Top Rated" videos on PornHub', inline=False)
+
+        await self.bot.say(embed=helpEmbed)
+
+    # Gets videos using the Hub Traffic API
+    def getVidsAPI(self, url, actualPage, skip, rating, stillNeed):
+        fullUrl = url + '&page=' + str(actualPage)
+        print(fullUrl)
+
+        r = requests.get(fullUrl)
+        if r.status_code != 200:
+            print('Error ' + str(r.status_code) + ': Cannot connect to PornHub.com :cry:')
+            # await self.bot.say('Error ' + str(r.status_code) + ': Cannot connect to PornHub.com :cry:')
+            return []
+
+        rJson = json.loads(r.text)
+
+        if ("videos" in rJson):
+            vidJson = rJson["videos"]
+        else:
+            # No videos!
+            return []
+
+        # Find video URLs and Titles
+        vids = []
+
+        i = 0
+        while i < len(vidJson) and stillNeed > 0:
+            key = vidJson[i]["video_id"]
+            # print(key)
+
+            title = vidJson[i]["title"]
+            # print(title)
+
+            dur = vidJson[i]["duration"]
+            # print(dur)
+
+            views = vidJson[i]["views"]
+            views = "{:,}".format(int(views))
+            # print(views)
+
+            rate = str(int(round(float(vidJson[i]["rating"]))))
+            # print(rate)
+
+            if int(rate) >= rating:
+                if skip > 0:
+                    skip -= 1
+                else:
+                    vids.append([key, title, dur, views, rate])
+                    stillNeed -= 1
+
+            i += 1
+
+        if stillNeed > 0:
+            vids += self.getVidsAPI(url, actualPage + 1, skip, rating, stillNeed)
+
+        return vids
+
+    # Scrapes videos from webpage HTML
+    def getVids(self, url, actualPage, skip, rating, stillNeed):
+        fullUrl = url + '&page=' + str(actualPage)
+        print(fullUrl)
+
+        r = requests.get(fullUrl)
+        if r.status_code != 200:
+            print('Error ' + str(r.status_code) + ': Cannot connect to PornHub.com :cry:')
+            # await self.bot.say('Error ' + str(r.status_code) + ': Cannot connect to PornHub.com :cry:')
+            return []
+
+        soup = BeautifulSoup(r.text, "html.parser")
+        videoContainer = soup.find("ul", class_="search-video-thumbs")
+        vidBoxes = videoContainer.find_all("li", class_="videoblock videoBox")
+
+        # Find video URLs and Titles
+        vids = []
+
+        i = 0
+        while i < len(vidBoxes) and stillNeed > 0:
+            key = vidBoxes[i]['_vkey']
+            # print(key)
+
+            title = vidBoxes[i].find('a', class_="img")['title']
+            # Replace encoded chars
+            title = title.replace("&#039;", "'")
+            title = title.replace("&amp;", "&")
+            title = title.replace("&quot;", '"')
+            title = title.replace("&mdash;", '-')
+            # print(title)
+
+            dur = vidBoxes[i].find('var', class_="duration").string
+            # print(dur)
+
+            views = vidBoxes[i].find('span', class_="views").var.string
+            # print(views)
+
+            rate = vidBoxes[i].find('div', class_="value").string
+            rate = rate[0:len(rate)-1]
+            # print(rate)
+
+            if int(rate) >= rating:
+                if skip > 0:
+                    skip -= 1
+                else:
+                    vids.append([key, title, dur, views, rate])
+                    stillNeed -= 1
+
+            i += 1
+
+        if stillNeed > 0:
+            vids += self.getVids(url, actualPage + 1, skip, rating, stillNeed)
+
+        return vids
+
+    def getVideo(self, vidID:str):
+        fullUrl = "https://www.pornhub.com/webmasters/video_by_id?thumbsize=small&id=" + vidID
+        print(fullUrl)
+
+        r = requests.get(fullUrl)
+        if r.status_code != 200:
+            print('Error ' + str(r.status_code) + ': Cannot connect to PornHub.com :cry:')
+            # await self.bot.say('Error ' + str(r.status_code) + ': Cannot connect to PornHub.com :cry:')
+            return []
+
+        rJson = json.loads(r.text)
+
+        if "video" in rJson:
+            vidJson = rJson["video"]
+        else:
+            # No video!
+            return []
+
+        # Find video Info
+        key = vidJson["video_id"]
+        # print(key)
+
+        title = vidJson["title"]
+        # print(title)
+
+        dur = vidJson["duration"]
+        # print(dur)
+
+        views = vidJson["views"]
+        views = "{:,}".format(int(views))
+        # print(views)
+
+        rate = str(int(round(float(vidJson["rating"]))))
+        # print(rate)
+
+        cats = []
+        for i in range(len(vidJson["categories"])):
+            cats.append(vidJson["categories"][i]["category"].replace("-", " ").title())
+        # print(cats)
+
+        tags = []
+        for i in range(len(vidJson["tags"])):
+            tags.append(vidJson["tags"][i]["tag_name"])
+        # print(tags)
+
+        ps = []
+        for i in range(len(vidJson["pornstars"])):
+            ps.append(vidJson["pornstars"][i]["pornstar_name"])
+        # print(ps)
+
+        thumb = vidJson["default_thumb"]
+        # print(thumb)
+
+        vid = [key, title, dur, views, rate, cats, tags, ps, thumb]
+
+        return vid
+
+    async def printVids(self, vids, context, query, page, rating):
+        if len(vids) <= 0:
+            await self.bot.say("No videos found :cry:")
+        else:
+            resEmbed = discord.Embed(title='__Choose one by giving its number__', colour=discord.Colour(0xFF9900))
+            resEmbed.set_footer(text=query + ' Results - Page ' + str(page))
+            for i in range(len(vids)):
+                goodBad = ':thumbsup:' if int(vids[i][4]) >= 50 else ':thumbsdown:'
+                pornTitle = str(i + page * 5 - 4) + '. ' + vids[i][1]
+                pornStats = '\t:clock2: ' + vids[i][2] + '\t:eyes: ' + vids[i][3] + '\t' + goodBad + ' ' + vids[i][4] + '%'
+                resEmbed.add_field(name=pornTitle, value=pornStats, inline=False)
+
+            await self.bot.say(embed=resEmbed)
+
+            def check(m):
+                return m.content in map(str, range(page * 5 - 4, page * 5 - 4 + len(vids)))
+
+            # Append it so it can be cancelled later if needed
+            self.tasks.append(asyncio.ensure_future(self.bot.wait_for_message(author=context.message.author, check=check,
+                                                                              channel=context.message.channel, timeout=20)))
+            resp = await self.tasks[len(self.tasks)-1]
+            #resp = await self.bot.wait_for_message(author=context.message.author, check=check,
+            #                                       channel=context.message.channel, timeout=20)
+
+            selectedVidIndex = (int(resp.content) - 1) % 5
+            selectedVid = self.getVideo(vids[selectedVidIndex][0])
+
+            # Video data didn't come back for some reason?
+            if not selectedVid:
+                await self.bot.say("Error getting your video :cry:")
+                return
+
+            goodBad = ':thumbsup:' if int(selectedVid[4]) >= 50 else ':thumbsdown:'
+            vidUrl = 'https://www.pornhub.com/view_video.php?viewkey=' + selectedVid[0]
+            vidStats = '\t:clock2: ' + selectedVid[2] + '\t:eyes: ' + selectedVid[3] + '\t' + goodBad + ' ' + selectedVid[4] + '%'
+            catString = ", ".join(selectedVid[5])
+            tagString = ", ".join(selectedVid[6])
+
+            vidEmbed = discord.Embed(title="__"+selectedVid[1]+"__", colour=discord.Colour(0xFF9900))
+            vidEmbed.set_thumbnail(url=selectedVid[8])
+            vidEmbed.add_field(name="Stats", value=vidStats, inline=False)
+            vidEmbed.add_field(name="Categories", value=catString, inline=False)
+            # Not necessarily pornstars in every video now, is there?
+            if selectedVid[7]: vidEmbed.add_field(name="Pornstars", value=", ".join(selectedVid[7]), inline=False)
+            vidEmbed.add_field(name="Tags", value=tagString, inline=False)
+            vidEmbed.add_field(name="URL", value=vidUrl, inline=False)
+
+            await self.bot.say(embed=vidEmbed)
+
+    @commands.group(pass_context=True)
+    async def pornhub(self, context):
+        if context.invoked_subcommand == None:
+            await self.displayHelp()
+        # print(context.invoked_subcommand)
+
+        # Clear out bot.wait_for_message Tasks
+        # Avoid multiple video returns
+        for task in self.tasks:
+            task.cancel()
+            # print(task)
+        self.tasks.clear()
+
+    @pornhub.command(pass_context=False)
+    async def help(self):
+        await self.displayHelp()
+
+    @help.error
+    async def help_error(error, errMsg, context):
+        print(errMsg)
+
+    @pornhub.command(pass_context=True)
+    async def search(self, context, query: str = "help", page: int = 1, rating: int = 0):
+        if query.lower() == "help":
+            helpEmbed = discord.Embed(title="*.pornhub search <query> [page] [minRating]*", colour=discord.Colour(0xFF9900))
+            helpEmbed.set_author(name="PornHub Search Help")
+            helpEmbed.add_field(name="Description",
+                                value="Allows you to search PornHub for videos. Simple as that!",
+                                inline=False)
+            helpEmbed.add_field(name="Arguments",
+                                value="**query:** What you want to search for\n"
+                                      "**page:** What page of results you want to go to (default=1)\n"
+                                      "**minRating:** Must be an integer between 0 and 100. Videos with a rating lower than this number won't be displayed in results (default=0)",
+                                inline=False)
+            await self.bot.say(embed=helpEmbed)
+            return
+
+        if rating < 0 or rating > 100: rating = 0
+        if page <= 0: page = 1
+
+        # Call the API
+        # Start at page 1 if rating is something other than 0
+        actualPage = 1 if rating != 0 else math.ceil(page / 6)
+        skip = 5 * ((page - 1) % 6)
+        # print(query)
+        baseUrl = "http://www.pornhub.com/webmasters/search?thumbsize=medium&search="
+        parsedQuery = urllib.parse.quote_plus(query)
+        partialUrl = baseUrl + parsedQuery
+        vids = self.getVidsAPI(partialUrl, actualPage, skip, rating, 5)
+
+
+        # --- BACKUP HTML SCRAPER METHOD ---
+        # Start at page 1 if rating is something other than 0
+        # actualPage = 1 if rating != 0 else math.ceil(page / 4)
+        # skip = 5 * ((page - 1) % 4)
+        # print(query)
+        # baseUrl = "https://www.pornhub.com/video/search?search="
+        # parsedQuery = urllib.parse.quote_plus(query)
+        # partialUrl = baseUrl + parsedQuery
+        # vids = self.getVids(partialUrl, actualPage, skip, rating, 5)
+
+        await self.printVids(vids, context, query, page, rating)
+
+    @search.error
+    async def search_error(error, errMsg, context):
+        print(errMsg)
+
+    @pornhub.command(pass_context=True)
+    async def category(self, context, categoryName: str = "help", page: int = 1, rating: int = 0):
+        if categoryName.lower() == "help":
+            helpEmbed = discord.Embed(title="*.pornhub category <categoryName> [page] [minRating]*", colour=discord.Colour(0xFF9900))
+            helpEmbed.set_author(name="PornHub Category Browse Help")
+            helpEmbed.add_field(name="Description",
+                                value="Allows you to browse PornHub by category",
+                                inline=False)
+            helpEmbed.add_field(name="Arguments",
+                                value="**categoryName:** Which category you would like to browse. Type *.pornhub category list* to get a list of all available categories\n"
+                                      "**page**: What page of results you want to go to (default=1)\n"
+                                      "**minRating:** Must be an integer between 0 and 100. Videos with a rating lower than this number won't be displayed in results (default=0)",
+                                inline=False)
+            await self.bot.say(embed=helpEmbed)
+            return
+
+        if categoryName.lower() == "list":
+            botString = "**Available Categories\n**"
+            for cat in self.categories:
+                botString += cat[0] + "\n"
+            await self.bot.send_message(destination=context.message.author, content=botString)
+            return
+
+        if rating < 0 or rating > 100: rating = 0
+        if page <= 0: page = 1
+
+        category = []
+
+        for cat in self.categories:
+            if cat[0].lower() == categoryName.lower():
+                category = cat
+
+        if not category:
+            await self.bot.say(
+                "Category " + categoryName + " not found. Do .pornhub category list for a list of all categories.")
+            return
+
+
+        # "Henry" is a custom category, don't call that on the API
+        if category[0] != "Henry":
+            # Start at page 1 if rating is something other than 0
+            actualPage = 1 if rating != 0 else math.ceil(page / 6)
+            skip = 5 * ((page - 1) % 6)
+            # print(query)
+            baseUrl = "http://www.pornhub.com/webmasters/search?thumbsize=medium&category="
+            parsedCategory = category[0].lower().replace(" ", "-")
+            partialUrl = baseUrl + parsedCategory
+            vids = self.getVidsAPI(partialUrl, actualPage, skip, rating, 5)
+        # Else scrape the HTML
+        else:
+            # Start at page 1 if rating is something other than 0
+            actualPage = 1 if rating != 0 else math.ceil(page / 4)
+            skip = 4 * ((page - 1) % 8)
+            # print(query)
+            baseUrl = "https://www.pornhub.com/" + category[1]
+            vids = self.getVids(baseUrl, actualPage, skip, rating, 4)
+
+
+        botString = category[0] + " Videos"
+        if category[0] == "SFW":
+            botString += " (Wtf why are you searching for SFW stuff on PornHub?)"
+        elif category[0] == "Panda Style":
+            botString += " (Careful, this is some kinky shit)"
+        elif category[0] == "Henry":
+            botString += " (Good choice! :wink:)"
+
+        await self.printVids(vids, context, botString, page, rating)
+
+    @category.error
+    async def category_error(error, errMsg, context):
+        print(errMsg)
+
+    @pornhub.command(pass_context=True)
+    async def hottest(self, context, page: int = 1, rating: int = 0):
+        if rating < 0 or rating > 100: rating = 0
+        if page <= 0: page = 1
+        # Start at page 1 if rating is something other than 0
+        actualPage = 1 if rating != 0 else math.ceil(page / 4)
+        skip = 4 * ((page - 1) % 8)
+
+        baseUrl = "https://www.pornhub.com/video?o=ht"
+
+        vids = self.getVids(baseUrl, actualPage, skip, rating, 4)
+        await self.printVids(vids, context, "Hottest Porn Videos", page, rating)
+
+    @hottest.error
+    async def hottest_error(error, errMsg, context):
+        print(errMsg)
+
+    @pornhub.command(pass_context=True)
+    async def mv(self, context, page: int = 1, rating: int = 0):
+        await self.mostviewed_func(context, page, rating)
+
+    @pornhub.command(pass_context=True)
+    async def mostviewed(self, context, page: int = 1, rating: int = 0):
+        await self.mostviewed_func(context, page, rating)
+
+    async def mostviewed_func(self, context, page, rating):
+        if rating < 0 or rating > 100: rating = 0
+        if page <= 0: page = 1
+        # Start at page 1 if rating is something other than 0
+        actualPage = 1 if rating != 0 else math.ceil(page / 4)
+        skip = 4 * ((page - 1) % 8)
+
+        baseUrl = "https://www.pornhub.com/video?o=mv"
+
+        vids = self.getVids(baseUrl, actualPage, skip, rating, 4)
+        await self.printVids(vids, context, "This Week's Most Viewed Porn Videos", page, rating)
+
+    @mv.error
+    async def mv_error(error, errMsg, context):
+        print(errMsg)
+
+    @mostviewed.error
+    async def mostviewed_error(error, errMsg, context):
+        print(errMsg)
+
     
-    base_url = "https://www.pornhub.com/video"
-    search_url = f"{base_url}/search?search={search_query}"
 
-    driver = init_driver()
-    driver.get(base_url)  # Load the website to set initial cookies
+    @pornhub.command(pass_context=True)
+    async def home(self, context):
+        url = "https://www.pornhub.com/"
+        r = requests.get(url)
+        if r.status_code != 200:
+            print('Error ' + str(r.status_code) + ': Cannot connect to PornHub.com :cry:')
+            await self.bot.say('Error ' + str(r.status_code) + ': Cannot connect to PornHub.com :cry:')
+            return
 
-    try:
-        driver.get(search_url)
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "gateway-modal")))
-        logging.info("scrape_pornhub: Page loaded successfully, waiting for 1 seconds...")
-        time.sleep(1)  # Allow page to load
-        logging.info("scrape_iptorrents: Page fully loaded, souping results...")
-        soup = BeautifulSoup(driver.page_source, 'html.parser')
-        video_list = soup.find('ul', {'id': 'videoSearchResult'})
-        results = []
+        soup = BeautifulSoup(r.text, "html.parser")
+        videoContainers = soup.find_all("div", class_="sectionWrapper")
+        hotVidBoxes = videoContainers[0].find_all("li", class_="videoblock videoBox")
+        mvVidBoxes = videoContainers[1].find_all("li", class_="videoblock videoBox")
+        vidBoxes = hotVidBoxes + mvVidBoxes
 
-        videos = video_list.find_all('li', class_=lambda x: x and 'pcVideoListItem' in x.split())
-        logging.info(f"scrape_pornhub: Found {len(videos)} results using updated class selector")
-        for video in videos:
-            video_link_element = video.find('a', {'class': 'fade videoPreviewBg linkVideoThumb js-linkVideoThumb img fadeUp'})
-            if video_link_element:
-                video_link = video_link_element['href']
-                title = video_link_element['data-title']
-            else:
-                video_link = 'URL not found'
-                title = 'Title not found'
-            
-            author_element = video.find('a', {'rel': ''})
-            if author_element:
-                author = author_element.text
-            else:
-                author = 'Author not found'
-            
-            views_element = video.find('span', {'class': 'views'})
-            if views_element:
-                views = views_element.text
-            else:
-                views = 'Views not found'
-            
-            rating_element = video.find('div', {'class': 'value'})
-            if rating_element:
-                rating = rating_element.text
-            else:
-                rating = 'Rating not found'
-            
-            duration_element = video.find('var', {'class': 'duration'})
-            if duration_element:
-                duration = duration_element.text
-            else:
-                duration = 'Duration not found'
+        # Find video URLs and Titles
+        vids = []
 
-            result = {
-                'Viewing URL': base_url + video_link,
-                'Title': title,
-                'Author': author,
-                'Views': views,
-                'Rating': rating,
-                'Duration': duration
-            }
-            results.append(result)
-            logging.info(f"Found result: {result}")
+        # Get Hot Vids and Most Watched Vids
+        i = 0
+        while i < len(vidBoxes) and len(vids) <= 11:
+            tempKey = vidBoxes[i]['_vkey']
 
-        if not results:
-            logging.info("No valid results found.")
-            return None
-    except Exception as e:
-        logging.error(f"Error while processing the page: {e}")
-        return None
-    finally:
-        driver.quit()
+            tempTitle = vidBoxes[i].find('a', class_="img")['title']
+            # Replace encoded chars
+            tempTitle = tempTitle.replace("&#039;", "'")
+            tempTitle = tempTitle.replace("&amp;", "&")
+            tempTitle = tempTitle.replace("&quot;", '"')
+            tempTitle = tempTitle.replace("&mdash;", '-')
 
-    return results
-    
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        logging.error("Usage: python search_pornhub.py <search_query>")
-        sys.exit(1)
-        
-    search_query = sys.argv[1]
-    logging.info(f"search_pornhub: Initiating scrape for '{search_query}' on PornHub...")
-    items = scrape_pornhub(search_query)
-    if items is None:
-        logging.error("search_pornhub: Failed to retrieve or parse items from PornHub.")
-    else:
-        items_json = json.dumps(items, indent=4)
-        logging.info(f"search_pornhub: Results: {items_json}")
+            tempDur = vidBoxes[i].find('var', class_="duration").string
+
+            tempViews = vidBoxes[i].find('span', class_="views").var.string
+
+            tempRate = vidBoxes[i].find('div', class_="value").string[0:2]
+
+            vids.append([tempKey, tempTitle, tempDur, tempViews, tempRate])
+            # Go to next vid
+            i += 1
+
+        hotEmbed = discord.Embed(title='__Hot Porn Videos__', colour=discord.Colour(0xFF9900))
+        hotEmbed.set_author(name="**PornHub Home - Choose one by giving its number**")
+        hotEmbed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/7/7c/Logo_of_Pornhub.png")
+        for i in range(6):
+            goodBad = ':thumbsup:' if int(vids[i][4]) >= 50 else ':thumbsdown:'
+            pornTitle = str(i + 1) + '. ' + vids[i][1]
+            pornStats = '\t:clock2: ' + vids[i][2] + '\t:eyes: ' + vids[i][3] + '\t' + goodBad + ' ' + vids[i][4] + '%'
+            hotEmbed.add_field(name=pornTitle, value=pornStats, inline=False)
+
+        await self.bot.say(embed=hotEmbed)
+
+        mvEmbed = discord.Embed(title='__Most Viewed Videos__', colour=discord.Colour(0xFF9900))
+        for i in range(6, 11):
+            goodBad = ':thumbsup:' if int(vids[i][4]) >= 50 else ':thumbsdown:'
+            pornTitle = str(i + 1) + '. ' + vids[i][1]
+            pornStats = '\t:clock2: ' + vids[i][2] + '\t:eyes: ' + vids[i][3] + '\t' + goodBad + ' ' + vids[i][4] + '%'
+            mvEmbed.add_field(name=pornTitle, value=pornStats, inline=False)
+
+        await self.bot.say(embed=mvEmbed)
+
+        def check(m):
+            return m.content in map(str, range(1, 12))
+
+        # Append it so it can be cancelled later if needed
+        self.tasks.append(asyncio.ensure_future(self.bot.wait_for_message(author=context.message.author, check=check,
+                                                                          channel=context.message.channel, timeout=20)))
+        resp = await self.tasks[len(self.tasks) - 1]
+        # resp = await self.bot.wait_for_message(author=context.message.author, check=check,
+        #
+
+        selectedVidIndex = (int(resp.content) - 1)
+        selectedVid = self.getVideo(vids[selectedVidIndex][0])
+
+        # Video data didn't come back for some reason?
+        if not selectedVid:
+            await self.bot.say("Error getting your video :cry:")
+            return
+
+        goodBad = ':thumbsup:' if int(selectedVid[4]) >= 50 else ':thumbsdown:'
+        vidUrl = 'https://www.pornhub.com/view_video.php?viewkey=' + selectedVid[0]
+        vidStats = '\t:clock2: ' + selectedVid[2] + '\t:eyes: ' + selectedVid[3] + '\t' + goodBad + ' ' + selectedVid[4] + '%'
+        catString = ", ".join(selectedVid[5])
+        tagString = ", ".join(selectedVid[6])
+
+        vidEmbed = discord.Embed(title="__" + selectedVid[1] + "__", colour=discord.Colour(0xFF9900))
+        vidEmbed.set_thumbnail(url=selectedVid[8])
+        vidEmbed.add_field(name="Stats", value=vidStats, inline=False)
+        vidEmbed.add_field(name="Categories", value=catString, inline=False)
+        # Not necessarily pornstars in every video now, is there?
+        if selectedVid[7]: vidEmbed.add_field(name="Pornstars", value=", ".join(selectedVid[7]), inline=False)
+        vidEmbed.add_field(name="Tags", value=tagString, inline=False)
+        vidEmbed.add_field(name="URL", value=vidUrl, inline=False)
+
+        await self.bot.say(embed=vidEmbed)
+
+    @home.error
+    async def home_error(error, errMsg, context):
+        print(errMsg)
+
+
+def setup(bot):
+    bot.add_cog(PornHub(bot))

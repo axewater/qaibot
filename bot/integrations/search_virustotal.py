@@ -87,42 +87,7 @@ def query_file_hash(file_hash):
     print(f"query_file_hash: API response code: {response.status_code}")
     return response.json()
 
-def process_data(data):
-    print(f"process_data: Processing API response: {data}")
-    if 'data' not in data:
-        return {"error": "Missing *data* in API response"}
-
-    data_type = data['data']['type']
-    if data_type == 'file' or data_type == 'ip_address' or data_type == 'domain':
-        if 'attributes' not in data['data']:
-            return {"error": "Missing *attributes* in API response"}
-        if data_type == 'file':
-            return process_file_hash_data(data)
-        elif data_type == 'ip_address':
-            return process_ip_address_data(data)
-        elif data_type == 'domain':
-            return process_domain_data(data)
-    elif data_type == 'analysis':
-        return process_url_data(data)
-    else:
-        return {"error": "Unsupported data type"}
-
-def process_file_hash_data(data):
-    attributes = data['data']['attributes']
-    analysis_results = attributes.get('last_analysis_results', {})
-    analysis_summary = {
-        "md5": attributes.get('md5', 'Unknown'),
-        "sha1": attributes.get('sha1', 'Unknown'),
-        "sha256": attributes.get('sha256', 'Unknown'),
-        "reputation": attributes.get('reputation', 0),
-        "type_description": attributes.get('type_description', 'Unknown'),
-        "malicious_votes": attributes['last_analysis_stats'].get('malicious', 0),
-        "undetected_votes": attributes['last_analysis_stats'].get('undetected', 0),
-        "Antivirus Results": {k: v['result'] for k, v in analysis_results.items() if v['result']}
-    }
-    return analysis_summary
-
-def process_ip_address_data(data):
+def process_ip_data(data):
     attributes = data['data']['attributes']
     ip_address_info = {
         "IP Address": data['data']['id'],
@@ -148,12 +113,6 @@ def process_ip_address_data(data):
         "Whois Information": attributes.get('whois', 'Unknown')
     }
     return ip_address_info
-
-def process_url_data(data):
-    if 'links' not in data['data']:
-        return {"error": "Missing *links* in URL analysis response"}
-    report_url = data['data']['links'].get('self', 'No report URL available')
-    return {"Report URL": report_url}
 
 def process_domain_data(data):
     attributes = data['data']['attributes']
@@ -185,10 +144,31 @@ def process_domain_data(data):
     }
     return domain_info
 
+def process_url_data(data):
+    if 'links' not in data['data']:
+        return {"error": "Missing *links* in URL analysis response"}
+    report_url = data['data']['links'].get('self', 'No report URL available')
+    return {"Report URL": report_url}
+
+def process_file_hash_data(data):
+    attributes = data['data']['attributes']
+    analysis_results = attributes.get('last_analysis_results', {})
+    analysis_summary = {
+        "md5": attributes.get('md5', 'Unknown'),
+        "sha1": attributes.get('sha1', 'Unknown'),
+        "sha256": attributes.get('sha256', 'Unknown'),
+        "reputation": attributes.get('reputation', 0),
+        "type_description": attributes.get('type_description', 'Unknown'),
+        "malicious_votes": attributes['last_analysis_stats'].get('malicious', 0),
+        "undetected_votes": attributes['last_analysis_stats'].get('undetected', 0),
+        "Antivirus Results": {k: v['result'] for k, v in analysis_results.items() if v['result']}
+    }
+    return analysis_summary
+
 def format_output(data, output_format):
     if output_format == 'json':
         
-        processed_data = process_data(data)
+        processed_data = data
         return json.dumps(processed_data, indent=4)
     elif output_format == 'table':
         if 'data' in data:

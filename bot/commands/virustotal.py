@@ -32,7 +32,7 @@ async def handle_virustotal(interaction: discord.Interaction, query: str, query_
             formatted_results.append("\n**Full Report**\n" + full_info)
 
         message = "\n".join(formatted_results)
-        await send_large_message(interaction, message)
+        await send_large_message(interaction, message, previewurls='no')
     except Exception as e:
         logging.error(f"handle_virustotal: An error occurred - {str(e)}")
         await interaction.followup.send("An error occurred while processing your request.")

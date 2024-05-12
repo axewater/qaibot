@@ -1,4 +1,5 @@
 # bot/utilities.py
+import re  # Import regular expression module
 from .integrations.openai_chat import summarize_text
 import tiktoken
 import logging
@@ -15,8 +16,14 @@ def is_admin(user):
     return any(role.name == 'qbotadmins' for role in user.roles)
 
 # Function to send large messages, respecting Discord's character limit
-async def send_large_message(interaction, message):
+async def send_large_message(interaction, message, previewurls='yes'):
     """Send a large message in chunks to respect Discord's character limit without cutting lines in half."""
+    if previewurls == 'no':
+        # Regex to find URLs in the message
+        url_pattern = r'https?://\S+'
+        # Replace URLs with bracketed version to prevent previews
+        message = re.sub(url_pattern, r'<\g<0>>', message)
+    
     if len(message) <= DISCORD_LIMIT:
         await interaction.followup.send(message)
     else:

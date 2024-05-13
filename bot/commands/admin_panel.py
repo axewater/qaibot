@@ -2,6 +2,7 @@ from discord.ui import Modal, TextInput, Button, View
 import discord
 import logging
 from ..utilities import is_admin
+from ..integrations.security_portscan import perform_port_scan
 from .readback_handler import ReadbackHandler
 
 class PortScanModal(Modal):
@@ -17,8 +18,7 @@ class PortScanModal(Modal):
     async def on_submit(self, interaction: discord.Interaction):
         ip_or_domain = self.ip_or_domain.value
         port_range = self.port_range.value
-        # Here we will enter the correct function to perform the port scan, once its written
-        result = security_portscan(ip_or_domain, port_range)
+        result = perform_port_scan(ip_or_domain, port_range, verbose=False)
         await interaction.response.send_message(f"Scan results for {ip_or_domain}:\n{result}", ephemeral=True)
 
 
@@ -46,4 +46,3 @@ async def handle_admin_panel(interaction: discord.Interaction):
         await interaction.response.send_message("Admin Panel:", view=view, ephemeral=True)
     else:
         await interaction.response.send_message("You are not authorized to use this command.", ephemeral=True)
-

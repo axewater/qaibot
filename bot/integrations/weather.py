@@ -1,17 +1,17 @@
-# bot\integrations\weather2.py
-
 import argparse
 import pandas as pd
 import requests_cache
 from retry_requests import retry
 import openmeteo_requests
 from functions.fetch_weatherdata import fetch_weather_data
+import json
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Fetch and display weather data using the Open-Meteo API.')
     parser.add_argument('-lat', '--latitude', type=float, required=True, help='Latitude of the location')
     parser.add_argument('-lon', '--longitude', type=float, required=True, help='Longitude of the location')
     parser.add_argument('--when', type=str, required=True, choices=['now', 'tomorrow', 'week'], help='Time of the weather forecast ("now", "tomorrow", or "week")')
+    parser.add_argument('--output-format', type=str, default='json', choices=['json', 'table'], help='Output format of the weather data')
     return parser.parse_args()
 
 def setup_api_client():
@@ -19,9 +19,22 @@ def setup_api_client():
     retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
     return openmeteo_requests.Client(session=retry_session)
 
+def display_weather_data(response, forecast_time, output_format):
+    print("Raw API Response:", response)
+    # Print detailed attributes of the response object
+    print("Inspecting attributes of the response object:")
+    attributes = dir(response)
+    for attr in attributes:
+        if not attr.startswith('__') and not callable(getattr(response, attr)):
+            print(f"{attr}: {getattr(response, attr)}")
 
+    if output_format == 'json':
+        try:
+            print(json.dumps(response, indent=4))
+        except TypeError as e:
+            print("Error serializing object to JSON:", e)
+        return
 
-def display_weather_data(response, forecast_time):
     print(f"Coordinates: {response.Latitude()}°N, {response.Longitude()}°E")
     print(f"Elevation: {response.Elevation()} m asl")
     print(f"Timezone: {response.Timezone()} ({response.TimezoneAbbreviation()})")
@@ -72,13 +85,11 @@ def display_weather_data(response, forecast_time):
             daily_df = pd.DataFrame(data=daily_data)
             print(daily_df)
 
-
-
 def main():
     args = parse_arguments()
     client = setup_api_client()
     response = fetch_weather_data(client, args.latitude, args.longitude, args.when)
-    display_weather_data(response, args.when)
+    display_weather_data(response, args.when, args.output_format)
 
 if __name__ == "__main__":
     main()

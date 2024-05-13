@@ -142,6 +142,16 @@ def perform_scan(ip, services, output_format='table', verbose=False):
     if verbose:
         logging.debug(f"Scan completed. Total: {total_ports}, Open: {open_ports}, Closed: {closed_ports}, Filtered: {filtered_ports}")
 
+def perform_port_scan(ip_or_domain, port_range=None, verbose=False, output_format='table'):
+    setup_logging(verbose)
+    resolved_ip = validate_and_resolve_input(ip_or_domain, verbose)
+    if resolved_ip:
+        services = parse_port_argument(port_range) if port_range else parse_services_file('bot/integrations/default_ports.json', verbose)
+        services = [(f"Custom-{port}", port, 'tcp') for port in services] if port_range else services
+        return perform_scan(resolved_ip, services, output_format, verbose)
+    else:
+        return "Scanning aborted due to invalid input."
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Perform a port scan on a specified IP or domain.')
     parser.add_argument('address', type=str, help='IP address or domain to scan')

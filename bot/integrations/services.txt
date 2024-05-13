@@ -1,24 +1,33 @@
 # Format:
 #
-# <service name>  <port number>/<protocol>  [aliases...]   [#<comment>]
-#
+# <service name>  <port number>/<protocol>
 
-
-ftp-data           20/tcp                           #FTP, data
-ftp                21/tcp                           #FTP. control
-ssh                22/tcp                           #SSH Remote Login Protocol
+ftp-data           20/tcp
+ftp                21/tcp
+ssh                22/tcp
 telnet             23/tcp
-smtp               25/tcp    mail                   #Simple Mail Transfer Protocol
-time               37/tcp    timserver
-time               37/udp    timserver
-rlp                39/udp    resource               #Resource Location Protocol
-nicname            43/tcp    whois
-domain             53/tcp                           #Domain Name Server
-domain             53/udp                           #Domain Name Server
-bootps             67/udp    dhcps                  #Bootstrap Protocol Server
-bootpc             68/udp    dhcpc                  #Bootstrap Protocol Client
-tftp               69/udp                           #Trivial File Transfer
+smtp               25/tcp
+time               37/tcp
+time               37/udp
+rlp                39/udp
+nicname            43/tcp
+domain             53/tcp
+domain             53/udp
+bootps             67/udp
+bootpc             68/udp
+tftp               69/tcp
+tftp               69/udp
 gopher             70/tcp
 finger             79/tcp
-http               80/tcp    www www-http           #World Wide Web
-https              443/tcp   www www-https          #World Wide Web (Secure)
+http               80/tcp
+pop3               110/tcp
+ntp                123/tcp
+imap               143/tcp
+https              443/tcp
+smtps              465/tcp
+ike-vpn            500/udp
+imaps              993/tcp
+pop3s              995/tcp 
+mysql              3306/tcp
+msrdp              3389/tcp
+sip                5060/udp

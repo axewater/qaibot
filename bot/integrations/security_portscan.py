@@ -65,61 +65,35 @@ def parse_services_file(filepath, verbose):
             logging.debug(f"Failed to read or parse {filepath}: {e}")
     return services
 
-def send_syn_packet(ip, port, timeout):
-    s = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP)
-    try:
-        s.setsockopt(socket.IPPROTO_IP, socket.IP_HDRINCL, 1)
-        # Build IP header, TCP header here
-        # Send SYN packet
-    except Exception as e:
-        logging.debug(f"Failed to send SYN packet: {e}")
-    finally:
-        s.close()
 
-def receive_syn_ack(s, timeout):
-    ready = select.select([s], [], [], timeout / 1000.0)
-    if ready[0]:
-        data = s.recv(4096)
-        return data
-    return None
 
-def scan_port(ip, port, protocol, verbose, half_open=False, timeout=1000):
+def scan_port(ip, port, protocol, verbose):
     if verbose:
         logging.info(f"Scanning {ip}:{port}/{protocol}")
     try:
-        if half_open:
-            send_syn_packet(ip, port, timeout)
-            response = receive_syn_ack(s, timeout)
-            if response:
-                logging.debug(f"Received SYN-ACK for {ip}:{port}, port is open")
-                return True
-            else:
-                logging.debug(f"No SYN-ACK for {ip}:{port}, port is filtered or closed")
-                return False
-        else:
-            socket_type = socket.SOCK_STREAM if protocol == 'tcp' else socket.SOCK_DGRAM
-            with socket.socket(socket.AF_INET, socket_type) as sock:
-                sock.settimeout(1)
-                if protocol == 'tcp':
-                    result = sock.connect_ex((ip, port))
-                    if result == 0:
-                        if verbose:
-                            logging.debug(f"Port {port}/{protocol} on {ip} is open")
-                        return True
-                    else:
-                        if verbose:
-                            logging.debug(f"Port {port}/{protocol} on {ip} is closed")
+        socket_type = socket.SOCK_STREAM if protocol == 'tcp' else socket.SOCK_DGRAM
+        with socket.socket(socket.AF_INET, socket_type) as sock:
+            sock.settimeout(1)
+            if protocol == 'tcp':
+                result = sock.connect_ex((ip, port))
+                if result == 0:
+                    if verbose:
+                        logging.debug(f"Port {port}/{protocol} on {ip} is open")
+                    return True
                 else:
-                    sock.sendto(b'', (ip, port))
-                    try:
-                        sock.recvfrom(1024)
-                        if verbose:
-                            logging.debug(f"Port {port}/{protocol} on {ip} is open")
-                        return True
-                    except socket.timeout:
-                        if verbose:
-                            logging.debug(f"Port {port}/{protocol} on {ip} is closed/firewalled")
-                        return False
+                    if verbose:
+                        logging.debug(f"Port {port}/{protocol} on {ip} is closed")
+            else:
+                sock.sendto(b'', (ip, port))
+                try:
+                    sock.recvfrom(1024)
+                    if verbose:
+                        logging.debug(f"Port {port}/{protocol} on {ip} is open")
+                    return True
+                except socket.timeout:
+                    if verbose:
+                        logging.debug(f"Port {port}/{protocol} on {ip} is closed/firewalled")
+                    return False
     except socket.timeout:
         if verbose:
             logging.debug(f"Timeout occurred while scanning {ip}:{port}/{protocol}")
@@ -137,7 +111,7 @@ def scan_port(ip, port, protocol, verbose, half_open=False, timeout=1000):
             return False
     return False
 
-def perform_scan(ip, services, output_format='table', verbose=False, half_open=False, timeout=1000):
+def perform_scan(ip, services, output_format='table', verbose=False):
     total_ports = len(services)
     scanned_ports = 0
     open_ports = 0
@@ -154,7 +128,7 @@ def perform_scan(ip, services, output_format='table', verbose=False, half_open=F
         scanned_ports += 1
         if verbose:
             logging.debug(f"Scanning port {scanned_ports} of {total_ports}: {port}/{protocol}")
-        open = scan_port(ip, port, protocol, verbose, half_open, timeout)
+        open = scan_port(ip, port, protocol, verbose)
         status = 'open' if open else 'closed/firewalled'
         if status == 'open':
             if not verbose:
@@ -181,8 +155,6 @@ if __name__ == "__main__":
     parser.add_argument('--port', type=str, help='Specify custom ports or ranges (e.g., 80,100-110)')
     parser.add_argument('--verbose', action='store_true', help='Enable verbose output')
     parser.add_argument('--format', type=str, choices=['table', 'json'], default='table', help='Output format')
-    parser.add_argument('--half-open', action='store_true', help='Enable half-open scan (SYN scan)')
-    parser.add_argument('--timeout', type=int, default=1000, help='Timeout in milliseconds for half-open scan')
     args = parser.parse_args()
 
     setup_logging(args.verbose)
@@ -195,6 +167,6 @@ if __name__ == "__main__":
         services = parse_services_file('bot/integrations/services.txt', args.verbose)
     resolved_ip = validate_and_resolve_input(ip_address, args.verbose)
     if resolved_ip:
-        perform_scan(resolved_ip, services, output_format, args.verbose, args.half_open, args.timeout)
+        perform_scan(resolved_ip, services, output_format, args.verbose)
     else:
         print("Scanning aborted due to invalid input.")

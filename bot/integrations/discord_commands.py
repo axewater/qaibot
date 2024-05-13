@@ -11,7 +11,7 @@ from ..commands.research import handle_research
 from ..commands.manage import handle_manage
 from ..commands.readback_handler import ReadbackHandler, setup as setup_readback_handler
 from ..commands.makeimage import handle_makeimage
-from ..commands.admin_settings import handle_admin_settings
+from ..commands.admin_panel import handle_admin_panel
 from ..commands.marktplaats import handle_marktplaats
 from ..commands.pricewatch import handle_pricewatch
 from ..commands.torrent import handle_torrent
@@ -21,7 +21,6 @@ from ..commands.imdb import handle_imdb
 from ..commands.steam import handle_steam
 from ..commands.cdkeys import handle_cdkeys
 from ..commands.amazon import handle_amazon
-from ..commands.pornhub import search_pornhub
 from ..utilities import send_large_message
 
 async def setup(bot):
@@ -95,7 +94,7 @@ async def setup(bot):
         logging.info(f"IPTorrents command called with search query: {search_query}")
         await handle_iptorrents(interaction, search_query)
 
-    @bot.slash_command(name="qqamazon", description="Search for products on Amazon.")
+    @bot.slash_command(name="qqamazon", description="Search for products on Amazon. (NOT WORKING ATM!)")
     async def amazon(interaction: discord.Interaction, search_query: str):
         logging.info(f"Amazon command called with search query: {search_query}")
         await handle_amazon(interaction, search_query)
@@ -113,10 +112,10 @@ async def setup(bot):
         logging.info("Manage command called")
         await handle_manage(interaction)
 
-    @bot.slash_command(name="qqadminsettings", description="Manage administrator settings.")
+    @bot.slash_command(name="qqadminpanel", description="Manage administrator settings.")
     async def admin_settings(interaction: discord.Interaction):
         logging.info("Admin Settings command called")
-        await handle_admin_settings(interaction)
+        await handle_admin_panel(interaction)
 
 
     # Register additional handlers

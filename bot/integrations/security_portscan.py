@@ -50,22 +50,15 @@ def parse_services_file(filepath, verbose):
     services = []
     try:
         with open(filepath, 'r') as file:
-            for line in file:
-                if line.strip() and not line.startswith('#'):
-                    parts = line.split()
-                    service_name = parts[0]
-                    port_protocol = parts[1].split('/')
-                    port = int(port_protocol[0])
-                    protocol = port_protocol[1]
-                    services.append((service_name, port, protocol))
+            data = json.load(file)
+            for service in data['services']:
+                services.append((service['name'], service['port'], service['protocol']))
         if verbose:
             logging.debug(f"Loaded {len(services)} services from {filepath}")
     except Exception as e:
         if verbose:
             logging.debug(f"Failed to read or parse {filepath}: {e}")
     return services
-
-
 
 def scan_port(ip, port, protocol, verbose):
     if verbose:
@@ -164,7 +157,7 @@ if __name__ == "__main__":
     if custom_ports:
         services = [(f"Custom-{port}", port, 'tcp') for port in custom_ports]
     else:
-        services = parse_services_file('bot/integrations/services.txt', args.verbose)
+        services = parse_services_file('bot/integrations/default_ports.json', args.verbose)
     resolved_ip = validate_and_resolve_input(ip_address, args.verbose)
     if resolved_ip:
         perform_scan(resolved_ip, services, output_format, args.verbose)

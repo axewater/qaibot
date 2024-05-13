@@ -3,8 +3,57 @@ import pandas as pd
 import requests_cache
 from retry_requests import retry
 import openmeteo_requests
-from functions.fetch_weatherdata import fetch_weather_data
+from .weather_api_vars import fetch_weather_data
 import json
+
+def serialize_weather_response(response):
+    """ Custom serialization for WeatherApiResponse objects. """
+    if hasattr(response, '_tab'):
+        # Assuming '_tab' is a flatbuffers table containing the response data.
+        # This needs to be adjusted based on the actual structure and content of '_tab'.
+        data = {
+            'Latitude': response.Latitude(),
+            'Longitude': response.Longitude(),
+            'Elevation': response.Elevation(),
+            'Timezone': response.Timezone().decode('utf-8'),
+            'UtcOffsetSeconds': response.UtcOffsetSeconds(),
+            'CurrentWeather': {
+                'Time': response.Current().Time(),
+                'Temperature': response.Current().Variables(0).Value(),
+                'Humidity': response.Current().Variables(1).Value(),
+                'Precipitation': response.Current().Variables(2).Value(),
+                'Rain': response.Current().Variables(3).Value(),
+                'WeatherCode': response.Current().Variables(4).Value(),
+                'WindSpeed': response.Current().Variables(5).Value(),
+                'WindDirection': response.Current().Variables(6).Value()
+            }
+        }
+        # Handling nested attributes and lists
+        if hasattr(response, 'Hourly'):
+            hourly_forecasts = []
+            for i in range(response.HourlyLength()):
+                hourly = response.Hourly(i)
+                hourly_forecasts.append({
+                    'Time': hourly.Time(),
+                    'Temperature': hourly.Variables(0).Value(),
+                    'Humidity': hourly.Variables(1).Value()
+                })
+            data['HourlyForecasts'] = hourly_forecasts
+
+        if hasattr(response, 'Daily'):
+            daily_forecasts = []
+            for i in range(response.DailyLength()):
+                daily = response.Daily(i)
+                daily_forecasts.append({
+                    'Date': daily.Date(),
+                    'MaxTemperature': daily.Variables(0).Value(),
+                    'MinTemperature': daily.Variables(1).Value(),
+                    'PrecipitationProbability': daily.Variables(2).Value()
+                })
+            data['DailyForecasts'] = daily_forecasts
+        return data
+    else:
+        return {}
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Fetch and display weather data using the Open-Meteo API.')
@@ -19,10 +68,11 @@ def setup_api_client():
     retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
     return openmeteo_requests.Client(session=retry_session)
 
-def display_weather_data(response, forecast_time, output_format):
-    print("Raw API Response:", response)
+def format_weather_data(response, forecast_time, output_format):
+    result = ""
+    # print("Raw API Response:", response)
     # Print detailed attributes of the response object
-    print("Inspecting attributes of the response object:")
+    # print("Inspecting attributes of the response object:")
     attributes = dir(response)
     for attr in attributes:
         if not attr.startswith('__') and not callable(getattr(response, attr)):
@@ -30,10 +80,11 @@ def display_weather_data(response, forecast_time, output_format):
 
     if output_format == 'json':
         try:
-            print(json.dumps(response, indent=4))
+            serialized_data = serialize_weather_response(response)
+            result = json.dumps(serialized_data, indent=4)
         except TypeError as e:
             print("Error serializing object to JSON:", e)
-        return
+        return result
 
     print(f"Coordinates: {response.Latitude()}°N, {response.Longitude()}°E")
     print(f"Elevation: {response.Elevation()} m asl")
@@ -85,11 +136,12 @@ def display_weather_data(response, forecast_time, output_format):
             daily_df = pd.DataFrame(data=daily_data)
             print(daily_df)
 
-def main():
+def run():
     args = parse_arguments()
     client = setup_api_client()
     response = fetch_weather_data(client, args.latitude, args.longitude, args.when)
-    display_weather_data(response, args.when, args.output_format)
+    result = format_weather_data(response, args.when, args.output_format)
+    print(result)
 
 if __name__ == "__main__":
-    main()
+    run()

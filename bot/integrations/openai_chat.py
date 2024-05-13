@@ -58,6 +58,11 @@ def ask_question(question_text):
     prompt = "You are QAI, a helpful Discord chatbot. Answer the following question. Do not translate any language to english. RETAIN THE LANGUAGE OF THE PROVIDED TEXT. Limit your output to 1000 characters."
     return process_text_with_gpt(question_text, prompt, gpt_version=4)
 
+def report_weather(question_text):
+    logging.info("report_weather: Checking the weather API")
+    prompt = "Je bent QAI, een Discord weerbericht bot. Hier volgent de gegevens van het weerbericht. Lees het voor als het voor een radio uitzending is. Beperkt de text tot een maximum van 300 karakters, of 500 karakters in geval van een 'week weer overzicht'."
+    return process_text_with_gpt(question_text, prompt, gpt_version=4)
+
 def join_conversation(context):
     logging.info("join_conversation: Joining the conversation with GPT4")
     prompt = "You are QAI, a nerdy Discord chatbot. Here is the recent conversation, join in using the dominant language of the conversation. Write a reply like a human. Limit your output to 200 characters."

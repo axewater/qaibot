@@ -10,7 +10,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 try:
     from config import GOOGLE_MAPS_API_KEY
 except ImportError:
-    from ...config import GOOGLE_MAPS_API_KEY
+    from .config import GOOGLE_MAPS_API_KEY
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 

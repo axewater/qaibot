@@ -1,4 +1,4 @@
-from discord.ui import Modal, TextInput, Button, View
+from discord.ui import Modal, InputText, Button, View
 import discord
 import logging
 from ..utilities import is_admin
@@ -9,10 +9,10 @@ class PortScanModal(Modal):
     def __init__(self):
         super().__init__(title="Port Scanner")
 
-        self.ip_or_domain = TextInput(label="IP Address or Domain", style=discord.TextStyle.short, placeholder="Enter IP or domain here", required=True)
+        self.ip_or_domain = InputText(label="IP Address or Domain", style=discord.TextStyle.short, placeholder="Enter IP or domain here", required=True)
         self.add_item(self.ip_or_domain)
 
-        self.port_range = TextInput(label="Port Range (optional)", style=discord.TextStyle.short, placeholder="Enter port range (e.g., 80,443 or 1-1024)", required=False)
+        self.port_range = InputText(label="Port Range (optional)", style=discord.TextStyle.short, placeholder="Enter port range (e.g., 80,443 or 1-1024)", required=False)
         self.add_item(self.port_range)
 
     async def on_submit(self, interaction: discord.Interaction):

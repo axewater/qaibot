@@ -25,7 +25,13 @@ async def handle_virustotal(interaction: discord.Interaction, query: str, query_
 
         formatted_results = []
         if report_type == 'quick':
-            quick_info = {key: processed_results[key] for key in processed_results if key in ['Domain ID', 'IP Address', 'Report URL', 'md5']}
+            quick_info = {key: processed_results[key] for key in processed_results if key in ['Domain ID', 'IP Address', 'Report URL', 'md5', 'Last DNS Records', 'Last Analysis Stats', 'Whois Information']}
+            
+            # Truncate Whois Information to the first 20 lines if it exists
+            if 'Whois Information' in quick_info and isinstance(quick_info['Whois Information'], str):
+                whois_lines = quick_info['Whois Information'].split('\n')
+                quick_info['Whois Information'] = '\n'.join(whois_lines[:20])
+                
             formatted_results.append("**Quick Info**\n" + "\n".join([f"**{key}**: {value}" for key, value in quick_info.items()]))
         if report_type == 'full':
             full_info = "\n".join([f"**{key}**: {value}" for key, value in processed_results.items()])

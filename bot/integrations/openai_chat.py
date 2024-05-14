@@ -80,7 +80,7 @@ def process_text_with_gpt(text, system_prompt, gpt_version=3):
     ]
 
     gpt_version_map = {
-        4: "gpt-4-turbo",
+        4: "gpt-4o",
         3: "gpt-3.5-turbo"
     }
 

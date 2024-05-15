@@ -16,7 +16,7 @@ DISCORD_LIMIT = 2000  # Maximum characters for Discord messages
 RATE_LIMITS = {
      'gpt-3.5-turbo': {'tokens': 160000, 'requests': 5000},
      'gpt-4': {'tokens': 80000, 'requests': 5000},
-     'gpt-4-turbo': {'tokens': 600000, 'requests': 5000}
+     'gpt-4o': {'tokens': 600000, 'requests': 5000}
 }
 
 class RateLimiter:

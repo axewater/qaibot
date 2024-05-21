@@ -12,7 +12,7 @@ async def handle_weather(interaction: discord.Interaction, location: str, report
         logging.info(f"Weather info fetched: {weather_info}")
         if weather_info:
             # Convert the weather data into a written form using GPT-4
-            written_report = report_weather(weather_info, report_type)
+            written_report = report_weather(weather_info, location, report_type)
             if written_report:
                 await send_large_message(interaction, written_report)
             else:

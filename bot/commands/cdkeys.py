@@ -1,12 +1,12 @@
 import discord
-from ..integrations.search_cdkeys import fetch_game_details
+from ..integrations.search_cdkeys import search_cdkeys
 from urllib.parse import urlparse, urlunparse, quote
 from ..utilities import send_large_message
 import logging
 
 async def handle_cdkeys(interaction: discord.Interaction, game_name: str):
     await interaction.response.defer()
-    results = fetch_game_details(game_name)
+    results = search_cdkeys(game_name)
     if results:
         formatted_results = []
         for result in results:

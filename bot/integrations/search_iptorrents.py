@@ -34,7 +34,7 @@ def get_clean_text(element):
     text = ''.join(parts).strip()
     return text
 
-def scrape_iptorrents(search_query):
+def search_iptorrents(search_query):
     base_url = "https://www.iptorrents.com"
     search_url = f"{base_url}/t?q={search_query.replace(' ', '+')}"
 
@@ -44,19 +44,19 @@ def scrape_iptorrents(search_query):
     # Load the cookies for authentication
     load_cookies(driver, "./bot/integrations/cookie_iptorrents.json")
 
-    logging.info(f"scrape_iptorrents: Fetching URL {search_url}")
+    logging.info(f"search_iptorrents: Fetching URL {search_url}")
     try:
         driver.get(search_url)
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "torrents")))
-        logging.info("scrape_iptorrents: Page loaded successfully, waiting for 2 seconds...")
+        logging.info("search_iptorrents: Page loaded successfully, waiting for 2 seconds...")
         time.sleep(2)  # Allow page to fully load
-        logging.info("scrape_iptorrents: Page fully loaded, souping results...")
+        logging.info("search_iptorrents: Page fully loaded, souping results...")
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         table = soup.find('table', {'id': 'torrents'})
         results = []
 
         rows = table.find('tbody').find_all('tr')[:12]  # Limit to 12 results
-        logging.info(f"scrape_iptorrents: Found {len(rows)} results")
+        logging.info(f"search_iptorrents: Found {len(rows)} results")
         for row in rows:
             cols = row.find_all('td')
             if not cols:
@@ -65,7 +65,7 @@ def scrape_iptorrents(search_query):
             # Use get_clean_text to extract the text properly from the <a> tag
             name_link = cols[1].find('a')
             name = get_clean_text(name_link) if name_link else "No name found"
-            logging.info(f"scrape_iptorrents: Cleaned name: {name}")
+            logging.info(f"search_iptorrents: Cleaned name: {name}")
             result = {
                 'Type': cols[0].find('img')['alt'] if cols[0].find('img') else 'No type',
                 'Name': name,
@@ -98,7 +98,7 @@ if __name__ == "__main__":
 
     search_query = sys.argv[1]
     logging.info(f"search_iptorrents: Initiating scrape for '{search_query}' on IPTorrents...")
-    items = scrape_iptorrents(search_query)
+    items = search_iptorrents(search_query)
     if items is None:
         logging.error("search_iptorrents: Failed to retrieve or parse items from IPTorrents.")
     else:

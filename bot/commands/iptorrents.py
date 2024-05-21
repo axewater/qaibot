@@ -2,7 +2,7 @@
 import discord, logging
 from urllib.parse import urlparse, urlunparse, quote
 from ..utilities import send_large_message
-from ..integrations.search_iptorrents import scrape_iptorrents
+from ..integrations.search_iptorrents import search_iptorrents
 
 async def handle_iptorrents(interaction: discord.Interaction, search_query: str):
     """
@@ -11,7 +11,7 @@ async def handle_iptorrents(interaction: discord.Interaction, search_query: str)
     
     await interaction.response.defer()
     logging.info(f"Starting to scrape IPTorrents for '{search_query}'")
-    results = scrape_iptorrents(search_query)
+    results = search_iptorrents(search_query)
 
     if results is None:
         logging.error("Failed to retrieve or parse items from IPTorrents.")

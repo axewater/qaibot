@@ -9,7 +9,7 @@ try:
 except ImportError:
     from chrome_webdriver import init_driver
 
-def fetch_game_details(game_name):
+def search_cdkeys(game_name):
     # Prepare the search URL
     search_url = f"https://www.cdkeys.com/#q={game_name.replace(' ', '%20')}"
 
@@ -51,7 +51,7 @@ def main():
 
     game_name = ' '.join(sys.argv[1:])
     print("Searching for:", game_name)
-    game_details = fetch_game_details(game_name)
+    game_details = search_cdkeys(game_name)
     if game_details:
         print(json.dumps(game_details, indent=4))
     else:

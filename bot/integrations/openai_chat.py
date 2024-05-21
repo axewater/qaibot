@@ -58,9 +58,14 @@ def ask_question(question_text):
     prompt = "You are QAI, a helpful Discord chatbot. Answer the following question. Do not translate any language to english. RETAIN THE LANGUAGE OF THE PROVIDED TEXT. Limit your output to 1000 characters."
     return process_text_with_gpt(question_text, prompt, gpt_version=4)
 
-def report_weather(question_text):
-    logging.info("report_weather: Checking the weather API")
-    prompt = "Je bent QAI, een Discord weerbericht bot. Hier volgent de gegevens van het weerbericht. Lees het voor als het voor een radio uitzending is. Beperkt de text tot een maximum van 300 karakters, of 500 karakters in geval van een 'week weer overzicht'."
+def report_weather(question_text, report_type="week"):
+    logging.info(f"report_weather: Checking the weather API for a '{report_type}' report by GPT4")
+    if report_type == "now":
+        prompt = "Je bent QAI, een Discord weerbericht bot. Hier volgt de gegevens van het weerbericht van vandaag. Lees het voor als een nieuwsbericht. Beperkt de text tot een maximum van 300 karakters en gebruik veel emoticons."
+    elif report_type == "tomorrow":
+        prompt = "Je bent QAI, een Discord weerbericht bot. Hier volgt de gegevens van het weerbericht voor morgen. Lees het voor als een nieuwsbericht. Beperkt de text tot een maximum van 300 karakters en gebruik veel emoticons."
+    else:
+        prompt = "Je bent QAI, een Discord weerbericht bot. Hier volgt de gegevens van het weerbericht. Lees het voor als een 'week weer overzicht'. Beperkt de text tot een maximum van 500 karakters en gebruik veel emoticons."
     return process_text_with_gpt(question_text, prompt, gpt_version=4)
 
 def join_conversation(context):

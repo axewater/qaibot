@@ -1,8 +1,10 @@
 import sys
 import os
 import json
+import io
+import contextlib
 
-sys.path.append('/bot/integrations/functions')  # Ensure the functions directory is in the path
+sys.path.append('/bot/integrations/functions')  # Ensures the functions directory is in the path
 
 try:
     from functions.loc2co import get_coordinates
@@ -26,9 +28,16 @@ def main(location_name=None, report_type='now'):
         raise WeatherSearchError("Could not get coordinates for the location.")
 
     sys.argv = ['weather_api.py', '-lat', str(latitude), '-lon', str(longitude), '--when', report_type, '--output-format', 'table']
-    fetch_weather()
+    
+    # Capture the output of fetch_weather
+    with io.StringIO() as buf, contextlib.redirect_stdout(buf):
+        fetch_weather()
+
+        output = buf.getvalue()
+    
+    return output
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
         raise WeatherSearchError("Usage: python search_weather.py <location_name> <report_type>")
-    main(sys.argv[1], sys.argv[2])
+    print(main(sys.argv[1], sys.argv[2]))

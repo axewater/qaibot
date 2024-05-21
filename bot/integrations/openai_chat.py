@@ -6,17 +6,9 @@ from openai import OpenAI
 import tiktoken
 import time
 import re
-from ..integrations import summarize_url
-from ..integrations import search_weather
-from ..integrations import search_google
-from ..integrations.search_imdb import search_imdb
-from ..integrations.search_iptorrents import search_iptorrents as search_it_component
-from ..integrations.search_steam import search_steam
-from ..integrations.search_cdkeys import search_cdkeys
-from ..integrations.search_magnetdl import search_torrents
-from ..integrations.openai_imagegen import generate_image
-from ..integrations.security_portscan import perform_port_scan
-# from ..integrations.search_virustotal import search_virustotal_url, search_virustotal_domain, search_virustotal_ip
+import sys
+
+
 
 
 # Instantiate the OpenAI client with your API key
@@ -71,86 +63,6 @@ def ask_question(question_text):
     return process_text_with_gpt(question_text, prompt, gpt_version=4)
 
 
-def magic_ai(question_text):
-    logging.info("ask_question: Asking a question to GPT4 with tools in context")
-    system_prompt = """
-    The date of today is {date}.
-    You are QAI, a helpful Discord chatbot that can use a variety of tools. 
-    You will be asked a question, and you should first decide if the answer requires the use of your tools before answering.
-    These are your tools and how to use them:
-    {googlesearch:query}                    example : {googlesearch:"how to make a sandwich"}
-    {summarize_url:url}                     example : {summarize_url:"https://example.com"}
-    {imdbsearch:movie}                      example : {imdb:"The Matrix"}
-    {it_component_search:component_name}    example : {it_component_search:"nvidia 4090"}
-    {steamsearch:game_name}                 example : {steamsearch:"Grand Theft Auto V"}
-    {cdkeysearch:game_name}                 example : {cdkeysearch:"GTA V"}
-    {torrentsearch:game_name}               example : {torrentsearch:"Grand Theft Auto V"}
-    {weather:location:when}                 examples : {weather:"London":now}, {weather:"London":tomorrow}, {weather:"London":week}
-    {makeimage:prompt}                      example : {makeimage:"a cute dog"}
-    {nmapscan:ip_address:ports}             example : {nmapscan:"237.84.2.178":"22,80,443"}
-    
-    To use a tool, just print the query as shown in the above examples. Only print that and wait for the answer.
-    Then you will be returned the data from the tool, and you can use it to answer the original question from the user.
-    """
-    return process_magic_with_gpt(question_text, system_prompt, gpt_version=4)
-
-
-def process_magic_with_gpt(question_text, system_prompt, gpt_version=4):
-    logging.info(f"process_magic_with_gpt: Processing magic with GPT (version: " + str(gpt_version) + ")")
-
-    # Send the user's question to process_text_with_gpt
-    response = process_text_with_gpt(question_text, system_prompt, gpt_version) 
-
-
-    # Define the regex pattern to match the commands
-    pattern = r'\{(\w+):([^}]+)\}'
-
-    # Find all the commands in the user's query
-    commands = re.findall(pattern, response)
-
-    # Process each command and store the results
-    results = []
-    for command, query in commands:
-        if command == 'googlesearch':
-            result = search_google(query)
-        elif command == 'summarize_url':
-            result = summarize_url(query)
-        elif command == 'imdbsearch':
-            result = search_imdb(query)
-        elif command == 'it_component_search':
-            result = search_it_component(query)
-        elif command == 'steamsearch':
-            result = search_steam(query)
-        elif command == 'cdkeysearch':
-            result = search_cdkeys(query)
-        elif command == 'torrentsearch':
-            result = search_torrents(query)
-        elif command == 'weather':
-            location, when = query.split(':')
-            result = search_weather(location, when)
-        elif command == 'makeimage':
-            result = generate_image(query)
-        elif command == 'nmapscan':
-            ip_address, ports = query.split(':')
-            result = perform_port_scan(ip_address, ports)
-        else:
-            result = f"Unknown command: {command}"
-
-        results.append(result)
-
-    # Combine the results into a single string
-    combined_results = "\n".join(results)
-
-    final_prompt =  """
-                    You are QAI, a helpful Discord chatbot. You must a question from the user. I will provide you with context below. Try to limit your output to 1500 characters if it is possible without leaving out important details."
-                    Question : {question_text}
-                    Context : {combined_results}
-                    """
-
-    # Feed the combined results as context to GPT using process_text_with_gpt
-    response = process_text_with_gpt(combined_results, final_prompt, gpt_version)
-
-    return response
 
 def report_weather(question_text, location, report_type="week"):
     logging.info(f"report_weather: Checking the weather API for a '{report_type}' report by GPT4")

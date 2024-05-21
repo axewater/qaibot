@@ -1,6 +1,9 @@
 # bot/integrations/google_search.py
 
-import json, logging, sys, os
+import json
+import logging
+import sys
+import os
 
 # Dynamically add the bot directory to the Python path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -10,7 +13,6 @@ try:
 except ImportError:
     from config import GOOGLE_API_KEY, GOOGLE_CX
 from googleapiclient.discovery import build
-
 
 
 def perform_web_search(query, start_index=1, max_results=5):
@@ -41,6 +43,6 @@ def perform_web_search(query, start_index=1, max_results=5):
         logging.info(f"perform_web_search: Received URLs from search results: {urls}")
         return urls
 
-    except Exception as e:
+    except (Exception, ValueError) as e:
         logging.error(f"Failed to perform web search using Google Search API: {e}")
         return []

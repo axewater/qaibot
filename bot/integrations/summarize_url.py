@@ -13,6 +13,7 @@ except ImportError:
 
 def validate_url(url):
     """Validate the URL format using a regular expression."""
+    logging.info(f"validate_url: Validating URL: {url}.")
     regex = re.compile(
         r'^(?:http|ftp)s?://'  # http://, https://, or ftp://
         r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+'  # domain names
@@ -75,6 +76,22 @@ if __name__ == '__main__':
         sys.exit(1)
 
     content = fetch_website_content(args.url)
+    if content:
+        summary = summarize_text(content, "Please summarize this text:")
+        print(summary)
+    else:
+        print("Failed to fetch content from the URL.")
+
+
+def samenvatting_bitch(url):
+    """Fetch and summarize website content."""
+    logging.info(f"fetch_website_content: Fetching content from {url}.")
+    
+    if not validate_url(url):
+        print("Invalid URL provided.")
+        sys.exit(1)
+
+    content = fetch_website_content(url)
     if content:
         summary = summarize_text(content, "Please summarize this text:")
         print(summary)

@@ -2,7 +2,7 @@
 
 import discord, logging
 from ..utilities import send_large_message
-from ..integrations.openai_chat import magic_ai
+from ..integrations.openai_magic import magic_ai
 
 async def handle_magic(interaction: discord.Interaction, query: str):
     await interaction.response.defer()

@@ -11,7 +11,8 @@ async def handle_magic(interaction: discord.Interaction, query: str):
     processed_text = magic_ai(query)
     if processed_text:
         logging.info("Magic command has generated an answer and is sending it to Discord now.")
-        await send_large_message(interaction, processed_text)
+        message = f"**Original Question:** {query}\n**Response:**\n{processed_text}"
+        await send_large_message(interaction, message)
     else:
         logging.error("Error: No response generated.")
         await interaction.followup.send("Error: No response generated.")

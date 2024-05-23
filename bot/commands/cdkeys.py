@@ -26,7 +26,9 @@ async def handle_cdkeys(interaction: discord.Interaction, game_name: str):
             formatted_results.append(f"**{game_title}** - Price: {price}, [Buy Now]({safe_url})")
 
         message = "\n".join(formatted_results)
-        await send_large_message(interaction, message)
+        final_message = f"**Original Question:** {game_name}\n**Response:**\n{message}"
+
+        await send_large_message(interaction, final_message)
     else:
         logging.warning("No results found or there was an error fetching game details.")
         await interaction.followup.send("No results found or there was an error.")

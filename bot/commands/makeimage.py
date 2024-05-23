@@ -37,7 +37,7 @@ async def handle_makeimage(interaction: discord.Interaction, prompt: str, size: 
             logging.info(f"Image saved to {image_filename}")
 
             # Use followup to send the message since we deferred the initial response
-            await interaction.followup.send(f"Here's the image I made: [{prompt}]({image_url})")
+            await interaction.followup.send(f"Here's the image you asked for: {prompt}", file=discord.File(image_filename))
         else:
             logging.error(f"Failed to download image. Status code: {response.status_code}")
             await interaction.followup.send("Failed to download the generated image.")

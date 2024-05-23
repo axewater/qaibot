@@ -42,10 +42,10 @@ async def setup(bot):
         
 
             
-    # @bot.slash_command(name="qqmakeimage", description="Generate an image based on your text prompt.")
-    # async def image(interaction: discord.Interaction, prompt: str):
-    #     logging.info(f"Image command called with prompt: {prompt}")
-    #     await handle_makeimage(interaction, prompt)
+    @bot.slash_command(name="qqmakeimage", description="Generate an image based on your text prompt.")
+    async def image(interaction: discord.Interaction, prompt: str):
+        logging.info(f"Image command called with prompt: {prompt}")
+        await handle_makeimage(interaction, prompt)
 
 
     # @bot.slash_command(name="qqmakeimage", description="Generate an image based on your text prompt.")

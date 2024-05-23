@@ -19,6 +19,22 @@ except ImportError:
 class WeatherSearchError(Exception):
     pass
 
+def search_weather(location_name: str, report_type: str = 'now') -> str:
+    """Fetches and returns the weather report for the given location.
+
+    Args:
+        location_name: The name of the location.
+        report_type: The type of report ('now', 'today', 'tomorrow', 'week'). Defaults to 'now'.
+
+    Returns:
+        str: The formatted weather report string.
+    """
+    latitude, longitude = get_coordinates(location_name, os.getenv('GOOGLE_MAPS_API_KEY'))
+    sys.argv = ['weather_api.py', '-lat', str(latitude), '-lon', str(longitude), '--when', report_type, '--output-format', 'table']
+    with io.StringIO() as buf, contextlib.redirect_stdout(buf):
+        fetch_weather()
+        return buf.getvalue()
+
 def main(location_name=None, report_type='now'):
     if location_name is None:
         raise WeatherSearchError("Usage: python search_weather.py <location_name> <report_type>")

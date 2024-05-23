@@ -8,7 +8,7 @@ from bot.integrations.search_iptorrents import search_iptorrents
 from bot.integrations.search_pricewatch import search_tweakers_pricewatch
 from bot.integrations.search_steam import search_steam
 from bot.integrations.search_cdkeys import search_cdkeys
-import bot.integrations.search_weather as search_weather
+from bot.integrations.search_weather import search_weather
 from bot.integrations.security_portscan import perform_port_scan
 from bot.integrations.openai_imagegen import generate_image
 
@@ -53,7 +53,9 @@ def process_magic_with_gpt(question_text, system_prompt, gpt_version=4):
         elif command == 'cdkeysearch':
             result = search_cdkeys(query)
         elif command == 'weather':
-            result = search_weather(query)
+            # Split the query to handle multiple parameters
+            location, when = query.split(':')
+            result = search_weather(location.strip('"'), when)
         elif command == 'makeimage':
             result = generate_image(query)
         elif command == 'nmapscan':
@@ -69,6 +71,13 @@ def process_magic_with_gpt(question_text, system_prompt, gpt_version=4):
     final_prompt = """
     You are QAI, a helpful Discord chatbot. You must answer a question from the user. I will provide you with context below.
 
+    Here are some rules about how you MUST reply in certain cases :
+    
+    -If the Context appears to be a weather report, you shall read it like a news report and use maximum amount of emoticons for decoration in the Discord message.
+    -If the Context appears to be a port scan report, you shall read it like a pentest report and use maximum amount of emoticons for decoration in the Discord message.
+    -If the Question allows, you will reply with a lot of emoticons for decoration in the Discord message.
+    -Modify your response length according to the Question.
+    
     Question: {question_text}
     Context: {combined_results}
     """.format(question_text=question_text, combined_results=combined_results)

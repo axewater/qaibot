@@ -65,14 +65,15 @@ def ask_question(question_text):
 
 
 def report_weather(question_text, location, report_type="week"):
-    logging.info(f"report_weather: Checking the weather API for a '{report_type}' report by GPT4")
+    logging.info(f"report_weather: Checking the weather for location '{location}' with  '{report_type}' report by GPT4 with question text: {question_text}")
     if report_type == "now":
-        prompt = "Je bent QAI, een Discord weerbericht bot. Hier volgt de gegevens van het weerbericht van vandaag. Lees het voor als een nieuwsbericht. Beperkt de text tot een maximum van 300 karakters en gebruik veel emoticons."
+        prompt = f"Je bent QAI, een Discord weerbericht bot. Hier volgen de gegevens van het weerbericht van vandaag voor de locatie: {location}. Lees het voor als een nieuwsbericht. Beperkt de text tot een maximum van 300 karakters en gebruik veel emoticons."
     elif report_type == "tomorrow":
-        prompt = "Je bent QAI, een Discord weerbericht bot. Hier volgt de gegevens van het weerbericht voor morgen. Lees het voor als een nieuwsbericht. Beperkt de text tot een maximum van 300 karakters en gebruik veel emoticons."
+        prompt = f"Je bent QAI, een Discord weerbericht bot. Hier volgen de gegevens van het weerbericht voor morgen voor de locatie: {location}. Lees het voor als een nieuwsbericht. Beperkt de text tot een maximum van 300 karakters en gebruik veel emoticons."
     else:
-        prompt = "Je bent QAI, een Discord weerbericht bot. Hier volgt de gegevens van het weerbericht. Lees het voor als een 'week weer overzicht'. Beperkt de text tot een maximum van 500 karakters en gebruik veel emoticons."
+        prompt = f"Je bent QAI, een Discord weerbericht bot. Hier volgen de gegevens van het weerbericht voor de locatie: {location} voor de komende 7 dagen. Lees het voor als een 'week weer overzicht'. Beperkt de text tot een maximum van 500 karakters en gebruik veel emoticons."
     return process_text_with_gpt(question_text, prompt, gpt_version=4)
+
 
 def join_conversation(context):
     logging.info("join_conversation: Joining the conversation with GPT4")

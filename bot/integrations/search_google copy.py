@@ -1,9 +1,9 @@
 # bot/integrations/search_google.py
 
+
 import logging
 import sys
 import os
-import argparse
 
 # Dynamically add the bot directory to the Python path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -46,21 +46,3 @@ def perform_web_search(query, start_index=1, max_results=5):
     except (Exception, ValueError) as e:
         logging.error(f"Failed to perform web search using Google Search API: {e}")
         return []
-
-
-def main():
-    parser = argparse.ArgumentParser(description="Perform a web search using the Google Search API.")
-    parser.add_argument('query', type=str, help='The search query.')
-    parser.add_argument('--start_index', type=int, default=1, help='The starting index for search results.')
-    parser.add_argument('--max_results', type=int, default=5, help='The maximum number of results to fetch.')
-    args = parser.parse_args()
-
-    logging.basicConfig(level=logging.INFO)
-    
-    urls = perform_web_search(args.query, args.start_index, args.max_results)
-    for url in urls:
-        print(url)
-
-
-if __name__ == "__main__":
-    main()

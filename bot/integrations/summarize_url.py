@@ -83,7 +83,7 @@ if __name__ == '__main__':
         print("Failed to fetch content from the URL.")
 
 
-def samenvatting_bitch(url):
+def magic_summarize(url):
     """Fetch and summarize website content."""
     logging.info(f"fetch_website_content: Fetching content from {url}.")
     

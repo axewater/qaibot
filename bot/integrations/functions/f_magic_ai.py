@@ -1,17 +1,14 @@
 import logging
 import re, sys
-
 from bot.integrations.search_google import perform_web_search
 from bot.integrations.openai_chat import process_text_with_gpt
 
-
 sys.path.append('/bot/integrations') 
 
-
 try:
-    from integrations.summarize_url import samenvatting_bitch
+    from integrations.summarize_url import magic_summarize
 except ImportError:
-    from summarize_url import samenvatting_bitch
+    from summarize_url import magic_summarize
 
 
 def process_magic_with_gpt(question_text, system_prompt, gpt_version=4):
@@ -19,10 +16,9 @@ def process_magic_with_gpt(question_text, system_prompt, gpt_version=4):
 
     # Send the user's question to process_text_with_gpt
     response = process_text_with_gpt(question_text, system_prompt, gpt_version) 
-
+    logging.info(f"process_magic_with_gpt: Response: {response} ")
     # Define the regex pattern to match the commands
     pattern = r'\[(\w+):([^\]]+)\]'
-
 
     # Find all the commands in the user's query
     commands = re.findall(pattern, response)
@@ -34,7 +30,7 @@ def process_magic_with_gpt(question_text, system_prompt, gpt_version=4):
         if command == 'googlesearch':
             result = perform_web_search(query)
         elif command == 'summarize_url':
-            result = samenvatting_bitch(query)
+            result = magic_summarize(query)
 
         else:
             result = f"Unknown command: {command}"
@@ -45,7 +41,7 @@ def process_magic_with_gpt(question_text, system_prompt, gpt_version=4):
     combined_results = "\n".join(map(str, results))
 
     final_prompt = """
-    You are QAI, a helpful Discord chatbot. You must answer a question from the user. I will provide you with context below. Try to limit your output to 1500 characters if it is possible without leaving out important details.
+    You are QAI, a helpful Discord chatbot. You must answer a question from the user. I will provide you with context below.
 
     Question: {question_text}
     Context: {combined_results}

@@ -28,15 +28,15 @@ from ..integrations.search_weather import main as fetch_weather_data
 
 async def setup(bot):
     
-    # Define slash commands and connect them to their respective handlers
-    @bot.slash_command(name="qqqai", description="Ask QAI any question... it knows all!")
-    async def qai(interaction: discord.Interaction, question: str):
-        logging.info(f"QAI command called with question: {question}")
-        await handle_qai(interaction, question)
+    # # Define slash commands and connect them to their respective handlers
+    # @bot.slash_command(name="qqqai", description="Ask QAI any question... it knows all!")
+    # async def qai(interaction: discord.Interaction, question: str):
+    #     logging.info(f"QAI command called with question: {question}")
+    #     await handle_qai(interaction, question)
             
 
     @bot.slash_command(name="qqmagic", description="mAgIc! Ask QAI any question... it knows all and uses all its tools!")
-    async def qai(interaction: discord.Interaction, question: str):
+    async def magic(interaction: discord.Interaction, question: str):
         logging.info(f"QAI magic command called with question: {question}")
         await handle_magic(interaction, question)
         

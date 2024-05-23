@@ -2,6 +2,15 @@ import logging
 import re, sys
 from bot.integrations.search_google import perform_web_search
 from bot.integrations.openai_chat import process_text_with_gpt
+from bot.integrations.search_imdb import search_imdb
+from bot.integrations.search_marktplaats import scrape_marktplaats_items
+from bot.integrations.search_iptorrents import search_iptorrents
+from bot.integrations.search_pricewatch import search_tweakers_pricewatch
+from bot.integrations.search_steam import search_steam
+from bot.integrations.search_cdkeys import search_cdkeys
+import bot.integrations.search_weather as search_weather
+from bot.integrations.security_portscan import perform_port_scan
+from bot.integrations.openai_imagegen import generate_image
 
 sys.path.append('/bot/integrations') 
 
@@ -31,7 +40,24 @@ def process_magic_with_gpt(question_text, system_prompt, gpt_version=4):
             result = perform_web_search(query)
         elif command == 'summarize_url':
             result = magic_summarize(query)
-
+        elif command == 'imdbsearch':
+            result = search_imdb(query)
+        elif command == 'marktplaats':
+            result = scrape_marktplaats_items(query)
+        elif command == 'iptorrents':
+            result = search_iptorrents(query)
+        elif command == 'it_component_search':
+            result = search_tweakers_pricewatch(query)
+        elif command == 'steamsearch':
+            result = search_steam(query)
+        elif command == 'cdkeysearch':
+            result = search_cdkeys(query)
+        elif command == 'weather':
+            result = search_weather(query)
+        elif command == 'makeimage':
+            result = generate_image(query)
+        elif command == 'nmapscan':
+            result = perform_port_scan(query)
         else:
             result = f"Unknown command: {command}"
 

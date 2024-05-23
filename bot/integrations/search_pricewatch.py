@@ -9,6 +9,7 @@ cookies = {
 }
 
 def search_tweakers_pricewatch(component_name):
+    component_name = component_name.replace("\"", "")
     logging.info(f"search_tweakers_pricewatch: Called with component name '{component_name}'")
     base_url = "https://tweakers.net/pricewatch/"
     search_url = base_url + "zoeken/?keyword=" + component_name

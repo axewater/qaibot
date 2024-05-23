@@ -7,7 +7,7 @@ try:
 except ImportError:
     from chrome_webdriver import init_driver
 
-def scrape_marktplaats_items(search_query, blacklist):
+def scrape_marktplaats_items(search_query, blacklist=[]):
     logging.info(f"scrape_marktplaats_items: Starting to scrape Marktplaats for '{search_query}'")
     base_url = "https://www.marktplaats.nl/q/"
     url = f"{base_url}{search_query.replace(' ', '+')}/"

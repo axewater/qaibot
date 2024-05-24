@@ -10,6 +10,7 @@ async def handle_iptorrents(interaction: discord.Interaction, search_query: str)
     """
     
     await interaction.response.defer()
+    progress_message = await interaction.followup.send("QAI is sending drones to search IPTorrents...")
     logging.info(f"Starting to scrape IPTorrents for '{search_query}'")
     results = search_iptorrents(search_query)
 

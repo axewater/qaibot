@@ -21,6 +21,7 @@ except ImportError:
 
 
 def process_magic_with_gpt(question_text, system_prompt, gpt_version=4):
+    
     logging.info(f"process_magic_with_gpt: Question: {question_text} ")
 
     # Send the user's question to process_text_with_gpt
@@ -31,6 +32,7 @@ def process_magic_with_gpt(question_text, system_prompt, gpt_version=4):
 
     # Find all the commands in the user's query
     commands = re.findall(pattern, response)
+    
     logging.info(f"process_magic_with_gpt: Found {len(commands)} commands: {commands}")
     # Process each command and store the results
     results = []

@@ -17,6 +17,8 @@ except ImportError:
 
 async def handle_summarize(interaction: discord.Interaction, url: str, context: str = None):
     await interaction.response.defer()
+    progress_message = await interaction.followup.send(f"QAI maakt een samenvatting van: {url}. ")
+    
     logging.info(f"handle_summarize: Summarizing '{url}' with context '{context}'")
     if not url.startswith(("http://", "https://")):
         url = "http://" + url

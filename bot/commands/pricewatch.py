@@ -5,6 +5,8 @@ from ..integrations.search_pricewatch import search_tweakers_pricewatch
 
 async def handle_pricewatch(interaction: discord.Interaction, component_name: str):
     await interaction.response.defer()
+    progress_message = await interaction.followup.send(f"QAI stuurt drones naar Tweakers voor: {component_name}. ")
+
     logging.info(f"Starting to scrape Pricewatch for '{component_name}'")
     results = search_tweakers_pricewatch(component_name)
 

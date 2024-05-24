@@ -5,6 +5,8 @@ from ..integrations.search_marktplaats import scrape_marktplaats_items
 
 async def handle_marktplaats(interaction: discord.Interaction, search_query: str):
     await interaction.response.defer()
+    progress_message = await interaction.followup.send(f"QAI stuurt drones naar marktplaats op zoek naar: {search_query}. ")
+
     logging.info(f"Starting to scrape Marktplaats for '{search_query}'")
     # Define the path to the blacklist file
     blacklist_path = 'bot/commands/blacklist_sellers.json'

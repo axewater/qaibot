@@ -5,6 +5,8 @@ from ..integrations.search_virustotal import query_domain, query_ip, query_url, 
 
 async def handle_virustotal(interaction: discord.Interaction, query: str, query_type: str, report_type='quick'):
     await interaction.response.defer()
+    progress_message = await interaction.followup.send(f"QAI stuurt drones naar VirusTotal voor: '{query}' type '{query_type}' en report type '{report_type}'...")
+
     logging.info(f"handle_virustotal: Starting to scrape VirusTotal for '{query}' with type '{query_type}' and report type '{report_type}'")
     try:
         if query_type == 'domain':
@@ -22,6 +24,9 @@ async def handle_virustotal(interaction: discord.Interaction, query: str, query_
         else:
             await interaction.followup.send("Invalid query type specified.")
             return
+
+        await progress_message.edit(content=f"QAI is compiling and formatting results for you ...")
+
 
         formatted_results = []
         if report_type == 'quick':

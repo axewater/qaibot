@@ -11,10 +11,14 @@ logging.basicConfig(level=logging.INFO)
 async def handle_makeimage(interaction: discord.Interaction, prompt: str, size: str='square', quality: str='standard'):
     # Acknowledge the interaction first and defer the response
     await interaction.response.defer()
+    progress_message = await interaction.followup.send(f"QAI gaat dit plaatje voor je maken: {prompt}. ")
+
+
     logging.info(f"handle_makeimage: called with prompt: {prompt}, size: {size}, quality: {quality}")
 
     # Generate the image
     result = json.loads(generate_image(prompt, size, quality))
+    
     logging.info(f"handle_makeimage: result: {result}")
 
     if result['status'] == 'success':

@@ -73,20 +73,20 @@ async def setup(bot):
     #     logging.info(f"Research command called with topic: {topic} and depth: {depth}")
     #     await handle_research(interaction, topic, depth)
         
-    @bot.slash_command(name="qimdb", description="Search for movies and shows on IMDb.")
-    async def imdb(interaction: discord.Interaction,
-                   search_query: str,
-                   type: str = Option(str, default='movie', choices=['movie', 'tv'], description="Specify the type: 'movie' or 'tv'.")):
-        logging.info(f"IMDb command called with search query: {search_query}")
-        await handle_imdb(interaction, search_query, type)        
+    # @bot.slash_command(name="qimdb", description="Search for movies and shows on IMDb.")
+    # async def imdb(interaction: discord.Interaction,
+    #                search_query: str,
+    #                type: str = Option(str, default='movie', choices=['movie', 'tv'], description="Specify the type: 'movie' or 'tv'.")):
+    #     logging.info(f"IMDb command called with search query: {search_query}")
+    #     await handle_imdb(interaction, search_query, type)        
 
-    # @bot.slash_command(name="qvirustotal", description="Query VirusTotal for URLs, domains, IPs, and hashes.")
-    # async def virustotal(interaction: discord.Interaction, 
-    #                      query: str, 
-    #                      type: str = Option(str, choices=['domain', 'ip', 'url', 'hash'], required=True, description="Specify the type of query."), 
-    #                      report_type: str = Option(str, default='quick', choices=['quick', 'full'], description="Choose report type: 'quick' or 'full'.")):
-    #     logging.info(f"VirusTotal command called with query: {query}, type: {type}")
-    #     await handle_virustotal(interaction, query, type, report_type)
+    @bot.slash_command(name="qvirustotal", description="Query VirusTotal for URLs, domains, IPs, and hashes.")
+    async def virustotal(interaction: discord.Interaction, 
+                         query: str, 
+                         type: str = Option(str, choices=['domain', 'ip', 'url', 'hash'], required=True, description="Specify the type of query."), 
+                         report_type: str = Option(str, default='quick', choices=['quick', 'full'], description="Choose report type: 'quick' or 'full'.")):
+        logging.info(f"VirusTotal command called with query: {query}, type: {type}")
+        await handle_virustotal(interaction, query, type, report_type)
 
     # @bot.slash_command(name="qpricewatch", description="Search for component prices on Tweakers Pricewatch.")
     # async def pricewatch(interaction: discord.Interaction, component_name: str):

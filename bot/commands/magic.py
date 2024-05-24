@@ -6,6 +6,7 @@ from ..integrations.openai_magic import magic_ai
 
 async def handle_magic(interaction: discord.Interaction, query: str):
     await interaction.response.defer()
+    progress_message = await interaction.followup.send(f"QAI is aan het nadenken over je vraag: {query}. ")
     logging.info(f"Magic command called with query: {query}")
     
     processed_text = magic_ai(query)

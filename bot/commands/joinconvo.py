@@ -8,6 +8,8 @@ async def handle_joinconvo(interaction: discord.Interaction):
     await interaction.response.defer()
 
     channel = interaction.channel
+    progress_message = await interaction.followup.send("QAI wanders into the channel and reads the last few messages ...")
+
     logging.info("JoinConvo command called. Reading last 15 messages.")
     messages = await channel.history(limit=15).flatten()
     # context = " ".join([msg.content for msg in messages[::-1]])  # Reverse to keep chronological order

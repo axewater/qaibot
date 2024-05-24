@@ -6,10 +6,14 @@ from ..integrations.openai_chat import report_weather
 
 async def handle_weather(interaction: discord.Interaction, location: str, report_type: str):
     await interaction.response.defer()
+    progress_message = await interaction.followup.send("QAI lanceert meteografische drones...")
+
     logging.info(f"Weather command received for location: {location} with report type: {report_type}.")
     try:
         weather_info = fetch_weather_data(location, report_type)
         logging.info(f"Weather info fetched: {weather_info}")
+        await progress_message.edit(content=f"Reading weather reports for: {location}.")
+
         if weather_info:
             # Convert the weather data into a written form using GPT-4
             written_report = report_weather(weather_info, location, report_type)

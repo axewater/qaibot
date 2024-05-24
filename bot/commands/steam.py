@@ -6,6 +6,8 @@ from ..utilities import send_large_message
 
 async def handle_steam(interaction: discord.Interaction, game_name: str):
     await interaction.response.defer()
+    progress_message = await interaction.followup.send(f"QAI stuurt drones naar Steam voor: {game_name}. ")
+
     logging.info(f"handle_steam: Starting to scrape Steam for '{game_name}'")
     results = search_steam(game_name, output_format='json')
     try:

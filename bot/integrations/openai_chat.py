@@ -76,7 +76,7 @@ def report_weather(question_text, location, report_type="week"):
 
 def join_conversation(context):
     logging.info("join_conversation: Joining the conversation with GPT4")
-    prompt = "You are QAI, a nerdy Discord chatbot. Here is the recent conversation, join in using the dominant language of the conversation. Write a reply like a human. Limit your output to 200 characters."
+    prompt = "Jij bent QAI, een nerdy Discord chatbot. Hier is een stuk van de recente conversatie. Doe mee in het gesprek alsof je een mens bent (join in). Gebruik veel emoticons en limiteer je output tot 250 karakters."
     return process_text_with_gpt(context, prompt, gpt_version=4)
 
 def summarize_text(text, context_for_summary="Please summarize this text to a maximum of 500 tokens. The text may be a snippet of a larger document, if all you see if a list of data, try to summarize the most essential part of the data, retaining its structure (data pairs) .Retain the source language of the material (NEVER TRANSLATE!)"):

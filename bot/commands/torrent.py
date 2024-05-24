@@ -5,6 +5,8 @@ from ..integrations.search_magnetdl import search_torrents
 
 async def handle_torrent(interaction: discord.Interaction, search_query: str):
     await interaction.response.defer()
+    progress_message = await interaction.followup.send(f"QAI stuurt drones naar MagnetDL voor: {search_query}. ")
+
     logging.info(f"handle_torrent: Starting to scrape MagnetDL for '{search_query}'")
     results = search_torrents(search_query)
 

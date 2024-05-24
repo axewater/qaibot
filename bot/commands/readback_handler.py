@@ -10,6 +10,8 @@ class ReadbackHandler(commands.Cog):
 
     async def index_server_messages(self, interaction: discord.Interaction):
         await interaction.response.defer()
+        progress_message = await interaction.followup.send(f"QAI is alles aan het leeg slurpen .. momentje hoor. ")
+
         server = interaction.guild
         db_session = SessionLocal()
         try:

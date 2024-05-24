@@ -11,9 +11,9 @@ async def handle_imdb(interaction: discord.Interaction, query: str, type: str = 
     Handle IMDb search command for Discord.
     """
     await interaction.response.defer()
-    logging.info(f"Starting to scrape IMDB for '{query}' with type '{type}'")
     progress_message = await interaction.followup.send("QAI is sending drones to search IMDB...")
-
+    logging.info(f"Starting to scrape IMDB for '{query}' with type '{type}'")
+    
     results = search_imdb(query, type)
     if not results:
         await interaction.followup.send("IMDB Search Drone: No results found for your query.")

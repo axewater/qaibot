@@ -12,9 +12,11 @@ async def handle_imdb(interaction: discord.Interaction, query: str, type: str = 
     """
     await interaction.response.defer()
     logging.info(f"Starting to scrape IMDB for '{query}' with type '{type}'")
+    progress_message = await interaction.followup.send("QAI is sending drones to search IMDB...")
+
     results = search_imdb(query, type)
     if not results:
-        await interaction.followup.send("IMDB Search: No results found for your query.")
+        await interaction.followup.send("IMDB Search Drone: No results found for your query.")
     else:
         formatted_results = []
         for result in results:
@@ -24,4 +26,4 @@ async def handle_imdb(interaction: discord.Interaction, query: str, type: str = 
             link = result['link']
             formatted_results.append(f"**{title} ({year})** - Actors: {actors}, [Link](<{link}>)")
         message = "\n".join(formatted_results)
-        await send_large_message(interaction, f"**IMDb Search Results for '{query}':**\n{message}")
+        await send_large_message(interaction, f"**IMDb Search Drone Report: '{query}':**\n{message}")

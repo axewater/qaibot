@@ -10,8 +10,9 @@ async def handle_joinconvo(interaction: discord.Interaction):
     channel = interaction.channel
     logging.info("JoinConvo command called. Reading last 15 messages.")
     messages = await channel.history(limit=15).flatten()
-    context = " ".join([msg.content for msg in messages[::-1]])  # Reverse to keep chronological order
-    
+    # context = " ".join([msg.content for msg in messages[::-1]])  # Reverse to keep chronological order
+    context = "\n".join([f"{msg.author.name} ({msg.created_at}): {msg.content}" for msg in messages[::-1]])  # Reverse to keep chronological order
+
     processed_text = join_conversation(context)
     if processed_text:
         logging.info("JoinConvo command has generated an answer and is sending it to Discord now.")

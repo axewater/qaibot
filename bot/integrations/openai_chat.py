@@ -5,7 +5,6 @@ import traceback
 from openai import OpenAI
 import tiktoken
 import time
-import re
 import sys
 
 
@@ -83,6 +82,9 @@ def join_conversation(context):
 def summarize_text(text, context_for_summary="Please summarize this text to a maximum of 500 tokens. The text may be a snippet of a larger document, if all you see if a list of data, try to summarize the most essential part of the data, retaining its structure (data pairs) .Retain the source language of the material (NEVER TRANSLATE!)"):
     logging.info("summarize_text: Summarizing the text with GPT3")
     return process_text_with_gpt(text, context_for_summary, gpt_version=3)
+
+
+
 
 def process_text_with_gpt(text, system_prompt, gpt_version=3):
     logging.info(f"process_text_with_gpt: Processing text with GPT (version: " + str(gpt_version) + ")")

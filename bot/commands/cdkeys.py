@@ -6,8 +6,10 @@ import logging
 
 async def handle_cdkeys(interaction: discord.Interaction, game_name: str):
     await interaction.response.defer()
+    progress_message = await interaction.followup.send("Searching CDKEYS for '" + game_name + "'...")
     results = search_cdkeys(game_name)
     if results:
+        await progress_message.edit(content=f"Found {len(results)} CDKEYs...")
         formatted_results = []
         for result in results:
             game_title = result['game_title']

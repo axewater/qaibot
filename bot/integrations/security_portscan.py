@@ -1,175 +1,113 @@
 import argparse
-import logging
-import socket
-import sys
-import re
+import asyncio
 import json
+import logging
+from concurrent.futures import ThreadPoolExecutor
+from ipaddress import ip_address
 from urllib.parse import urlparse
+import socket
+import aiohttp
 
-import select
+# Configuration
+DEFAULT_TIMEOUT = 1
+DEFAULT_MAX_THREADS = 100
+DEFAULT_SERVICES_FILE = 'default_ports.json'
+DEFAULT_OUTPUT_FORMAT = 'table'
+DEFAULT_LOGGING_LEVEL = logging.INFO
 
-def parse_port_argument(port_arg):
-    ports = []
-    parts = port_arg.split(',')
-    for part in parts:
-        if '-' in part:
-            start, end = map(int, part.split('-'))
-            ports.extend(range(start, end + 1))
-        else:
-            ports.append(int(part))
-    return ports
+class PortScanner:
+    def __init__(self, services_file, timeout, max_threads):
+        self.services_file = services_file
+        self.timeout = timeout
+        self.max_threads = max_threads
+        self.services = self.load_services()
 
-def setup_logging(verbose):
-    if verbose:
-        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-    else:
-        logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
-def validate_and_resolve_input(input, verbose):
-    parsed_url = urlparse(input)
-    hostname = parsed_url.netloc or parsed_url.path
-
-    if re.match(r'^\d{1,3}(\.\d{1,3}){3}$', hostname) and not hostname.endswith('.255'):
-        return hostname
-    elif '.' in hostname and not re.search(r'[^a-zA-Z0-9.-]', hostname):
+    def load_services(self):
         try:
-            resolved_ip = socket.gethostbyname(hostname)
-            if verbose:
-                logging.debug(f"Resolved {input} to {resolved_ip}")
-            return resolved_ip
-        except socket.gaierror:
-            if verbose:
-                logging.debug(f"DNS resolution failed for {hostname}")
-            return None
-    else:
-        if verbose:
-            logging.debug(f"Invalid input: {hostname}")
-        return None
+            with open(self.services_file, 'r') as file:
+                data = json.load(file)
+                return [(service['name'], service['port'], service['protocol']) for service in data['services']]
+        except Exception as e:
+            logging.error(f"Failed to read or parse services file: {e}")
+            return []
 
-def parse_services_file(filepath, verbose):
-    services = []
-    try:
-        with open(filepath, 'r') as file:
-            data = json.load(file)
-            for service in data['services']:
-                services.append((service['name'], service['port'], service['protocol']))
-        if verbose:
-            logging.debug(f"Loaded {len(services)} services from {filepath}")
-    except Exception as e:
-        if verbose:
-            logging.debug(f"Failed to read or parse {filepath}: {e}")
-    return services
-
-def scan_port(ip, port, protocol, verbose):
-    if verbose:
-        logging.info(f"Scanning {ip}:{port}/{protocol}")
-    try:
-        socket_type = socket.SOCK_STREAM if protocol == 'tcp' else socket.SOCK_DGRAM
-        with socket.socket(socket.AF_INET, socket_type) as sock:
-            sock.settimeout(1)
+    async def scan_port(self, ip, port, protocol):
+        try:
             if protocol == 'tcp':
-                result = sock.connect_ex((ip, port))
-                if result == 0:
-                    if verbose:
-                        logging.debug(f"Port {port}/{protocol} on {ip} is open")
-                    return True
-                else:
-                    if verbose:
-                        logging.debug(f"Port {port}/{protocol} on {ip} is closed")
+                connector = aiohttp.TCPConnector(limit=1, enable_cleanup_closed=True)
+                async with aiohttp.ClientSession(connector=connector) as session:
+                    try:
+                        async with session.get(f'http://{ip}:{port}', timeout=self.timeout) as response:
+                            return 'open'
+                    except (aiohttp.ClientError, asyncio.TimeoutError):
+                        return 'closed'
             else:
-                sock.sendto(b'', (ip, port))
-                try:
-                    sock.recvfrom(1024)
-                    if verbose:
-                        logging.debug(f"Port {port}/{protocol} on {ip} is open")
-                    return True
-                except socket.timeout:
-                    if verbose:
-                        logging.debug(f"Port {port}/{protocol} on {ip} is closed/firewalled")
-                    return False
-    except socket.timeout:
-        if verbose:
-            logging.debug(f"Timeout occurred while scanning {ip}:{port}/{protocol}")
-        return False
-    except Exception as e:
-        if verbose:
-            logging.debug(f"Error scanning {ip}:{port}/{protocol}: {e}")
-        if "forcibly closed" in str(e):
-            if verbose:
-                logging.debug(f"Port {port}/{protocol} on {ip} is filtered")
-            return False
-        else:
-            if verbose:
-                logging.debug(f"Port {port}/{protocol} on {ip} is closed/firewalled")
-            return False
-    return False
+                # Implement UDP scanning logic here
+                pass
+        except Exception as e:
+            logging.error(f"Error scanning {ip}:{port}/{protocol}: {e}")
+            return 'error'
 
-def perform_scan(ip, services, output_format='table', verbose=False):
-    total_ports = len(services)
-    scanned_ports = 0
-    open_ports = 0
-    closed_ports = 0
-    filtered_ports = 0
-    if not verbose:
-        print(f"Starting scan of {total_ports} ports on {ip}")
-    if verbose:
-        logging.debug(f"Starting scan of {total_ports} ports on {ip}")
-    results = {}
-    if verbose:
-        logging.debug(f"Starting port scan on {ip}")
-    for service, port, protocol in services:
-        scanned_ports += 1
-        if verbose:
-            logging.debug(f"Scanning port {scanned_ports} of {total_ports}: {port}/{protocol}")
-        open = scan_port(ip, port, protocol, verbose)
-        status = 'open' if open else 'closed/firewalled'
-        if status == 'open':
-            if not verbose:
-                print(f"Port {port}/{protocol} on {ip} is open")
-            open_ports += 1
-        elif "firewalled" in status:
-            filtered_ports += 1
-        else:
-            closed_ports += 1
-        results[port] = {'status': status, 'service': service, 'protocol': protocol}
-    if output_format == 'json':
-        print(json.dumps(results, indent=4))
-    else:
-        if verbose:
-            logging.debug("Scan Results:")
-        for port, info in results.items():
-            print(f"Port {port}/{info['protocol']} ({info['service']}) is {info['status']}")
-    if verbose:
-        logging.debug(f"Scan completed. Total: {total_ports}, Open: {open_ports}, Closed: {closed_ports}, Filtered: {filtered_ports}")
+    async def scan_ip(self, ip):
+        num_ports = len(self.services)
+        logging.info(f"Starting scan of {num_ports} ports on {ip}")
+        results = {}
+        with ThreadPoolExecutor(max_workers=self.max_threads) as executor:
+            loop = asyncio.get_running_loop()
+            tasks = []
+            for i, (service, port, protocol) in enumerate(self.services, start=1):
+                task = loop.run_in_executor(executor, asyncio.run, self.scan_port(ip, port, protocol))
+                tasks.append(task)
+                if i % 100 == 0 or i == num_ports:
+                    logging.info(f"Scanned {i}/{num_ports} ports...")
+            for (service, port, protocol), result in zip(self.services, await asyncio.gather(*tasks)):
+                results[port] = {'status': result, 'service': service, 'protocol': protocol}
+        logging.info(f"Scan completed on {ip}")
+        return results
 
-def perform_port_scan(ip_or_domain, port_range=None, verbose=False, output_format='table'):
-    setup_logging(verbose)
-    resolved_ip = validate_and_resolve_input(ip_or_domain, verbose)
-    if resolved_ip:
-        services = parse_port_argument(port_range) if port_range else parse_services_file('bot/integrations/default_ports.json', verbose)
-        services = [(f"Custom-{port}", port, 'tcp') for port in services] if port_range else services
-        return perform_scan(resolved_ip, services, output_format, verbose)
-    else:
-        return "Scanning aborted due to invalid input."
+def parse_ports(port_range):
+    return [port for start, end in (map(int, part.split('-')) for part in port_range.split(',')) for port in range(start, end+1)]
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Perform a port scan on a specified IP or domain.')
-    parser.add_argument('address', type=str, help='IP address or domain to scan')
+def main():
+    parser = argparse.ArgumentParser(description='Perform a port scan on specified IP addresses or domains.')
+    parser.add_argument('addresses', nargs='+', help='IP addresses or domains to scan')
     parser.add_argument('--port', type=str, help='Specify custom ports or ranges (e.g., 80,100-110)')
+    parser.add_argument('--timeout', type=float, default=DEFAULT_TIMEOUT, help='Timeout for each port scan (default: 1)')
+    parser.add_argument('--max-threads', type=int, default=DEFAULT_MAX_THREADS, help='Maximum number of threads to use (default: 100)')
+    parser.add_argument('--services-file', type=str, default=DEFAULT_SERVICES_FILE, help='JSON file containing services and ports (default: default_ports.json)')
+    parser.add_argument('--format', choices=['table', 'json'], default=DEFAULT_OUTPUT_FORMAT, help='Output format (default: table)')
     parser.add_argument('--verbose', action='store_true', help='Enable verbose output')
-    parser.add_argument('--format', type=str, choices=['table', 'json'], default='table', help='Output format')
     args = parser.parse_args()
 
-    setup_logging(args.verbose)
-    ip_address = args.address
-    output_format = args.format
-    custom_ports = parse_port_argument(args.port) if args.port else None
-    if custom_ports:
-        services = [(f"Custom-{port}", port, 'tcp') for port in custom_ports]
-    else:
-        services = parse_services_file('bot/integrations/default_ports.json', args.verbose)
-    resolved_ip = validate_and_resolve_input(ip_address, args.verbose)
-    if resolved_ip:
-        perform_scan(resolved_ip, services, output_format, args.verbose)
-    else:
-        print("Scanning aborted due to invalid input.")
+    logging.basicConfig(level=logging.DEBUG if args.verbose else DEFAULT_LOGGING_LEVEL, format='%(asctime)s - %(levelname)s - %(message)s')
+
+    scanner = PortScanner(args.services_file, args.timeout, args.max_threads)
+
+    for address in args.addresses:
+        try:
+            ip = str(ip_address(address))
+        except ValueError:
+            parsed_url = urlparse(address)
+            hostname = parsed_url.netloc or parsed_url.path
+            try:
+                ip = socket.gethostbyname(hostname)
+            except socket.gaierror:
+                logging.error(f"Failed to resolve {address}")
+                continue
+
+        if args.port:
+            services = [(f"Custom-{port}", port, 'tcp') for port in parse_ports(args.port)]
+        else:
+            services = scanner.services
+
+        results = asyncio.run(scanner.scan_ip(ip))
+
+        if args.format == 'json':
+            print(json.dumps(results, indent=4))
+        else:
+            print(f"Scan Results for {ip}:")
+            for port, info in results.items():
+                print(f"  {port}/{info['protocol']} ({info['service']}): {info['status']}")
+
+if __name__ == "__main__":
+    main()

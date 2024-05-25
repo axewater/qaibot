@@ -11,7 +11,7 @@ try:
 except ImportError:
     from .functions.f_magic_ai import process_magic_with_gpt
     
-def magic_ai(question_text):
+def magic_ai(question_text, context=None):
     logging.info(f"magic_ai: START Asking a question to GPT4 with tools in context. Question: {question_text}")
     
     # Get the current date in a human-readable format

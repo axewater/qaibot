@@ -56,9 +56,9 @@ def check_rate_limit(model_name):
                 return False
     return True
 
-def ask_question(question_text):
+def ask_question(question_text, context=None):
     logging.info("ask_question: Asking a question to GPT4")
-    prompt = "You are QAI, a helpful Discord chatbot. Answer the following question. Do not translate any language to english. RETAIN THE LANGUAGE OF THE PROVIDED TEXT. Limit your output to 1000 characters."
+    prompt = "Jij bent QAI, een helpzame, nerdy Discord chatbot. Antwoord altijd in de bron tool. Beantwoord de volgende vraag, en limiteer jezelf tot 1000 karakters."
     return process_text_with_gpt(question_text, prompt, gpt_version=4)
 
 

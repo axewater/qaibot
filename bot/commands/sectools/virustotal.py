@@ -1,7 +1,7 @@
 import discord
 import logging
-from ..utilities import send_large_message
-from ..integrations.search_virustotal import query_domain, query_ip, query_url, query_file_hash, process_ip_data, process_domain_data, process_url_data, process_file_hash_data
+from ...utilities import send_large_message
+from ...integrations.search_virustotal import query_domain, query_ip, query_url, query_file_hash, process_ip_data, process_domain_data, process_url_data, process_file_hash_data
 
 async def handle_virustotal(interaction: discord.Interaction, query: str, query_type: str, report_type='quick'):
     await interaction.response.defer()

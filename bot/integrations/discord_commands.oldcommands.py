@@ -11,12 +11,12 @@ from ..commands.research import handle_research
 from ..commands.manage import handle_manage
 from ..commands.readback_handler import ReadbackHandler, setup as setup_readback_handler
 from ..commands.makeimage import handle_makeimage
-from ..commands.admin_panel import handle_admin_panel
+from ..commands.old_admin_panel import handle_admin_panel
 from ..commands.marktplaats import handle_marktplaats
 from ..commands.pricewatch import handle_pricewatch
 from ..commands.torrent import handle_torrent
 from ..commands.iptorrents import handle_iptorrents
-from ..commands.virustotal import handle_virustotal
+from ..commands.sectools.virustotal import handle_virustotal
 from ..commands.imdb import handle_imdb
 from ..commands.steam import handle_steam
 from ..commands.cdkeys import handle_cdkeys

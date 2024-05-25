@@ -2,7 +2,7 @@ from discord.ui import Modal, InputText, Button, View
 import discord
 import logging
 from ..utilities import is_admin
-from ..integrations.security_portscan import perform_port_scan
+from ..integrations.security_portscan import PortScanner, parse_ports
 from .readback_handler import ReadbackHandler
 
 class PortScanModal(Modal):

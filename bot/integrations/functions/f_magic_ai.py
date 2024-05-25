@@ -9,7 +9,6 @@ from bot.integrations.search_pricewatch import search_tweakers_pricewatch
 from bot.integrations.search_steam import search_steam
 from bot.integrations.search_cdkeys import search_cdkeys
 from bot.integrations.search_weather import search_weather
-from bot.integrations.security_portscan import perform_port_scan
 from bot.integrations.openai_imagegen import generate_image
 
 sys.path.append('/bot/integrations') 
@@ -41,7 +40,11 @@ def process_magic_with_gpt(question_text, system_prompt, gpt_version=4):
         if command == 'googlesearch':
             google_result = perform_web_search(query)
             # we get the list of URLs as a JSON, now we pass each of them to the summarize_url function
-            result = magic_summarize(google_result, query)
+            summaries = []
+            for url in google_result:
+                summary = magic_summarize(url, query)
+                summaries.append(summary)
+            result = "\n".join(summaries)
         elif command == 'summarize_url':
             result = magic_summarize(query)
         elif command == 'imdbsearch':
@@ -62,8 +65,6 @@ def process_magic_with_gpt(question_text, system_prompt, gpt_version=4):
             result = search_weather(location.strip('"'), when)
         elif command == 'makeimage':
             result = generate_image(query)
-        elif command == 'nmapscan':
-            result = perform_port_scan(query)
         else:
             result = f"Unknown command: {command}"
 

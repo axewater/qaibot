@@ -11,7 +11,7 @@ from .database import init_db, SessionLocal
 from .manage_db import main as manage_db_main
 from .integrations.message_logger import setup as setup_message_logger
 from threading import Thread
-from .web_app import app
+from .adminpanel import app
 
 
 logging.basicConfig(filename='qaibot.log', level=logging.INFO, format='%(asctime)s:%(levelname)s:%(message)s')

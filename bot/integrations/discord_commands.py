@@ -29,10 +29,10 @@ from ..utilities import send_large_message
 async def setup(bot):
     
 
-    @bot.slash_command(name="qqai", description="mAgIc! Ask QAI any question... it knows all and uses all its tools!")
-    async def magic(interaction: discord.Interaction, question: str):
-        logging.info(f"QAI magic command called with question: {question}")
-        await handle_magic(interaction, question)
+    # @bot.slash_command(name="qqai", description="mAgIc! Ask QAI any question... it knows all and uses all its tools!")
+    # async def magic(interaction: discord.Interaction, question: str):
+    #     logging.info(f"QAI magic command called with question: {question}")
+    #     await handle_magic(interaction, question)
 
 
     # @bot.slash_command(name="qmakeimage", description="Generate an image based on your text prompt.")
@@ -43,10 +43,10 @@ async def setup(bot):
     #     logging.info(f"Image command called with prompt: {prompt}, size: {size}, quality: {quality}")
     #     await handle_makeimage(interaction, prompt, size, quality)
 
-    @bot.slash_command(name="qcoingecko", description="Get cryptocurrency data from CoinGecko.")
-    async def coingecko(interaction: discord.Interaction, coin_name: str):
-        logging.info(f"CoinGecko command called with coin name: {coin_name}")
-        await handle_coingecko(interaction, coin_name)
+    # @bot.slash_command(name="qcoingecko", description="Get cryptocurrency data from CoinGecko.")
+    # async def coingecko(interaction: discord.Interaction, coin_name: str):
+    #     logging.info(f"CoinGecko command called with coin name: {coin_name}")
+    #     await handle_coingecko(interaction, coin_name)
 
 
 
@@ -115,15 +115,15 @@ async def setup(bot):
     # async def cdkeys_search(interaction: discord.Interaction, game_name: str):
     #     await handle_cdkeys(interaction, game_name)
         
-    @bot.slash_command(name="qmanage", description="Manage your settings.")
-    async def settings(interaction: discord.Interaction):
-        logging.info("Manage command called")
-        await handle_manage(interaction)
+    # @bot.slash_command(name="qmanage", description="Manage your settings.")
+    # async def settings(interaction: discord.Interaction):
+    #     logging.info("Manage command called")
+    #     await handle_manage(interaction)
 
-    @bot.slash_command(name="qadminpanel", description="Manage administrator settings.")
-    async def admin_settings(interaction: discord.Interaction):
-        logging.info("Admin Settings command called")
-        await handle_admin_panel(interaction)
+    # @bot.slash_command(name="qadminpanel", description="Manage administrator settings.")
+    # async def admin_settings(interaction: discord.Interaction):
+    #     logging.info("Admin Settings command called")
+    #     await handle_admin_panel(interaction)
 
     # @bot.slash_command(name="qweather", description="Get weather information for a specified location.")
     # async def weather(interaction: discord.Interaction, location: str, report_type: str = Option(str, choices=['now', 'tomorrow', 'week'], required=True, description="Choose the report type: 'now', 'tomorrow', or 'week'.")):

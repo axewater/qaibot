@@ -1,5 +1,5 @@
 # bot/models.py
-from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, DateTime, BigInteger
+from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, DateTime, BigInteger, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 import datetime
@@ -12,6 +12,8 @@ class BotStatistics(Base):
     start_time = Column(DateTime, default=datetime.datetime.utcnow)
     notes = Column(String)
     last_registered_version = Column(String)
+    servers_info = Column(Text)  # New column to store server information as JSON string
+    channels_info = Column(Text)  # New column to store channel information as JSON string
 
 class User(Base):
     __tablename__ = 'users'

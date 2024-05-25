@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Servers and Channels</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Discord Servers and Channels</h1>
+    <ul>
+        {% for server in servers %}
+            <li>
+                <h2>{{ server.name }}</h2>
+                <ul>
+                    {% for channel in server.channels %}
+                        <li>{{ channel.name }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

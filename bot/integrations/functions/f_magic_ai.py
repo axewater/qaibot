@@ -39,7 +39,9 @@ def process_magic_with_gpt(question_text, system_prompt, gpt_version=4):
     for command, query in commands:
         logging.info(f"process_magic_with_gpt: Processing command: {command} with query: {query}")
         if command == 'googlesearch':
-            result = perform_web_search(query)
+            google_result = perform_web_search(query)
+            # we get the list of URLs as a JSON, now we pass each of them to the summarize_url function
+            result = magic_summarize(google_result, query)
         elif command == 'summarize_url':
             result = magic_summarize(query)
         elif command == 'imdbsearch':

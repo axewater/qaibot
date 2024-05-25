@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
-{% block title %}Config Page{% endblock %}
+{% block title %}Database Statistics{% endblock %}
 
 {% block content %}
-<h1>Configuration Values</h1>
+<h1>Database Statistics</h1>
 <table class="table table-dark">
     <thead>
         <tr>
-            <th>Key</th>
+            <th>Statistic</th>
             <th>Value</th>
         </tr>
     </thead>
     <tbody>
-        {% for key, value in config.items() %}
+        {% for key, value in stats.items() %}
         <tr>
             <td>{{ key }}</td>
             <td>{{ value }}</td>
@@ -20,7 +20,4 @@
         {% endfor %}
     </tbody>
 </table>
-</div>
-</body>
-</html>
 {% endblock %}

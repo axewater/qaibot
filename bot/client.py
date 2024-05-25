@@ -2,6 +2,7 @@
 import argparse
 import discord
 import logging
+import json
 from discord.ext import commands
 from discord import Intents
 from .config import DISCORD_TOKEN, QAI_VERSION
@@ -55,8 +56,34 @@ async def on_ready():
             for command in bot.commands:
                 logging.info(f"- {command.name}")
 
-            # Update the database with the new version
-            new_stat = BotStatistics(notes=f"Registered with version {QAI_VERSION}", last_registered_version=QAI_VERSION)
+            # Log and store server and channel information
+            servers_info = []
+            channels_info = []
+            for guild in bot.guilds:
+                servers_info.append({
+                    "id": guild.id,
+                    "name": guild.name
+                })
+                for channel in guild.channels:
+                    channels_info.append({
+                        "id": channel.id,
+                        "name": channel.name,
+                        "guild_id": guild.id
+                    })
+
+            servers_info_json = json.dumps(servers_info)
+            channels_info_json = json.dumps(channels_info)
+
+            logging.info(f"Connected to servers: {servers_info_json}")
+            logging.info(f"Connected to channels: {channels_info_json}")
+
+            # Update the database with the new version and server/channel info
+            new_stat = BotStatistics(
+                notes=f"Registered with version {QAI_VERSION}",
+                last_registered_version=QAI_VERSION,
+                servers_info=servers_info_json,
+                channels_info=channels_info_json
+            )
             session.add(new_stat)
             session.commit()
             logging.info(f"QAIBOT: Commands registered with version {QAI_VERSION}.")
@@ -82,3 +109,6 @@ def run(argv):
     flask_thread.start()
     
     bot.run(DISCORD_TOKEN)
+
+def get_guilds(bot: commands.Bot):
+    return bot.guilds

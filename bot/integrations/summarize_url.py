@@ -83,7 +83,7 @@ if __name__ == '__main__':
         print("Failed to fetch content from the URL.")
 
 
-def magic_summarize(url):
+def magic_summarize(url, query="No context provided."):
     """Fetch and summarize website content."""
     logging.info(f"fetch_website_content: Fetching content from {url}.")
     
@@ -93,7 +93,17 @@ def magic_summarize(url):
 
     content = fetch_website_content(url)
     if content:
-        summary = summarize_text(content, "Please summarize this text:")
+        summary = summarize_text(f"You are a summarization expert. The user has asked the following question: " + query + "\n . Please summarize the following text and extract only information that is relevant to the question. If nothing relevant is found, only print 'No relevant information found.'\n" + content)
+        print(summary)
+    else:
+        print("Failed to fetch content from the URL.")
+
+
+def magic_final_summarize(context="No context provided.", query="No question provided."):
+    """Fetch and summarize website content."""
+
+    if context:
+        summary = summarize_text(f"The user has asked the following question: " + query + "\n . We have performed web searches and retrieved the following information. Read it, then answer the question from the user using the context information provided. information found.'\n" + context)
         print(summary)
     else:
         print("Failed to fetch content from the URL.")

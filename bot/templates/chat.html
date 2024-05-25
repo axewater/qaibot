@@ -3,7 +3,7 @@
 {% block title %}Chat Interface{% endblock %}
 
 {% block content %}
-<div style="margin-left: 220px; padding: 20px;">
+<div class="chat-container">
     <h1>Chat with QAI</h1>
     <form method="POST" action="{{ url_for('chat') }}">
         {{ form.hidden_tag() }}
@@ -18,5 +18,4 @@
     </form>
     <div id="response" class="mt-3">{{ response }}</div>
 </div>
-
 {% endblock %}

@@ -9,16 +9,19 @@ from bot.database import SessionLocal
 from bot.models import User, Log, MessageLog, BotStatistics
 from discord.ext import commands
 from datetime import datetime
+import logging
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = SECRET_KEY  # Add this line to set the secret key
 
 @app.route('/')
 def index():
+    logging.info("WEBUI: Opened")
     return render_template('home.html')
 
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():
+    logging.info("WEBUI: Opened CHAT")
     form = ChatForm()
     response = ""
     if form.validate_on_submit():
@@ -30,7 +33,7 @@ def chat():
     return render_template('chat.html', form=form, response=response)
 
 def handle_chat_question(question):
-    print(f"WEBUI: Received question:", question)
+    logging.info(f"WEBUI: Received question:", question)
     try:
         answer = ask_question(question)
         print(f"WEBUI: Answer:", answer)
@@ -39,7 +42,7 @@ def handle_chat_question(question):
         return str(e)
     
 def handle_magic_question(question):
-    print(f"WEBUI: Received question:", question)
+    logging.info(f"WEBUI: Received question:", question)
     try:
         answer = magic_ai(question)
         print(f"WEBUI: Answer:", answer)
@@ -54,6 +57,7 @@ def config():
 
 @app.route('/db_stats')
 def db_stats():
+    logging.info("WEBUI: Opened DB STATS")
     session = SessionLocal()
     user_count = session.query(User).count()
     log_count = session.query(Log).count()
@@ -82,8 +86,10 @@ def db_stats():
 
 @app.route('/discord')
 def discord():
+    logging.info("WEBUI: Opened DISCORD")
     session = SessionLocal()
     bot_statistics = session.query(BotStatistics).order_by(BotStatistics.id.desc()).first()
+    logging.info(f"WEBUI: bot_statistics: {bot_statistics}")
     session.close()
 
     if bot_statistics:
@@ -100,7 +106,7 @@ def discord():
             })
     else:
         servers = []
-
+    logging.info(f"WEBUI: servers: {servers}")
     return render_template('discord.html', servers=servers)
 
 if __name__ == '__main__':

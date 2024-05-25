@@ -1,24 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Servers and Channels</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <h1>Discord Servers and Channels</h1>
-    <ul>
-        {% for server in servers %}
-            <li>
-                <h2>{{ server.name }}</h2>
-                <ul>
-                    {% for channel in server.channels %}
-                        <li>{{ channel.name }}</li>
-                    {% endfor %}
-                </ul>
-            </li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Discord Servers and Channels{% endblock %}
+
+{% block content %}
+<h1>Discord Servers and Channels</h1>
+<div class="table-responsive">
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>Server</th>
+                <th>Channels</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for server in servers %}
+            <tr>
+                <td>{{ server.name }}</td>
+                <td>
+                    <table class="table table-dark table-striped">
+                        <thead>
+                            <tr>
+                                <th>Channel</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for channel in server.channels %}
+                            <tr>
+                                <td>{{ channel.name }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

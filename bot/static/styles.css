@@ -38,3 +38,32 @@ button {
 button:hover {
     background: rgba(255, 255, 255, 0.2);
 }
+
+.table-dark {
+    background-color: #343a40;
+}
+
+.table-dark th,
+.table-dark td,
+.table-dark thead th {
+    border-color: #454d55;
+}
+
+.table-dark.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.content {
+    margin-left: 140px;
+    padding: 20px;
+}
+
+.chat-container {
+    margin-left: 20px;
+    padding: 20px;
+}
+
+.home-container {
+    margin-left: 20px;
+    padding: 20px;
+}

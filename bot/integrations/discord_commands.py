@@ -35,13 +35,13 @@ async def setup(bot):
         await handle_magic(interaction, question)
 
 
-    @bot.slash_command(name="qmakeimage", description="Generate an image based on your text prompt.")
-    async def image(interaction: discord.Interaction, 
-                    prompt: str,
-                    size: str = Option(str, default='square', choices=['square', 'tiktok', 'boomer'], description="Size of the generated image."),
-                    quality: str = Option(str, default='standard', choices=['standard', 'hd'], description="Quality of the generated image.")):
-        logging.info(f"Image command called with prompt: {prompt}, size: {size}, quality: {quality}")
-        await handle_makeimage(interaction, prompt, size, quality)
+    # @bot.slash_command(name="qmakeimage", description="Generate an image based on your text prompt.")
+    # async def image(interaction: discord.Interaction, 
+    #                 prompt: str,
+    #                 size: str = Option(str, default='square', choices=['square', 'tiktok', 'boomer'], description="Size of the generated image."),
+    #                 quality: str = Option(str, default='standard', choices=['standard', 'hd'], description="Quality of the generated image.")):
+    #     logging.info(f"Image command called with prompt: {prompt}, size: {size}, quality: {quality}")
+    #     await handle_makeimage(interaction, prompt, size, quality)
 
     @bot.slash_command(name="qcoingecko", description="Get cryptocurrency data from CoinGecko.")
     async def coingecko(interaction: discord.Interaction, coin_name: str):
@@ -50,27 +50,27 @@ async def setup(bot):
 
 
 
-    @bot.slash_command(name="qjoinconvo", description="Let QAI join the conversation (reads last 15 messages).")
-    async def joinconvo(interaction: discord.Interaction):
-        logging.info("JoinConvo command called")
-        await handle_joinconvo(interaction)
+    # @bot.slash_command(name="qjoinconvo", description="Let QAI join the conversation (reads last 15 messages).")
+    # async def joinconvo(interaction: discord.Interaction):
+    #     logging.info("JoinConvo command called")
+    #     await handle_joinconvo(interaction)
     
-    @bot.slash_command(name="qimback", description="I was away for a while, what happened while I was gone? Summarize the last 200 messages.")
-    async def imback(interaction: discord.Interaction):
-        logging.info("ImBack command called")
-        await handle_imback(interaction)
+    # @bot.slash_command(name="qimback", description="I was away for a while, what happened while I was gone? Summarize the last 200 messages.")
+    # async def imback(interaction: discord.Interaction):
+    #     logging.info("ImBack command called")
+    #     await handle_imback(interaction)
 
-    @bot.slash_command(name="qsummarize", description="QAI will summarize the content of a given URL.")
-    async def summarize(interaction: discord.Interaction, url: str, context: str = Option(str, default=None, required=False, description="Optional context to guide the summarization.")):
-        logging.info(f"Summarize command called with URL: {url} and context: {context}")
-        await handle_summarize(interaction, url, context)
+    # @bot.slash_command(name="qsummarize", description="QAI will summarize the content of a given URL.")
+    # async def summarize(interaction: discord.Interaction, url: str, context: str = Option(str, default=None, required=False, description="Optional context to guide the summarization.")):
+    #     logging.info(f"Summarize command called with URL: {url} and context: {context}")
+    #     await handle_summarize(interaction, url, context)
 
-    @bot.slash_command(name="qresearch", description="Let QAI research a topic on the web for you.")
-    async def research(interaction: discord.Interaction, 
-                       topic: str = Option(str, description="Enter the topic you want to research."), 
-                       depth: str = Option(str, default='normal', description="Specify the depth of research: 'quick', 'normal', or 'deep'.")):
-        logging.info(f"Research command called with topic: {topic} and depth: {depth}")
-        await handle_research(interaction, topic, depth)
+    # @bot.slash_command(name="qresearch", description="Let QAI research a topic on the web for you.")
+    # async def research(interaction: discord.Interaction, 
+    #                    topic: str = Option(str, description="Enter the topic you want to research."), 
+    #                    depth: str = Option(str, default='normal', description="Specify the depth of research: 'quick', 'normal', or 'deep'.")):
+    #     logging.info(f"Research command called with topic: {topic} and depth: {depth}")
+    #     await handle_research(interaction, topic, depth)
         
     # @bot.slash_command(name="qimdb", description="Search for movies and shows on IMDb.")
     # async def imdb(interaction: discord.Interaction,
@@ -125,9 +125,9 @@ async def setup(bot):
         logging.info("Admin Settings command called")
         await handle_admin_panel(interaction)
 
-    @bot.slash_command(name="qweather", description="Get weather information for a specified location.")
-    async def weather(interaction: discord.Interaction, location: str, report_type: str = Option(str, choices=['now', 'tomorrow', 'week'], required=True, description="Choose the report type: 'now', 'tomorrow', or 'week'.")):
-        await handle_weather(interaction, location, report_type)
+    # @bot.slash_command(name="qweather", description="Get weather information for a specified location.")
+    # async def weather(interaction: discord.Interaction, location: str, report_type: str = Option(str, choices=['now', 'tomorrow', 'week'], required=True, description="Choose the report type: 'now', 'tomorrow', or 'week'.")):
+    #     await handle_weather(interaction, location, report_type)
 
     # Register additional handlers
     setup_readback_handler(bot)

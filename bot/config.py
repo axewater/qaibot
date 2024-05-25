@@ -13,3 +13,5 @@ MOBYGAMES_API_KEY = os.getenv('MOBYGAMES_API_KEY')
 VIRUSTOTAL_API_KEY = os.getenv('VIRUSTOTAL_API_KEY')
 QAI_VERSION = '3.1.0'
 SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://postgres:!Piratingin2024!@theknox:5432/qaibot_noenv')
+FLASK_HOST = os.getenv('FLASK_HOST', '127.0.0.1')
+FLASK_PORT = int(os.getenv('FLASK_PORT', 5000))

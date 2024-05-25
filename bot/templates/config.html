@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Config Page{% endblock %}
+
+{% block content %}
+<h1>Configuration Values</h1>
+<table class="table table-dark">
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for key, value in config.items() %}
+        <tr>
+            <td>{{ key }}</td>
+            <td>{{ value }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+</body>
+</html>

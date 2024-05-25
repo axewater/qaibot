@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Chat Interface{% endblock %}
+
+{% block content %}
+<div style="margin-left: 220px; padding: 20px;">
+    <h1>Chat with QAI</h1>
+    <form id="chat-form">
+        <input type="text" id="question" name="question" placeholder="Ask a question..." class="form-control">
+        <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+    <div id="response" class="mt-3"></div>
+</div>
+
+<script>
+    document.getElementById('chat-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const question = document.getElementById('question').value;
+        const responseDiv = document.getElementById('response');
+
+        const response = await fetch('/ask', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ question }),
+        });
+
+        const data = await response.json();
+        responseDiv.innerHTML = `<p>${data.answer}</p>`;
+    });
+</script>
+{% endblock %}

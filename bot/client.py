@@ -10,6 +10,8 @@ from .models import BotStatistics
 from .database import init_db, SessionLocal
 from .manage_db import main as manage_db_main
 from .integrations.message_logger import setup as setup_message_logger
+from threading import Thread
+from .web_app import app
 
 
 logging.basicConfig(filename='qaibot.log', level=logging.INFO, format='%(asctime)s:%(levelname)s:%(message)s')
@@ -68,7 +70,15 @@ async def on_ready():
     finally:
         session.close()
 
+def run_flask():
+    app.run(host='127.0.0.1', port=5000)
+
 def run(argv):
     global args
     args = parser.parse_args(argv)
+    
+    # Start Flask in a separate thread
+    flask_thread = Thread(target=run_flask)
+    flask_thread.start()
+    
     bot.run(DISCORD_TOKEN)

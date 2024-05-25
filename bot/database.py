@@ -16,3 +16,4 @@ def init_db():
     db_name = parsed_uri.path[1:]  # Strip leading slash to get the database name
     logging.info(f"Connecting to database: {db_name}")
     Base.metadata.create_all(bind=engine)
+

@@ -40,7 +40,7 @@ def perform_web_search(query, start_index=1, max_results=5):
 
             start_index += len(items)
 
-        logging.info(f"perform_web_search: Received URLs from search results: {urls}")
+        logging.info(f"perform_web_search: Found this number of URLS: {len(urls)}")
         return urls
 
     except (Exception, ValueError) as e:

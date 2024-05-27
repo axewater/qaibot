@@ -3,29 +3,31 @@ import discord
 import logging
 from discord import Option
 
-from ..commands.joinconvo import handle_joinconvo
-from ..commands.imback import handle_imback
-from ..commands.summarize import handle_summarize
-from ..commands.research import handle_research
-from ..commands.manage import handle_manage
-from ..commands.readback_handler import ReadbackHandler, setup as setup_readback_handler
+from .commands.joinconvo import handle_joinconvo
+from .commands.imback import handle_imback
+from .commands.summarize import handle_summarize
+from .commands.research import handle_research
+from .commands.manage import handle_manage
+from .commands.readback_handler import ReadbackHandler, setup as setup_readback_handler
 
 # from ..commands.ingest_server import ReadbackHandler, setup as setup_readback_handler
-from ..commands.makeimage import handle_makeimage
-from ..commands.marktplaats import handle_marktplaats
-from ..commands.pricewatch import handle_pricewatch
-from ..commands.torrent import handle_torrent
-from ..commands.iptorrents import handle_iptorrents
-from ..commands.sectools.virustotal import handle_virustotal
-from ..commands.imdb import handle_imdb
-from ..commands.steam import handle_steam
-from ..commands.cdkeys import handle_cdkeys
-from ..commands.weather import handle_weather
-from ..commands.magic import handle_magic
-from ..commands.admin_settings import handle_admin_settings
-from ..commands.coingecko import handle_coingecko
-from ..commands.sectools.portscan import handle_portscan
-from ..commands.sectools.sshlogin import handle_sshlogin
+from .commands.makeimage import handle_makeimage
+from .commands.marktplaats import handle_marktplaats
+from .commands.pricewatch import handle_pricewatch
+from .commands.torrent import handle_torrent
+from .commands.iptorrents import handle_iptorrents
+from .commands.sectools.virustotal import handle_virustotal
+from .commands.imdb import handle_imdb
+from .commands.steam import handle_steam
+from .commands.cdkeys import handle_cdkeys
+from .commands.weather import handle_weather
+from .commands.magic import handle_magic
+from .commands.admin_settings import handle_admin_settings
+from .commands.coingecko import handle_coingecko
+from .commands.wikipedia import handle_wikipedia
+from .commands.sectools.virustotal import handle_virustotal
+from .commands.sectools.portscan import handle_portscan
+from .commands.sectools.sshlogin import handle_sshlogin
 
 async def setup(bot):
     
@@ -34,10 +36,17 @@ async def setup(bot):
         logging.info(f"QAI magic command called with question: {question}")
         await handle_magic(interaction, question)
 
-    @bot.slash_command(name="qadminpanel", description="Manage administrator settings.")
-    async def admin_settings(interaction: discord.Interaction):
-        logging.info("Admin Settings command called")
-        await handle_admin_settings(interaction)
+    # @bot.slash_command(name="qwiki", description="Search Wikipedia.")
+    # async def wikipedia(interaction: discord.Interaction, search_query: str):
+    #     logging.info(f"Wikipedia command called with search query: {search_query}")
+    #     await handle_wikipedia(interaction, search_query)
+
+
+
+    # @bot.slash_command(name="qadminpanel", description="Manage administrator settings.")
+    # async def admin_settings(interaction: discord.Interaction):
+    #     logging.info("Admin Settings command called")
+    #     await handle_admin_settings(interaction)
 
 
     # @bot.slash_command(name="qmakeimage", description="Generate an image based on your text prompt.")

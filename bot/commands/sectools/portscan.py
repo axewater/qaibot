@@ -1,10 +1,10 @@
 import discord
 import logging
 import json
-from ...integrations.security_portscan import PortScanner, parse_ports
-from ...utilities import send_large_message
+from bot.integrations.security_portscan import PortScanner, parse_ports
+from bot.utilities import send_large_message
 
-async def handle_portscan(interaction: discord.Interaction, ip_address: str, ports: str = None):
+async def handle_portscan(interaction: discord.Interaction, ip_address: str, ports: str = 22):
     await interaction.response.defer()
     progress_message = await interaction.followup.send(f"Starting port scan on: {ip_address}")
 

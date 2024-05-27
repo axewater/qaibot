@@ -15,6 +15,37 @@ try:
 except ImportError:
     from config import VIRUSTOTAL_API_KEY
 
+def search_virustotal(query, type='domain', output='json'):
+    logging.info(f"inside search_virustotal: Query: {query} Type: {type} Output: {output}")
+
+    if type == 'domain':
+        if not is_valid_domain(query):
+            logging.error(f"Invalid domain: {query}")
+            return "Invalid domain. Please enter a valid domain."
+        result = query_domain(query)
+    elif type == 'url':
+        if not is_valid_url(query):
+            logging.error(f"Invalid URL: {query}")
+            return "Invalid URL. Please enter a valid URL."
+        result = query_url(query)
+    elif type == 'ip':
+        if not is_valid_ip(query):
+            logging.error(f"Invalid IP address: {query}")
+            return "Invalid IP address. Please enter a valid IP address."
+        result = query_ip(query)
+    elif type == 'file':
+        if not is_valid_hash(query):
+            logging.error(f"Invalid file hash: {query}")
+            return "Invalid file hash. Please enter a valid file hash."
+        result = query_file_hash(query)
+    else:
+        logging.error(f"Invalid query type: {type}")
+        return "Invalid query type. Please enter a valid query type."
+
+    logging.info(f"search_virustotal: result: {result}")
+    return format_output(result, output)
+
+
 def is_valid_url(input_string):
     print(f"is_valid_url: Validating URL: {input_string}")
     url_pattern = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'

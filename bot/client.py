@@ -6,7 +6,7 @@ import json
 from discord.ext import commands
 from discord import Intents
 from .config import DISCORD_TOKEN, QAI_VERSION
-from .integrations import discord_commands
+from . import discord_commands
 from .models import BotStatistics
 from .database import init_db, SessionLocal
 from .manage_db import main as manage_db_main

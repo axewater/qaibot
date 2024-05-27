@@ -30,6 +30,9 @@ def magic_ai(question_text, context=None):
     [summarize_url:url]                     example : [summarize_url:"https://example.com"]
     this will return a summary of the URL
     
+    [wikipedia:query:language]              example : [wikipedia:"donald trump":"en"], [wikipedia:"nederland":"nl"]
+    this will return a summary of the first 5 wikipedia results
+    
     [imdbsearch:movie]                      example : [imdb:"The Matrix"]
     this will return a list of movie names with IMDB URLs and ratings
     
@@ -55,7 +58,16 @@ def magic_ai(question_text, context=None):
     use this when asked to create an image
     
     [nmapscan:ip_address:ports]             example : [nmapscan:"237.84.2.178":"22,80,443"]
-    use this for securiy checks when asked. or when you need to explore a host further for recon.
+    use this to scan which ports are open and closed on a host when requested.
+    
+    [testssh:ip_address:port]               example : [testssh:"237.84.2.178":"22"]
+    use this to test an SSH server on a given IP/Domain and optional port when requested.
+    
+    [portscanner:ip_address:ports]          example : [portscanner:"192.168.1.1":"22,80,443"]
+    use this to scan specified ports on a given IP address.
+    
+    [virustotal:query:type]                 example : [virustotal:"example.com":"domain"], [virustotal:"example.com":"url"], [virustotal:"example.com":"ip"], [virustotal:"example.com":"file"]
+    use this to query VirusTotal for domain, URL, IP, or file hash information.
     
     To use a tool, just print the query as shown in the above examples. Only print that and wait for the answer.
     Then you will be returned the data from the tool, and you can use it to answer the original question from the user.

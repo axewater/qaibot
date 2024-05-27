@@ -7,6 +7,8 @@ from ...utilities import send_large_message
 
 async def handle_sshlogin(interaction: discord.Interaction, ip_address: str, port: int):
     await interaction.response.defer()
+    # if the port is empty set it to 22
+    port = int(port) if port else 22
     progress_message = await interaction.followup.send(f"Starting SSH login test on: {ip_address}:{port}")
 
     logging.info(f"handle_sshlogin: Starting SSH login test on '{ip_address}' with port '{port}'")

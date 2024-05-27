@@ -9,6 +9,8 @@ from ..commands.summarize import handle_summarize
 from ..commands.research import handle_research
 from ..commands.manage import handle_manage
 from ..commands.readback_handler import ReadbackHandler, setup as setup_readback_handler
+
+# from ..commands.ingest_server import ReadbackHandler, setup as setup_readback_handler
 from ..commands.makeimage import handle_makeimage
 from ..commands.marktplaats import handle_marktplaats
 from ..commands.pricewatch import handle_pricewatch
@@ -20,6 +22,7 @@ from ..commands.steam import handle_steam
 from ..commands.cdkeys import handle_cdkeys
 from ..commands.weather import handle_weather
 from ..commands.magic import handle_magic
+from ..commands.admin_settings import handle_admin_settings
 from ..commands.coingecko import handle_coingecko
 from ..commands.sectools.portscan import handle_portscan
 from ..commands.sectools.sshlogin import handle_sshlogin
@@ -30,6 +33,12 @@ async def setup(bot):
     async def magic(interaction: discord.Interaction, question: str):
         logging.info(f"QAI magic command called with question: {question}")
         await handle_magic(interaction, question)
+
+    @bot.slash_command(name="qadminpanel", description="Manage administrator settings.")
+    async def admin_settings(interaction: discord.Interaction):
+        logging.info("Admin Settings command called")
+        await handle_admin_settings(interaction)
+
 
     # @bot.slash_command(name="qmakeimage", description="Generate an image based on your text prompt.")
     # async def image(interaction: discord.Interaction, 
@@ -133,4 +142,4 @@ async def setup(bot):
     #     await handle_sshlogin(interaction, ip_address, port)
 
     # Register additional handlers
-    setup_readback_handler(bot)
+    # setup_readback_handler(bot)

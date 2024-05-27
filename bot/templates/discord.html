@@ -10,6 +10,7 @@
             <tr>
                 <th>Server</th>
                 <th>Channels</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -32,9 +33,26 @@
                         </tbody>
                     </table>
                 </td>
+                <td>
+                    server id # {{ server.id }}
+                    <button class="btn btn-primary" data-server-id="{{ server.id }}">Perform Readback</button>
+                    <div class="spinner-border text-primary ml-2" role="status" style="display: none;">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+<script>
+    document.querySelectorAll('.btn-primary').forEach(button => {
+        button.addEventListener('click', function() {
+            const serverId = this.getAttribute('data-server-id');
+            performReadback(serverId, this);
+        });
+    });
+</script>
+<script src="{{ url_for('static', filename='discord.js') }}"></script>
+
 {% endblock %}

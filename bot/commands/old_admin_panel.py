@@ -3,7 +3,7 @@ import discord
 import logging
 from ..utilities import is_admin
 from ..integrations.security_portscan import PortScanner, parse_ports
-from .readback_handler import ReadbackHandler
+from .ingest_server import ReadbackHandler
 
 class PortScanModal(Modal):
     def __init__(self):

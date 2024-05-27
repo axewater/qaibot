@@ -3,6 +3,7 @@ import json
 from flask import Flask, request, render_template, jsonify
 from bot.integrations.openai_chat import ask_question
 from bot.integrations.openai_magic import magic_ai
+from bot.commands.ingest_server import readback_old
 from bot.forms import ChatForm
 from bot.config import *
 from bot.database import SessionLocal
@@ -84,30 +85,53 @@ def db_stats():
     }
     return render_template('db_stats.html', stats=stats)
 
+
+@app.route('/perform_readback/<int:server_id>', methods=['POST'])
+async def perform_readback(server_id):
+    logging.info(f"WEBUI: Performing readback for server ID: {server_id}")
+    # Retrieve the bot instance from the Flask application
+    bot = app.bot
+    # Retrieve the server object based on the server_id
+    server = bot.get_guild(server_id)
+    if server:
+        # Call the perform_readback function from the ReadbackHandler
+        await readback_old(server)
+        return jsonify({'message': 'Readback process started'})
+    else:
+        return jsonify({'message': 'Server not found'})
+
+
 @app.route('/discord')
 def discord():
     logging.info("WEBUI: Opened DISCORD")
     session = SessionLocal()
     bot_statistics = session.query(BotStatistics).order_by(BotStatistics.id.desc()).first()
-    logging.info(f"WEBUI: bot_statistics: {bot_statistics}")
+    logging.info(f"WEBUI: current bot_statistics: {bot_statistics}")
     session.close()
 
     if bot_statistics:
         servers_info = json.loads(bot_statistics.servers_info)
+        logging.info(f"WEBUI: servers_info: {servers_info}")
         channels_info = json.loads(bot_statistics.channels_info)
+        logging.info(f"WEBUI: channels_info: {channels_info}")
 
         # Combine servers and channels information
         servers = []
         for server in servers_info:
             server_channels = [channel for channel in channels_info if channel['guild_id'] == server['id']]
             servers.append({
+                'id': server['id'],  # Ensure the server ID is included
                 'name': server['name'],
                 'channels': server_channels
             })
     else:
         servers = []
-    logging.info(f"WEBUI: servers: {servers}")
+    logging.info(f"WEBUI: servercombined object returning: {servers}")
     return render_template('discord.html', servers=servers)
+
+
+
+
 
 if __name__ == '__main__':
     FLASK_HOST = os.getenv('FLASK_HOST', '127.0.0.1')

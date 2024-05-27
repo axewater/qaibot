@@ -43,7 +43,7 @@ def main(location_name=None, report_type='now'):
     if latitude is None or longitude is None:
         raise WeatherSearchError("Could not get coordinates for the location.")
 
-    sys.argv = ['weather_api.py', '-lat', str(latitude), '-lon', str(longitude), '--when', report_type, '--output-format', 'table']
+    sys.argv = ['search_weather.py', '-lat', str(latitude), '-lon', str(longitude), '--when', report_type, '--output-format', 'table']
     
     # Capture the output of fetch_weather
     with io.StringIO() as buf, contextlib.redirect_stdout(buf):

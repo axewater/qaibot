@@ -98,6 +98,7 @@ async def on_ready():
         session.close()
 
 def run_flask():
+    app.bot = bot
     app.run(host='0.0.0.0', port=5555)
 
 def run(argv):

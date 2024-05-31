@@ -3,7 +3,7 @@ import json
 import paramiko
 import socket
 
-DEFAULT_CREDENTIALS_FILE = 'default_credentials.json'
+DEFAULT_CREDENTIALS_FILE = 'bot/integrations/default_credentials.json'
 
 def load_credentials(file_path):
     try:

@@ -9,8 +9,6 @@ from .commands.summarize import handle_summarize
 from .commands.research import handle_research
 from .commands.manage import handle_manage
 from .commands.readback_handler import ReadbackHandler, setup as setup_readback_handler
-
-# from ..commands.ingest_server import ReadbackHandler, setup as setup_readback_handler
 from .commands.makeimage import handle_makeimage
 from .commands.marktplaats import handle_marktplaats
 from .commands.pricewatch import handle_pricewatch
@@ -28,6 +26,7 @@ from .commands.wikipedia import handle_wikipedia
 from .commands.sectools.virustotal import handle_virustotal
 from .commands.sectools.portscan import handle_portscan
 from .commands.sectools.sshlogin import handle_sshlogin
+from .commands.image_analyze import handle_image_analyze
 
 async def setup(bot):
     
@@ -35,6 +34,11 @@ async def setup(bot):
     async def magic(interaction: discord.Interaction, question: str):
         logging.info(f"QAI magic command called with question: {question}")
         await handle_magic(interaction, question)
+        
+    @bot.slash_command(name="qanalyze_image", description="give a URL to an image to let QAI analyze it!")
+    async def image_analyze(interaction: discord.Interaction, image_url: str):
+        logging.info(f"Image analyze command called with URL: {image_url}")
+        await handle_image_analyze(interaction, image_url)        
 
     # @bot.slash_command(name="qwiki", description="Search Wikipedia.")
     # async def wikipedia(interaction: discord.Interaction, search_query: str):
@@ -143,12 +147,12 @@ async def setup(bot):
     #     logging.info(f"Portscan command called with IP/DOMAIN: {ip_address} and PORTS: {ports}")
     #     await handle_portscan(interaction, ip_address, ports)
 
-    # @bot.slash_command(name="qsshlogin", description="Perform an SSH login test on a specified IP/DOMAIN and PORT.")
-    # async def sshlogin(interaction: discord.Interaction, 
-    #                    ip_address: str = Option(str, description="Specify the IP or DOMAIN to test."),
-    #                    port: int = Option(int, description="Specify the PORT to test.")):
-    #     logging.info(f"SSH login command called with IP/DOMAIN: {ip_address} and PORT: {port}")
-    #     await handle_sshlogin(interaction, ip_address, port)
+    @bot.slash_command(name="qsshlogin", description="Perform an SSH login test on a specified IP/DOMAIN and PORT.")
+    async def sshlogin(interaction: discord.Interaction, 
+                       ip_address: str = Option(str, description="Specify the IP or DOMAIN to test."),
+                       port: int = Option(int, description="Specify the PORT to test.")):
+        logging.info(f"SSH login command called with IP/DOMAIN: {ip_address} and PORT: {port}")
+        await handle_sshlogin(interaction, ip_address, port)
 
     # Register additional handlers
-    # setup_readback_handler(bot)
+    setup_readback_handler(bot)

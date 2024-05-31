@@ -58,7 +58,7 @@ def fetch_website_content(url):
         return None
 
 
-def summarize_text(text, context_for_summary):
+def summarize_text(text, context_for_summary="No context provided."):
     """Use the LLM to generate a summary based on the extracted text."""
     logging.info("summarize_text: Summarizing the text with GPT")
     # add the context to the prompt
@@ -91,11 +91,19 @@ def magic_summarize(url, query="No context provided."):
         print("Invalid URL provided.")
         sys.exit(1)
 
-    content = fetch_website_content(url)
-    if content:
-        summary = summarize_text(f"You are a summarization expert. The user has asked the following question: " + query + "\n . Please summarize the following text and extract only information that is relevant to the question. If nothing relevant is found, only print 'No relevant information found.'\n" + content)
-        print(summary)
+    text = fetch_website_content(url)
+    context = (
+    f"You are a summarization expert. The user has asked the following question:\n"
+    f"{query}\n"
+    f"Please summarize the following text and extract only information that is "
+    f"relevant to the question. If nothing relevant is found, only print "
+    f"'No relevant information found.'\n"
+)
+    if text:
+        summary = summarize_text(text, context)
+        return summary
     else:
+        return "No relevant information found or an error occurred fetching web content."
         print("Failed to fetch content from the URL.")
 
 

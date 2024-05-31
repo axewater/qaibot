@@ -14,6 +14,7 @@ from bot.integrations.openai_imagegen import generate_image
 from bot.commands.sectools.sshlogin import handle_sshlogin
 from bot.commands.sectools.portscan import handle_portscan
 from bot.integrations.search_virustotal import search_virustotal
+from bot.integrations.openai_imageanalyze import get_image_description
 
 sys.path.append('/bot/integrations') 
 
@@ -41,7 +42,7 @@ def process_magic_with_gpt(question_text, system_prompt, gpt_version=4):
     for command, query in commands:
         logging.info(f"process_magic_with_gpt: Processing command: {command} with query: {query}")
         if command == 'googlesearch':
-            google_result = perform_web_search(query)
+            google_result = perform_web_search(query.strip('"'))
             # we get the list of URLs as a JSON, now we pass each of them to the summarize_url function
             summaries = []
             for url in google_result:
@@ -73,6 +74,8 @@ def process_magic_with_gpt(question_text, system_prompt, gpt_version=4):
             result = search_weather(location.strip('"'), when)
         elif command == 'makeimage':
             result = generate_image(query)
+        elif command == 'analyzeimage':
+            result = get_image_description(query.strip('"'))
         elif command == 'portscanner':
             ip_address, ports = query.split(':')
             result = handle_portscan(ip_address.strip('"'), ports.strip('"'))

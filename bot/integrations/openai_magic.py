@@ -57,6 +57,9 @@ def magic_ai(question_text, context=None):
     [makeimage:prompt]                      example : [makeimage:"a cute dog"]
     use this when asked to create an image
     
+    [analyzeimage:image_url]                example : [analyzeimage:"http://www.googleimages.com/images/dog.jpg"]
+    use this to get a detailed text description of an image.
+    
     [nmapscan:ip_address:ports]             example : [nmapscan:"237.84.2.178":"22,80,443"]
     use this to scan which ports are open and closed on a host when requested.
     
@@ -72,5 +75,5 @@ def magic_ai(question_text, context=None):
     To use a tool, just print the query as shown in the above examples. Only print that and wait for the answer.
     Then you will be returned the data from the tool, and you can use it to answer the original question from the user.
     """
-    logging.info(f"magic_ai: Magic System prompt: {system_prompt}")
+    # logging.info(f"magic_ai: Magic System prompt: {system_prompt}")
     return process_magic_with_gpt(question_text, system_prompt, gpt_version=4)

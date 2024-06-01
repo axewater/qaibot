@@ -50,12 +50,18 @@ def process_magic_with_gpt(question_text, system_prompt, gpt_version=4):
                 summaries.append(summary)
             result = "\n".join(summaries)
         elif command == 'summarize_url':
-            result = magic_summarize(query)
+            parts = query.split('"')
+            if len(parts) >= 5:
+                url = parts[1]
+                context = parts[3]
+                logging.info(f"process_magic_with_gpt: summarize_url URL: {url} Context: {context}")
+                result = magic_summarize(url, context)
+            else:
+                result = "Invalid summarize_url command format. Expected: [summarize_url:\"http://example.com\":\"context\"]"
         elif command == 'wikipedia':
-            
             query, country = query.split(':')
             logging.info(f"process_magic_with_gpt: WIKI Query: {query} Country: {country} ")
-            result = search_wikipedia(query.strip('"'), 5, country.strip('"'))
+            result = search_wikipedia(query.strip('"'), 5, country.strip('"'))        
         elif command == 'imdbsearch':
             result = search_imdb(query)
         elif command == 'marktplaats':

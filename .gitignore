@@ -103,3 +103,4 @@ bot\integrations\cookie*
 bot/integrations/cookie_iptorrents.json
 cookie_iptorrents.json
 .cache.sqlite
+bot/integrations/pyExploitDbwindowscompatible

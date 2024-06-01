@@ -27,8 +27,8 @@ def magic_ai(question_text, context=None):
     [googlesearch:query]                    example : [googlesearch:"how to make a sandwich"]
     this will return a list of URLs. use this for requests about recent information beyond your knoewledge cut-off date
     
-    [summarize_url:url]                     example : [summarize_url:"https://example.com"]
-    this will return a summary of the URL
+    [summarize_url:url:context]             examples : [summarize_url:"https://example.com/api-docs/":"write python script based on this documentation"], [summarize_url:"https://example.com/about-us/":"provide generic summary of this page"]
+    this will return a summary of the URL with a given context
     
     [wikipedia:query:language]              example : [wikipedia:"donald trump":"en"], [wikipedia:"nederland":"nl"]
     this will return a summary of the first 5 wikipedia results

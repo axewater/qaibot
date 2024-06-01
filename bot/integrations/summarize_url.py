@@ -14,6 +14,9 @@ except ImportError:
 def validate_url(url):
     """Validate the URL format using a regular expression."""
     logging.info(f"validate_url: Validating URL: {url}.")
+    
+
+    
     regex = re.compile(
         r'^(?:http|ftp)s?://'  # http://, https://, or ftp://
         r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+'  # domain names
@@ -40,6 +43,10 @@ def fetch_website_content(url):
         "Cache-Control": "no-cache",
     }
     try:
+        # Remove quotes around the URL if present
+        if url.startswith('"') and url.endswith('"'):
+            logging.info(f"validate_url: Removing quotes from URL: {url}.")
+            url = url[1:-1]
         response = requests.get(url, headers=headers)
         logging.info(f"fetch_website_content: Received response from {url}: {response.status_code}")
         response.raise_for_status()  # raise exception for HTTP errors
@@ -85,10 +92,10 @@ if __name__ == '__main__':
 
 def magic_summarize(url, query="No context provided."):
     """Fetch and summarize website content."""
-    logging.info(f"fetch_website_content: Fetching content from {url}.")
+    logging.info(f"magic_summarize: Fetching content from {url} with query: {query}.")
     
     if not validate_url(url):
-        return "Invalid URL provided."
+        return "magic_summarize: Invalid URL provided."
 
     text = fetch_website_content(url)
     context = (
@@ -99,6 +106,7 @@ def magic_summarize(url, query="No context provided."):
         f"'No relevant information found.'\n"
     )
     if text:
+        logging.info("magic_summarize: Summarizing the text with GPT3")
         summary = summarize_text(text, context)
         return summary
     else:

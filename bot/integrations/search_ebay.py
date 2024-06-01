@@ -22,6 +22,7 @@ def search_ebay(query, max_results=10):
                 'category': item.primaryCategory.categoryName,
                 'shipto': item.shippingInfo.shipToLocations,
                 'price': item.sellingStatus.currentPrice.value,
+                'item_url': item.viewItemURL,
                 'image_url': item.galleryURL
             }
             results.append(item_info)

@@ -1,7 +1,7 @@
 import discord
 import logging
-from ...utilities import send_large_message
-from ...integrations.search_ebay import search_ebay
+from ..utilities import send_large_message
+from ..integrations.search_ebay import search_ebay
 import json
 
 async def handle_ebay(interaction: discord.Interaction, query: str, max_results: int = 10):
@@ -17,12 +17,12 @@ async def handle_ebay(interaction: discord.Interaction, query: str, max_results:
         results_list = json.loads(results)
         
         # Construct a table-like string with markdown and emoticons
-        table_header = f"**{'Name':<50}{'Category':<20}{'Ship To':<20}{'Price':<10}{'Image URL'}**\n"
-        table_header += "-" * 120 + "\n"
+        table_header = f"**{'Name':<50}{'Category':<20}{'Ship To':<20}{'Price':<10}{'Image URL':<50}{'Item URL'}**\n"
+        table_header += "-" * 170 + "\n"
         
         table_rows = ""
         for item in results_list:
-            table_rows += f"{item['name']:<50}{item['category']:<20}{item['shipto']:<20}{item['price']:<10}{item['image_url']}\n"
+            table_rows += f"{item['name']:<50}{item['category']:<20}{item['shipto']:<20}{'$' + item['price']:<10}{item['image_url']:<50}{item['item_url']}\n"
         
         formatted_results = table_header + table_rows
 

@@ -39,8 +39,11 @@ def magic_ai(question_text, context=None):
     [it_component_search:component_name]    example : [it_component_search:"nvidia 4090"]
     this will return a list of IT components with current prices
     
+    [ebay:product_name]                     example : [ebay]:"gucci bag"]
+    this will return a list matching products offered second hand. Can be used for : Just about anything.
+    
     [marktplaats:product_name]               example : [marktplaats]:"gucci tassen"]
-    this will return a list matching products offered second hand. Can be used for : Just about anything
+    this will return a list matching products offered second hand on the Dutch and Belgian market. Can be used for : Just about anything, use if you know the user is Dutch or to compare to eBay prices
     
     [steamsearch:game_name]                 example : [steamsearch:"Grand Theft Auto V"]
     this will return a list matching games with Steam URLs with prices.

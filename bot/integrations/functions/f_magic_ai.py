@@ -4,6 +4,7 @@ from bot.integrations.search_google import perform_web_search
 from bot.integrations.openai_chat import process_text_with_gpt
 from bot.integrations.search_imdb import search_imdb
 from bot.integrations.search_marktplaats import scrape_marktplaats_items
+from bot.integrations.search_ebay import search_ebay
 from bot.integrations.search_iptorrents import search_iptorrents
 from bot.integrations.search_pricewatch import search_tweakers_pricewatch
 from bot.integrations.search_steam import search_steam
@@ -67,6 +68,8 @@ def process_magic_with_gpt(question_text, system_prompt, gpt_version=4):
             result = search_imdb(query)
         elif command == 'marktplaats':
             result = scrape_marktplaats_items(query)
+        elif command == 'ebay':
+            result = search_ebay(query)
         elif command == 'iptorrents':
             result = search_iptorrents(query)
         elif command == 'it_component_search':

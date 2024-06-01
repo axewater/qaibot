@@ -19,11 +19,13 @@ async def handle_research(interaction: discord.Interaction, topic: str, depth: s
     blacklist_filename = 'blacklist_urls.json'
     blacklist = load_blacklist(blacklist_filename)
 
+    
     refined_query = process_text_with_gpt(
         topic,
         "This is a sentence typed by a human that we need to research online. Refine this topic into an effective web search query without translating to another language. Keep English in English, keep Dutch in Dutch. etc.",
         gpt_version=3
     )
+    refined_query = refined_query.replace('"', '')
     logging.info(f"handle_research: Refined query '{refined_query}' with depth '{depth}'")
     await progress_message.edit(content=f"Researching the topic: {refined_query}...")
     logging.info(f"handle_research: Starting web search...")

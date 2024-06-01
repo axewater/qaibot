@@ -21,14 +21,17 @@ def perform_web_search(query, start_index=1, max_results=5):
     """Performs a web search using the Google Search API and returns URLs up to max_results."""
     urls = []
     try:
-        logging.info(f"perform_web_search: Performing web search for: {query} with start index: {start_index} and max results: {max_results}")
+        # Strip any leading or trailing quotes from the query
+        cleaned_query = query.strip('\'"')
+        
+        logging.info(f"perform_web_search: Performing web search for: {cleaned_query} with start index: {start_index} and max results: {max_results}")
         logging.info(f"perform_web_search: Using GOOGLE_API_KEY: {GOOGLE_API_KEY} and GOOGLE_CX: {GOOGLE_CX}")
         service = build("customsearch", "v1", developerKey=GOOGLE_API_KEY)
         total_results_fetched = 0
 
         while total_results_fetched < max_results:
             request_body = {
-                'q': query,
+                'q': cleaned_query,
                 'cx': GOOGLE_CX,
                 'num': min(10, max_results - total_results_fetched),
                 'start': start_index
@@ -48,7 +51,7 @@ def perform_web_search(query, start_index=1, max_results=5):
             
             items = res.get("items", [])
             if not items:
-                logging.info(f"perform_web_search: No search results found for: {query}")
+                logging.info(f"perform_web_search: No search results found for: {cleaned_query}")
                 break
 
             for item in items:

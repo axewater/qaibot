@@ -88,23 +88,22 @@ def magic_summarize(url, query="No context provided."):
     logging.info(f"fetch_website_content: Fetching content from {url}.")
     
     if not validate_url(url):
-        print("Invalid URL provided.")
-        sys.exit(1)
+        return "Invalid URL provided."
 
     text = fetch_website_content(url)
     context = (
-    f"You are a summarization expert. The user has asked the following question:\n"
-    f"{query}\n"
-    f"Please summarize the following text and extract only information that is "
-    f"relevant to the question. If nothing relevant is found, only print "
-    f"'No relevant information found.'\n"
-)
+        f"You are a summarization expert. The user has asked the following question:\n"
+        f"{query}\n"
+        f"Please summarize the following text and extract only information that is "
+        f"relevant to the question. If nothing relevant is found, only print "
+        f"'No relevant information found.'\n"
+    )
     if text:
         summary = summarize_text(text, context)
         return summary
     else:
-        return "No relevant information found or an error occurred fetching web content."
-        print("Failed to fetch content from the URL.")
+        logging.error("Failed to fetch content from the URL.")
+        return "Failed to fetch content from the URL."
 
 
 def magic_final_summarize(context="No context provided.", query="No question provided."):

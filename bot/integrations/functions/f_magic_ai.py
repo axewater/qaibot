@@ -11,10 +11,11 @@ from bot.integrations.search_cdkeys import search_cdkeys
 from bot.integrations.search_weather import search_weather
 from bot.integrations.search_wikipedia import search_wikipedia
 from bot.integrations.openai_imagegen import generate_image
-from bot.commands.sectools.sshlogin import handle_sshlogin
-from bot.commands.sectools.portscan import handle_portscan
 from bot.integrations.search_virustotal import search_virustotal
 from bot.integrations.openai_imageanalyze import get_image_description
+from bot.commands.sectools.sshlogin import handle_sshlogin
+from bot.commands.sectools.portscan import handle_portscan
+from bot.commands.sectools.exploitdb import search_exploit_json
 
 sys.path.append('/bot/integrations') 
 
@@ -97,6 +98,18 @@ def process_magic_with_gpt(question_text, system_prompt, gpt_version=4):
             vt_query = vt_query.strip('"')
             vt_type = vt_type.strip('"')
             result = search_virustotal(vt_query, vt_type)
+        elif command == 'exploitsearch':
+            parts = query.split(':')
+            if len(parts) >= 3:
+                exploit_query = parts[0].strip('"')
+                platform = parts[1].strip('"')
+                maxresult = int(parts[2].strip('"'))
+                result = search_exploit_json(exploit_query, platform=platform, nb_results=maxresult)
+            else:
+                result = "Invalid exploitsearch command format. Expected: [exploitsearch:\"query\":\"platform\":\"maxresult\"]"
+        elif command == 'exploitsearchcve':
+            cve_number = query.strip('"')
+            result = search_exploit_json(query="", cve=cve_number)
         else:
             result = f"Unknown command: {command}"
 

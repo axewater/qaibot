@@ -12,8 +12,12 @@ GOOGLE_CX = os.getenv('GOOGLE_CX')
 GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
 MOBYGAMES_API_KEY = os.getenv('MOBYGAMES_API_KEY')
 VIRUSTOTAL_API_KEY = os.getenv('VIRUSTOTAL_API_KEY')
-QAI_VERSION = '3.3.1'
+QAI_VERSION = '3.4.1'
 SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://postgres:!Piratingin2024!@theknox:5432/qaibot_noenv')
 FLASK_HOST = os.getenv('FLASK_HOST', '127.0.0.1')
-FLASK_PORT = int(os.getenv('FLASK_PORT', 5555))
+FLASK_PORT = int(os.getenv('FLASK_PORT', 5678))
 DISCORD_ADMIN_ROLENAME = os.getenv('DISCORD_ADMIN_ROLENAME', 'qbotadmins')
+# eBay API credentials
+APP_ID = os.getenv('EBAY_APP_ID')
+DEV_ID = os.getenv('EBAY_DEV_ID')
+CERT_ID = os.getenv('EBAY_CERT_ID')

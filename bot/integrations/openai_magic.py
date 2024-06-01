@@ -72,6 +72,11 @@ def magic_ai(question_text, context=None):
     [virustotal:query:type]                 example : [virustotal:"example.com":"domain"], [virustotal:"example.com":"url"], [virustotal:"example.com":"ip"], [virustotal:"example.com":"file"]
     use this to query VirusTotal for domain, URL, IP, or file hash information.
     
+    [exploitsearch:query:platform:maxresult] example : [exploitsearch:"printer dll":windows:10]
+    [exploitsearchcve:cve#]                  example : [exploitsearchcve:"CVE-2022-0101"]
+    use this to search for known vulnerabilities on a given platform, or when you know a specific CVE.
+    use this in combination with results from banner scanning using nmapscan. it returns banners of protocols and versions.
+        
     To use a tool, just print the query as shown in the above examples. Only print that and wait for the answer.
     Then you will be returned the data from the tool, and you can use it to answer the original question from the user.
     """

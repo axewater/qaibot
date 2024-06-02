@@ -21,7 +21,8 @@ from .commands.cdkeys import handle_cdkeys
 from .commands.weather import handle_weather
 from .commands.magic import handle_magic
 from .commands.admin_settings import handle_admin_settings
-from .commands.coingecko import handle_coingecko
+from .commands.cryptocoin_values import handle_coinvalues
+from .commands.cryptocoin_trends import handle_cointrends
 from .commands.wikipedia import handle_wikipedia
 from .commands.sectools.virustotal import handle_virustotal
 from .commands.sectools.portscan import handle_portscan
@@ -72,10 +73,17 @@ async def setup(bot):
     #     logging.info(f"Image command called with prompt: {prompt}, size: {size}, quality: {quality}")
     #     await handle_makeimage(interaction, prompt, size, quality)
 
-    # @bot.slash_command(name="qcrypto", description="Get cryptocurrency data from CoinGecko.")
-    # async def coingecko(interaction: discord.Interaction, coin_name: str):
-    #     logging.info(f"CoinGecko command called with coin name: {coin_name}")
-    #     await handle_coingecko(interaction, coin_name)
+    @bot.slash_command(name="qcrypto_values", description="Get cryptocoin values.")
+    async def coingecko(interaction: discord.Interaction, coin_name: str):
+        logging.info(f"CoinGecko command called with coin name: {coin_name}")
+        await handle_coinvalues(interaction, coin_name)
+        
+    @bot.slash_command(name="qcrypto_trends", description="Get latest cryptocoin trends.")
+    async def coingecko(interaction: discord.Interaction, max_results: int):
+        if not max_results:
+            max_results = 10
+        logging.info(f"CyptoTrends command called with max results: {max_results}")
+        await handle_cointrends(interaction, max_results)
 
     # @bot.slash_command(name="qjoinconvo", description="Let QAI join the conversation (reads last 15 messages).")
     # async def joinconvo(interaction: discord.Interaction):

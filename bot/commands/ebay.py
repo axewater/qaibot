@@ -22,7 +22,7 @@ async def handle_ebay(interaction: discord.Interaction, query: str, max_results:
         
         table_rows = ""
         for item in results_list:
-            table_rows += f"{item['name']:<50}{item['category']:<20}{item['shipto']:<20}{'$' + item['price']:<10}{item['image_url']:<50}{item['item_url']}\n"
+            table_rows += f"{item['name']:<50}{item['category']:<20}{item['shipto']:<20}{'$' + item['price']:<10}{item['image_url']:<50} {item['item_url']}\n"
         
         formatted_results = table_header + table_rows
 

@@ -1,12 +1,15 @@
-import os
+import os, sys
 import json
 import argparse
 from ebaysdk.finding import Connection
 
-APP_ID = os.getenv('EBAY_APP_ID')
-DEV_ID = os.getenv('EBAY_DEV_ID')
-CERT_ID = os.getenv('EBAY_CERT_ID')
+# Dynamically add the bot directory to the Python path
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
+try:
+    from ..config import EBAY_APP_ID as APP_ID, EBAY_DEV_ID as DEV_ID, EBAY_CERT_ID as CERT_ID
+except ImportError:
+    from config import EBAY_APP_ID as APP_ID, EBAY_DEV_ID as DEV_ID, EBAY_CERT_ID as CERT_ID
 
 def search_ebay(query, max_results=10):
     try:

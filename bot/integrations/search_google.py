@@ -13,6 +13,7 @@ try:
     from ..config import GOOGLE_API_KEY, GOOGLE_CX
 except ImportError:
     from config import GOOGLE_API_KEY, GOOGLE_CX
+    
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 

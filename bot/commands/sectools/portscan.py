@@ -11,7 +11,7 @@ async def handle_portscan(interaction: discord.Interaction, ip_address: str, por
     logging.info(f"handle_portscan: Starting port scan on '{ip_address}' with ports '{ports}'")
     
     # Initialize PortScanner
-    scanner = PortScanner(services_file='default_ports.json', timeout=1, max_threads=100)
+    scanner = PortScanner(services_file='bot/integrations/default_ports.json', timeout=1, max_threads=100)
     
     # Parse custom ports if provided
     if ports:

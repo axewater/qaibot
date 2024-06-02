@@ -2,9 +2,15 @@ import argparse
 import json
 import paramiko
 import socket
+import os
 
-DEFAULT_CREDENTIALS_FILE = 'bot/integrations/default_credentials.json'
+# Try loading the file directly in the current directory
+DEFAULT_CREDENTIALS_FILE = 'default_credentials.json'
 
+# If the file doesn't exist in the current directory, try the alternative path
+if not os.path.exists(DEFAULT_CREDENTIALS_FILE):
+    DEFAULT_CREDENTIALS_FILE = os.path.join('bot', 'integrations', 'default_credentials.json')
+    
 def load_credentials(file_path):
     try:
         with open(file_path, 'r') as file:

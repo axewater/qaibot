@@ -11,7 +11,7 @@ import aiohttp
 # Configuration
 DEFAULT_TIMEOUT = 1
 DEFAULT_MAX_THREADS = 100
-DEFAULT_SERVICES_FILE = 'default_ports.json'
+DEFAULT_SERVICES_FILE = 'bot/integrations/default_ports.json'
 DEFAULT_OUTPUT_FORMAT = 'table'
 DEFAULT_LOGGING_LEVEL = logging.INFO
 
@@ -108,6 +108,13 @@ def main():
             print(f"Scan Results for {ip}:")
             for port, info in results.items():
                 print(f"  {port}/{info['protocol']} ({info['service']}): {info['status']}")
+
+            open_ports = [str(port) for port, info in results.items() if info['status'] == 'open']
+            num_open_ports = len(open_ports)
+            if num_open_ports > 0:
+                print(f"QAI's drones found ({num_open_ports}) open ports on host {ip}: {','.join(open_ports)}")
+            else:
+                print(f"QAI's drones found no open ports on host {ip}.")
 
 if __name__ == "__main__":
     main()
